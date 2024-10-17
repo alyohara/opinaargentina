@@ -14,8 +14,8 @@
     <style>
         body {
             font-family: 'Figtree', sans-serif;
-            background-color: #f0f8ff;
-            color: #1e3a8a;
+            background-color: #F3F4F6;
+            color: #F3F4F6;
             margin: 0;
             display: flex;
             flex-direction: column;
