@@ -1,6 +1,19 @@
-<a href="/">
-    <svg class="w-16 h-16" viewbox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.395 44.428C4.557 40.198 0 32.632 0 24 0 10.745 10.745 0 24 0a23.891 23.891 0 0113.997 4.502c-.2 17.907-11.097 33.245-26.602 39.926z" fill="#6875F5"/>
-        <path d="M14.134 45.885A23.914 23.914 0 0024 48c13.255 0 24-10.745 24-24 0-3.516-.756-6.856-2.115-9.866-4.659 15.143-16.608 27.092-31.75 31.751z" fill="#6875F5"/>
-    </svg>
-</a>
+<svg viewBox="0 0 48 48" id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" fill="#2828b5"
+     stroke="#2828b5" stroke-width="1.056">
+    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+    <g id="SVGRepo_iconCarrier">
+        <defs>
+            <style>.cls-1 {
+                    fill: none;
+                    stroke: #2828b5;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                }</style>
+        </defs>
+        <path class="cls-1"
+              d="M34.65,34.51,42.5,37.8c0-10,0-20.27,0-30.53a1.76,1.76,0,0,0-1.76-1.76H15.13a1.76,1.76,0,0,0-1.76,1.76v6.07"></path>
+        <path class="cls-1"
+              d="M5.5,10.12V40.33a2.16,2.16,0,0,0,2.15,2.16H32.5a2.16,2.16,0,0,0,2.15-2.16V15.49a2.14,2.14,0,0,0-2.15-2.15H13.18ZM20,19.62a4.53,4.53,0,0,1,2.23,8.46l1.06,7.58-6.44,0,1-7.57A4.53,4.53,0,0,1,20,19.62Z"></path>
+    </g>
+</svg>
