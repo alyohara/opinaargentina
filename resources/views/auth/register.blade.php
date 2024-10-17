@@ -59,8 +59,10 @@
         </form>
 
         <div class="flex items-center justify-end mt-4">
-            <button type="button" class="ms-4 bg-gray-500 text-white px-4 py-2 rounded-md" onclick="window.history.back();">
-                {{ __('Volver') }}
-            </button>
+            <div class="flex items-center justify-end mt-4">
+                <a href="javascript:window.history.back();" class="ms-4 text-white underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 w-full text-center">
+                    {{ __('Volver') }}
+                </a>
+            </div>
     </x-authentication-card>
 </x-guest-layout>
