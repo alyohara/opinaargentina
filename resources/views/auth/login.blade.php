@@ -38,14 +38,15 @@
                         {{ __('¿Olvidaste tu contraseña?') }}
                     </a>
                 @endif
+                    <button type="button" class="ms-4 bg-gray-500 text-white px-4 py-2 rounded-md" onclick="window.history.back();">
+                        {{ __('Volver') }}
+                    </button>
 
                 <x-button class="ms-4">
                     {{ __('Ingresar') }}
                 </x-button>
 
-                <button type="button" class="ms-4 bg-gray-500 text-white px-4 py-2 rounded-md" onclick="window.history.back();">
-                    {{ __('Volver') }}
-                </button>
+
             </div>
         </form>
     </x-authentication-card>

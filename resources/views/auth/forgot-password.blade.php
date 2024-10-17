@@ -25,13 +25,14 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
+                <button type="button" class="ms-4 bg-gray-500 text-white px-4 py-2 rounded-md" onclick="window.history.back();">
+                    {{ __('Volver') }}
+                </button>
                 <x-button>
                     {{ __('Enviar Link de Recuperación') }}
                 </x-button>
 
-                <button type="button" class="ms-4 bg-gray-500 text-white px-4 py-2 rounded-md" onclick="window.history.back();">
-                    {{ __('Volver') }}
-                </button>
+
             </div>
         </form>
     </x-authentication-card>
