@@ -15,7 +15,7 @@
         body {
             font-family: 'Figtree', sans-serif;
             background-color: #F3F4F6;
-            color: #F3F4F6;
+            color: #658edc;
             margin: 0;
             display: flex;
             flex-direction: column;
