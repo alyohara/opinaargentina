@@ -1,5 +1,5 @@
 <svg viewBox="0 0 48.00 48.00" id="b" xmlns="http://www.w3.org/2000/svg" fill="#0f02ac" stroke="#0f02ac"
-     stroke-width="0.9120000000000001" transform="rotate(0)">
+     stroke-width="0.9120000000000001" transform="rotate(0)" style="height: 100px">
     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
     <g id="SVGRepo_iconCarrier">
