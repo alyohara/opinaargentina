@@ -9,9 +9,9 @@
         </div>
 
         @session('status')
-            <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-                {{ $value }}
-            </div>
+        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+            {{ $value }}
+        </div>
         @endsession
 
         <x-validation-errors class="mb-4" />
@@ -28,6 +28,10 @@
                 <x-button>
                     {{ __('Enviar Link de Recuperación') }}
                 </x-button>
+
+                <button type="button" class="ms-4 bg-gray-500 text-white px-4 py-2 rounded-md" onclick="window.history.back();">
+                    {{ __('Volver') }}
+                </button>
             </div>
         </form>
     </x-authentication-card>

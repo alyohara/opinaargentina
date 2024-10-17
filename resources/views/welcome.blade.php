@@ -15,7 +15,7 @@
         body {
             font-family: 'Figtree', sans-serif;
             background-color: #F3F4F6;
-            color: #658edc;
+            color: #ffffff;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -55,9 +55,9 @@
         @auth
             <a href="{{ url('/dashboard') }}">Dashboard</a>
         @else
-            <a href="{{ route('login') }}">Log in</a>
+            <a href="{{ route('login') }}">Ingresar</a>
             @if (Route::has('register'))
-                <a href="{{ route('register') }}">Register</a>
+                <a href="{{ route('register') }}">Registro</a>
             @endif
         @endauth
     </div>
