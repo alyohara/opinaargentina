@@ -7,10 +7,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-<<<<<<< HEAD
                         <x-jet-application-mark class="block h-9 w-auto" />
-=======
->>>>>>> f275a24eda67cb38bcaf416be0be8398bf2aa9f5
                     </a>
                 </div>
 
