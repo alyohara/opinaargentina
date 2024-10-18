@@ -5,13 +5,13 @@
         </x-slot>
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('¿Olvidaste tu contraseña? No hay problema. Solo déjanos saber tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña que te permitirá elegir una nueva.') }}
+            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
         </div>
 
         @session('status')
-        <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ $value }}
-        </div>
+            <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
+                {{ $value }}
+            </div>
         @endsession
 
         <x-validation-errors class="mb-4" />
@@ -20,24 +20,15 @@
             @csrf
 
             <div class="block">
-                <x-label for="email" value="{{ __('Correo Electrónico') }}" />
+                <x-label for="email" value="{{ __('Email') }}" />
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
-
-
                 <x-button>
-                    {{ __('Enviar Link de Recuperación') }}
+                    {{ __('Email Password Reset Link') }}
                 </x-button>
-
-
             </div>
         </form>
-        <div class="flex items-center justify-center mt-4 w-full">
-            <a href="javascript:window.history.back();" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 w-full text-center">
-                {{ __('Volver') }}
-            </a>
-        </div>
     </x-authentication-card>
 </x-guest-layout>
