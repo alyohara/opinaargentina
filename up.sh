@@ -11,3 +11,4 @@ sudo git pull
 sudo php artisan route:cache
 sudo php artisan config:cache
 sudo php artisan view:cache
+sudo php artisan optimize:clear
