@@ -12,7 +12,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
-        return view('roles.index', compact('roles'));
+        return view('roles.index2', compact('roles'));
     }
 
     public function create()
@@ -25,7 +25,7 @@ class RoleController extends Controller
     {
         $role = Role::create(['name' => $request->name]);
         $role->syncPermissions($request->permissions);
-        return redirect()->route('roles.index');
+        return redirect()->route('roles.index2');
     }
 
     public function edit(Role $role)
@@ -38,13 +38,13 @@ class RoleController extends Controller
     {
         $role->update(['name' => $request->name]);
         $role->syncPermissions($request->permissions);
-        return redirect()->route('roles.index');
+        return redirect()->route('roles.index2');
     }
 
     public function destroy(Role $role)
     {
         $role->delete();
-        return redirect()->route('roles.index');
+        return redirect()->route('roles.index2');
     }
 
     public function assignRole(Request $request, User $user)
