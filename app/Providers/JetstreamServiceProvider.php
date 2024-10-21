@@ -44,18 +44,41 @@ class JetstreamServiceProvider extends ServiceProvider
     protected function configurePermissions(): void
     {
         Jetstream::defaultApiTokenPermissions(['read']);
+        
 
-        Jetstream::role('admin', 'Administrator', [
+        Jetstream::role('adminit', 'AdminIT', [
             'create',
             'read',
             'update',
             'delete',
-        ])->description('Administrator users can perform any action.');
+            'assignRoles',
+            'assignPermissions',
+            'createTeams',
+            'deleteTeams',
+            'addTeamMembers',
+            'removeTeamMembers',
+            'deleteTeams',
+            'deleteUsers',
+            'createUsers',
+            'updateUsers',
 
-        Jetstream::role('editor', 'Editor', [
-            'read',
+        ])->description('Usuario Administardor de IT');
+
+        Jetstream::role('admin', 'Administrador', [
             'create',
+            'read',
             'update',
-        ])->description('Editor users have the ability to read, create, and update.');
+            'delete',
+        ])->description('Los uduarios administradores pueden realizar cualquier acciòn');
+
+        Jetstream::role('editor', 'TeamLeader', [
+            'read',
+            'update',
+        ])->description('Los TeamLeaders pueden asignar operadores a su equipo.');
+        Jetstream::role('operator', 'Operador', [
+            'read',
+            'update',
+        ])->description('Los operadores pueden realizar tareas asignadas por su TeamLeader.');
+
     }
 }
