@@ -38,13 +38,13 @@ class RoleController extends Controller
     {
         $role->update(['name' => $request->name]);
         $role->syncPermissions($request->permissions);
-        return redirect()->route('roles.index2');
+        return redirect()->route('roles.index');
     }
 
     public function destroy(Role $role)
     {
         $role->delete();
-        return redirect()->route('roles.index2');
+        return redirect()->route('roles.index');
     }
 
     public function assignRole(Request $request, User $user)
