@@ -21,7 +21,7 @@ Route::middleware([
   //  Route::post('/roles', [RolePermissionController::class, 'store'])->name('roles.store');
   //  Route::delete('/roles/{role}', [RolePermissionController::class, 'destroy'])->name('roles.destroy');
 
-    Route::resource('roles', RoleController::class);
-    Route::post('users/{user}/assign-role', [RoleController::class, 'assignRole'])->name('users.assignRole');
+    //Route::resource('roles', RoleController::class);
+    //Route::post('users/{user}/assign-role', [RoleController::class, 'assignRole'])->name('users.assignRole');
 
 });
