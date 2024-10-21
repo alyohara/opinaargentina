@@ -4,8 +4,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="description" content="Sistemas de Gestión">
+        <meta name="author" content="angel.leonardo.bianco@gmail.com">
+        <link rel="icon" type="image/x-icon" href="{{ asset('imgs/logo2.ico') }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <title>{{ config('app.name', 'Sistemas de Gestión') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

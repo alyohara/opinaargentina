@@ -1,5 +1,5 @@
 <a href="/">
-    <svg height="75px" width="75px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+    <svg height="64px" width="64px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
          xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000"><g
             id="SVGRepo_bgCarrier" stroke-width="0"></g>
         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
