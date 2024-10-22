@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <a href="{{ route('users.create') }}" box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;>Add User</a>
+                <a href="{{ route('users.create') }}" class="ms-4">Add User</a>
                 <table class="min-w-full mt-4">
                     <thead>
                     <tr>
