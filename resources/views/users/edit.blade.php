@@ -1,6 +1,9 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Editar Usuario') }}
+        </h2>
+    </x-slot>
     <h1>Edit User</h1>
     <form action="{{ route('users.update', $user) }}" method="POST">
         @csrf
@@ -15,4 +18,4 @@
         <input type="password" name="password_confirmation" id="password_confirmation">
         <button type="submit">Update</button>
     </form>
-@endsection
+</x-app-layout>
