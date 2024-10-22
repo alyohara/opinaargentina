@@ -8,8 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <h1 class="text-2xl font-semibold mb-4">Users</h1>
-                <a href="{{ route('users.create') }}" class="text-blue-500 hover:underline">Add User</a>
+                <a href="{{ route('users.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring focus:ring-blue-300 disabled:opacity-25 transition">Add User</a>
                 <table class="min-w-full mt-4">
                     <thead>
                     <tr>
@@ -24,11 +23,11 @@
                             <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">{{ $user->name }}</td>
                             <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">{{ $user->email }}</td>
                             <td class="px-6 py-4 border-b border-gray-300 dark:border-gray-700">
-                                <a href="{{ route('users.edit', $user) }}" class="text-blue-500 hover:underline mr-2">Edit</a>
+                                <a href="{{ route('users.edit', $user) }}" class="inline-flex items-center px-4 py-2 bg-yellow-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:border-yellow-900 focus:ring focus:ring-yellow-300 disabled:opacity-25 transition mr-2">Edit</a>
                                 <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring focus:ring-red-300 disabled:opacity-25 transition">Delete</button>
                                 </form>
                             </td>
                         </tr>
