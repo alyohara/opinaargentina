@@ -18,9 +18,9 @@
 {{--                    <x-nav-link href="{{ route('roles.index') }}" :active="request()->routeIs('roles.index')">--}}
 {{--                        {{ __('Roles y Permisos') }}--}}
 {{--                    </x-nav-link>--}}
-                    <x-responsive-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
+                    <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
                         {{ __('Manage Users') }}
-                    </x-responsive-nav-link>
+                    </x-nav-link>
                 </div>
             </div>
 
