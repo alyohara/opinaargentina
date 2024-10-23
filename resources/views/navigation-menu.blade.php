@@ -19,10 +19,10 @@
 {{--                        {{ __('Roles y Permisos') }}--}}
 {{--                    </x-nav-link>--}}
                     <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
-                        {{ __('Manage Users') }}
+                        {{ __('Administrar Usuarios') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('roles.index') }}" :active="request()->routeIs('roles.index')">
-                        {{ __('Manage Roles') }}
+                        {{ __('Administrar Roles') }}
                     </x-nav-link>
                 </div>
             </div>
