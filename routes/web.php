@@ -19,8 +19,10 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
     Route::resource('users', UserController::class);
+    Route::resource('roles', RoleController::class);
 
-  //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
+
+    //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
   //  Route::post('/roles', [RolePermissionController::class, 'store'])->name('roles.store');
   //  Route::delete('/roles/{role}', [RolePermissionController::class, 'destroy'])->name('roles.destroy');
 
