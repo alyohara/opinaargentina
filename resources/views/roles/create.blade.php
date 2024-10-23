@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Add Role') }}
+            {{ __('Administrar Roles') }}
         </h2>
     </x-slot>
 
@@ -13,10 +13,10 @@
                     <form action="{{ route('roles.store') }}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <label for="name">Role Name</label>
+                            <label for="name">Nombre del Rol</label>
                             <input type="text" name="name" id="name" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-success mt-3">Add Role</button>
+                        <button type="submit" class="btn btn-success mt-3">Agregar Rol</button>
                     </form>
                 </div>
             </div>

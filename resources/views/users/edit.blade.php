@@ -27,7 +27,15 @@
                     <div class="mb-4">
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password:</label>
                         <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                    </div><div class="form-group">
+                        <label for="role_id">Rol</label>
+                        <select name="role_id" id="role_id" class="form-control" required>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}" {{ $user->roles->contains($role->id) ? 'selected' : '' }}>{{ $role->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
+
                     <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring focus:ring-blue-300 disabled:opacity-25 transition">Update</button>
                 </form>
             </div>

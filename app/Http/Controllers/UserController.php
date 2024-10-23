@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
+
 
 class UserController extends Controller
 {
@@ -16,8 +18,8 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('users.create');
-    }
+        $roles = Role::all();
+        return view('users.create', compact('roles'));    }
 
     public function store(Request $request)
     {
@@ -27,18 +29,21 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $user->roles()->attach($request->role_id);
+
 
         return redirect()->route('users.index');
     }
 
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+        $roles = Role::all();
+        return view('users.edit', compact('user', 'roles'));
     }
 
     public function update(Request $request, User $user)
@@ -54,6 +59,8 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => $request->password ? Hash::make($request->password) : $user->password,
         ]);
+        $user->roles()->sync($request->role_id);
+
 
         return redirect()->route('users.index');
     }
