@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <h1 class="text-2xl font-semibold mb-4">Add User</h1>
+                <h1 class="text-2xl font-semibold mb-4">Agregar Usuario</h1>
                 <form action="{{ route('users.store') }}" method="POST">
                     @csrf
                     <div class="mb-4">
@@ -35,7 +35,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring focus:ring-blue-300 disabled:opacity-25 transition">Add</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
                 </form>
             </div>
         </div>
