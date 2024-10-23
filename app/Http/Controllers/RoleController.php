@@ -2,42 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use App\Models\User;
 
 class RoleController extends Controller
 {
     public function index()
     {
         $roles = Role::all();
-        return view('roles.index2', compact('roles'));
+        return view('roles.index', compact('roles'));
     }
 
     public function create()
     {
-        $permissions = Permission::all();
-        return view('roles.create', compact('permissions'));
+        return view('roles.create');
     }
 
     public function store(Request $request)
     {
-        $role = Role::create(['name' => $request->name]);
-        $role->syncPermissions($request->permissions);
-        return redirect()->route('roles.index2');
+        $request->validate([
+            'name' => 'required|string|max:255|unique:roles',
+        ]);
+
+        Role::create($request->all());
+
+        return redirect()->route('roles.index');
     }
 
     public function edit(Role $role)
     {
-        $permissions = Permission::all();
-        return view('roles.edit', compact('role', 'permissions'));
+        return view('roles.edit', compact('role'));
     }
 
     public function update(Request $request, Role $role)
     {
-        $role->update(['name' => $request->name]);
-        $role->syncPermissions($request->permissions);
+        $request->validate([
+            'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
+        ]);
+
+        $role->update($request->all());
+
         return redirect()->route('roles.index');
     }
 
@@ -45,11 +49,5 @@ class RoleController extends Controller
     {
         $role->delete();
         return redirect()->route('roles.index');
-    }
-
-    public function assignRole(Request $request, User $user)
-    {
-        $user->assignRole($request->role);
-        return redirect()->back();
     }
 }

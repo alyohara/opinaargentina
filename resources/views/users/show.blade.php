@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <h3>{{ $user->name }}</h3>
                     <p>Email: {{ $user->email }}</p>
-                    <a href="{{ route('users.index') }}" class="btn btn-primary">Back to List</a>
+                    <a href="{{ route('users.index') }}" class="btn btn-primary">Volver al listado</a>
                 </div>
             </div>
         </div>

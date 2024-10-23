@@ -1,55 +1,39 @@
+<!-- resources/views/roles/index.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Roles and Permissions') }}
+            {{ __('Manage Roles') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                    <form method="POST" action="{{ route('roles.store') }}">
-                        @csrf
-                        <div>
-                            <x-label for="name" value="{{ __('Role Name') }}" />
-                            <x-input id="name" type="text" name="name" required autofocus />
-                        </div>
-
-                        <div class="mt-4">
-                            <x-label for="permissions" value="{{ __('Permissions') }}" />
-                            @foreach($permissions as $permission)
-                                <div>
-                                    <input type="checkbox" name="permissions[]" value="{{ $permission->id }}">
-                                    <label>{{ $permission->name }}</label>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <div class="mt-4">
-                            <x-button>
-                                {{ __('Create Role') }}
-                            </x-button>
-                        </div>
-                    </form>
-
-                    <div class="mt-6">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Existing Roles') }}</h3>
-                        <ul>
-                            @foreach($roles as $role)
-                                <li class="mt-2">
-                                    {{ $role->name }}
-                                    <form method="POST" action="{{ route('roles.destroy', $role) }}" class="inline">
+        <div class="container">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <button onclick="window.location.href='{{ route('roles.create') }}'" class="btn btn-success mb-3">Add Role</button>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($roles as $role)
+                            <tr>
+                                <td>{{ $role->name }}</td>
+                                <td>
+                                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <x-button class="ml-4">
-                                            {{ __('Delete') }}
-                                        </x-button>
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                     </form>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
