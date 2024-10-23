@@ -13,9 +13,9 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Nombre</th>
                             <th>Email</th>
-                            <th>Actions</th>
+                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -51,13 +51,13 @@
                 const form = this.closest('form');
 
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: '¿Está seguro?',
+                    text: "No podrá deshacer esta elección",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    confirmButtonText: '¡Sí, borrar!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
