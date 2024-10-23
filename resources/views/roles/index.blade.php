@@ -15,6 +15,8 @@
                         <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Created on</th>
+
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -22,6 +24,7 @@
                         @foreach($roles as $role)
                             <tr>
                                 <td>{{ $role->name }}</td>
+                                <td>{{ $role->created_at->diffForHumans() }}</td>
                                 <td>
                                     <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Edit</a>
                                     <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline">
