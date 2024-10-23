@@ -9,8 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <a href="{{ route('users.create') }}" class="inline-flex items-center px-4 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring focus:ring-green-300 disabled:opacity-25 transition">Add User</a>
-                <table class="min-w-full mt-4">
+                <button onclick="window.location.href='{{ route('users.create') }}'" class="inline-flex items-center px-4 py-2 bg-green-500 border border-transparent rounded-md font-semibold text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring focus:ring-green-300 disabled:opacity-25 transition">Add User</button>                <table class="min-w-full mt-4">
                     <thead>
                     <tr>
                         <th class="px-6 py-3 border-b-2 border-gray-300 dark:border-gray-700">Name</th>
