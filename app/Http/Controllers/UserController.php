@@ -63,4 +63,9 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('users.index');
     }
+
+    public function show(User $user)
+    {
+        return view('users.show', compact('user'));
+    }
 }
