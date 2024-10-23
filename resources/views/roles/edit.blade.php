@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Edit Role') }}
+            {{ __('Editar Rol') }}
         </h2>
     </x-slot>
 
@@ -14,10 +14,10 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group">
-                            <label for="name">Role Name</label>
+                            <label for="name">Nombre del Rol</label>
                             <input type="text" name="name" id="name" class="form-control" value="{{ $role->name }}" required>
                         </div>
-                        <button type="submit" class="btn btn-success mt-3">Update Role</button>
+                        <button type="submit" class="btn btn-success mt-3">Actualizar Rol</button>
                     </form>
                 </div>
             </div>

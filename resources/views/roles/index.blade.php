@@ -14,10 +14,10 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Created on</th>
+                            <th>Nombre</th>
+                            <th>Fecha de Creación</th>
 
-                            <th>Actions</th>
+                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -26,11 +26,11 @@
                                 <td>{{ $role->name }}</td>
                                 <td>{{ $role->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline">
+                                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="button" class="btn btn-danger btn-sm delete-button">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
@@ -41,4 +41,28 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const form = this.closest('form');
+
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "No podrá deshacer esta elección",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '¡Sí, borrar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
