@@ -35,7 +35,7 @@ class CreateNewUser implements CreatesNewUsers
                 'password' => Hash::make($input['password']),
             ]), function (User $user) {
                 $user->roles()->attach(1);
-                $this->createTeam($user);
+               // $this->createTeam($user);
             });
         });
     }
