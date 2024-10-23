@@ -24,6 +24,7 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
+                                    <a href="{{ route('users.show', $user) }}" class="btn btn-info btn-sm">Ver Usuario</a>
                                     <a href="{{ route('users.edit', $user) }}" class="btn btn-warning btn-sm">Editar</a>
                                     <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline delete-form">
                                         @csrf
