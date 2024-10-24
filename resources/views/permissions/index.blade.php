@@ -1,8 +1,8 @@
-<!-- resources/views/permissions/index.blade.php -->
+<!-- resources/views/roles/index.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Manage Permissions') }}
+            {{ __('Administrar Roles') }}
         </h2>
     </x-slot>
 
@@ -10,24 +10,26 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <button onclick="window.location.href='{{ route('permissions.create') }}'" class="btn btn-success mb-3">Add Permission</button>
+                    <button onclick="window.location.href='{{ route('roles.create') }}'" class="btn btn-success mb-3">Add Role</button>
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Actions</th>
+                            <th>Nombre</th>
+                            <th>Fecha de Creación</th>
+                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($permissions as $permission)
+                        @foreach($roles as $role)
                             <tr>
-                                <td>{{ $permission->name }}</td>
+                                <td>{{ $role->name }}</td>
+                                <td>{{ $role->created_at->diffForHumans() }}</td>
                                 <td>
-                                    <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('permissions.destroy', $permission) }}" method="POST" class="d-inline">
+                                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        <button type="button" class="btn btn-danger btn-sm delete-button">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
@@ -38,4 +40,27 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const form = this.closest('form');
+
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "No podrá deshacer esta elección",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '¡Sí, borrar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
