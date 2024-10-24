@@ -20,6 +20,7 @@ Route::middleware([
     })->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('permissions', PermissionController::class);
 
 
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
