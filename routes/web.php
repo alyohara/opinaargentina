@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\EquipoController;
+
 
 
 Route::get('/', function () {
@@ -22,6 +24,7 @@ Route::middleware([
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
+    Route::resource('equipos', EquipoController::class);
 
 
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');

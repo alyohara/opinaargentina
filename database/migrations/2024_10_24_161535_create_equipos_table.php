@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('equipos', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->foreignId('leader_id')->constrained('users')->unique();
+            $table->timestamps();
+        });
+
+        Schema::create('equipo_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('equipo_id')->constrained();
+            $table->foreignId('user_id')->constrained()->unique();
             $table->timestamps();
         });
     }
@@ -22,6 +31,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('equipo_user');
         Schema::dropIfExists('equipos');
     }
 };
