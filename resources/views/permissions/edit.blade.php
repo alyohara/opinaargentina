@@ -2,7 +2,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Edit Permission') }}
+            {{ __('Editar Permiso') }}
         </h2>
     </x-slot>
 
@@ -14,10 +14,10 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group">
-                            <label for="name">Name</label>
+                            <label for="name">Nombre</label>
                             <input type="text" name="name" id="name" class="form-control" value="{{ $permission->name }}" required>
                         </div>
-                        <button type="submit" class="btn btn-success mt-3">Update Permission</button>
+                        <button type="submit" class="btn btn-success mt-3">Actualizar Permiso</button>
                     </form>
                 </div>
             </div>

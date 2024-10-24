@@ -16,7 +16,6 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Fecha de Creación</th>
-
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -41,7 +40,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         document.querySelectorAll('.delete-button').forEach(button => {

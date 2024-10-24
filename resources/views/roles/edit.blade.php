@@ -18,7 +18,7 @@
                             <input type="text" name="name" id="name" class="form-control" value="{{ $role->name }}" required>
                         </div>
                         <div class="form-group mt-3">
-                            <label for="permissions">Permissions</label>
+                            <label for="permissions">Permisos</label>
                             @foreach($permissions as $permission)
                                 <div class="form-check">
                                     <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" class="form-check-input"
