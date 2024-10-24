@@ -27,6 +27,9 @@
                     <x-nav-link href="{{ route('permissions.index') }}" :active="request()->routeIs('permissions.index')">
                         {{ __('Administrar Permisos') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('equipos.index') }}" :active="request()->routeIs('equipos.index')">
+                        {{ __('Administrar Equipos') }}
+                    </x-nav-link>
                 </div>
             </div>
 
