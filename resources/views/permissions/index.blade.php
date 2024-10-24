@@ -1,8 +1,8 @@
-<!-- resources/views/roles/index.blade.php -->
+<!-- resources/views/permissions/index.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Administrar Roles') }}
+            {{ __('Administrar Permisos') }}
         </h2>
     </x-slot>
 
@@ -10,26 +10,24 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <button onclick="window.location.href='{{ route('roles.create') }}'" class="btn btn-success mb-3">Add Role</button>
+                    <button onclick="window.location.href='{{ route('permissions.create') }}'" class="btn btn-success mb-3">Agregar Permiso</button>
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th>Fecha de Creación</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($roles as $role)
+                        @foreach($permissions as $permission)
                             <tr>
-                                <td>{{ $role->name }}</td>
-                                <td>{{ $role->created_at->diffForHumans() }}</td>
+                                <td>{{ $permission->name }}</td>
                                 <td>
-                                    <a href="{{ route('roles.edit', $role) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline delete-form">
+                                    <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <form action="{{ route('permissions.destroy', $permission) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm delete-button">Eliminar</button>
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
