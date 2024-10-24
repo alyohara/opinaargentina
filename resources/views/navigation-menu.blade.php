@@ -18,44 +18,45 @@
 {{--                    <x-nav-link href="{{ route('roles.index') }}" :active="request()->routeIs('roles.index')">--}}
 {{--                        {{ __('Roles y Permisos') }}--}}
 {{--                    </x-nav-link>--}}
-                    <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
-                        {{ __('Administrar Usuarios') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('roles.index') }}" :active="request()->routeIs('roles.index')">
-                        {{ __('Administrar Roles') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('permissions.index') }}" :active="request()->routeIs('permissions.index')">
-                        {{ __('Administrar Permisos') }}
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('equipos.index') }}" :active="request()->routeIs('equipos.index')">
-                        {{ __('Administrar Equipos') }}
-                    </x-nav-link>
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                {{ __('Administración') }}
-                                <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                </svg>
-                            </button>
-                        </x-slot>
+{{--                    <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">--}}
+{{--                        {{ __('Administrar Usuarios') }}--}}
+{{--                    </x-nav-link>--}}
+{{--                    <x-nav-link href="{{ route('roles.index') }}" :active="request()->routeIs('roles.index')">--}}
+{{--                        {{ __('Administrar Roles') }}--}}
+{{--                    </x-nav-link>--}}
+{{--                    <x-nav-link href="{{ route('permissions.index') }}" :active="request()->routeIs('permissions.index')">--}}
+{{--                        {{ __('Administrar Permisos') }}--}}
+{{--                    </x-nav-link>--}}
+{{--                    <x-nav-link href="{{ route('equipos.index') }}" :active="request()->routeIs('equipos.index')">--}}
+{{--                        {{ __('Administrar Equipos') }}--}}
+{{--                    </x-nav-link>--}}
 
-                        <x-slot name="content">
-                            <x-dropdown-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
-                                {{ __('Administrar Usuarios') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('roles.index') }}" :active="request()->routeIs('roles.index')">
-                                {{ __('Administrar Roles') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('permissions.index') }}" :active="request()->routeIs('permissions.index')">
-                                {{ __('Administrar Permisos') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('equipos.index') }}" :active="request()->routeIs('equipos.index')">
-                                {{ __('Administrar Equipos') }}
-                            </x-dropdown-link>
-                        </x-slot>
-                    </x-dropdown>
                 </div>
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
+                            {{ __('Administración') }}
+                            <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <x-dropdown-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
+                            {{ __('Administrar Usuarios') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link href="{{ route('roles.index') }}" :active="request()->routeIs('roles.index')">
+                            {{ __('Administrar Roles') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link href="{{ route('permissions.index') }}" :active="request()->routeIs('permissions.index')">
+                            {{ __('Administrar Permisos') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link href="{{ route('equipos.index') }}" :active="request()->routeIs('equipos.index')">
+                            {{ __('Administrar Equipos') }}
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
