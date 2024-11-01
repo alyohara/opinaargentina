@@ -57,4 +57,9 @@ class CityController extends Controller
         $city->delete();
         return redirect()->route('cities.index');
     }
+    public function getCitiesByState($stateId)
+    {
+        $cities = City::where('state_id', $stateId)->get();
+        return response()->json($cities);
+    }
 }
