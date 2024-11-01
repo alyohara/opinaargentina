@@ -59,6 +59,9 @@
                         <x-dropdown-link href="{{ route('equipos.index') }}" :active="request()->routeIs('equipos.index')">
                             {{ __('Administrar Equipos') }}
                         </x-dropdown-link>
+                        <x-dropdown-link href="{{ route('states.index') }}" :active="request()->routeIs('states.index')">
+                            {{ __('Administrar Provincias') }}
+                        </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
                 <!-- Teams Dropdown -->
