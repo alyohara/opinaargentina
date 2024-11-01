@@ -20,11 +20,11 @@
                         <tbody>
                         @foreach($states as $state)
                             <tr>
-                                <td>{{ $user->name }}</td>
+                                <td>{{ $state->name }}</td>
                                 <td>
-                                    <a href="{{ route('states.show', $user) }}" class="btn btn-info btn-sm">Ver Usuario</a>
-                                    <a href="{{ route('states.edit', $user) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <form action="{{ route('states.destroy', $user) }}" method="POST" class="d-inline delete-form">
+                                    <a href="{{ route('states.show', $state) }}" class="btn btn-info btn-sm">Ver Usuario</a>
+                                    <a href="{{ route('states.edit', $state) }}" class="btn btn-warning btn-sm">Editar</a>
+                                    <form action="{{ route('states.destroy', $state) }}" method="POST" class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" class="btn btn-danger btn-sm delete-button">Eliminar</button>
