@@ -2,14 +2,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\State;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
     public function index()
     {
-        $cities = City::all();
-        return response()->json($cities);
+        $cities = City::paginate(10); // Adjust the number as needed
+        return view('cities.index', compact('cities'));
+    }
+
+    public function create()
+    {
+        $states = State::all();
+        return view('cities.create', compact('states'));
     }
 
     public function store(Request $request)
@@ -17,16 +24,16 @@ class CityController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'state_id' => 'required|exists:states,id',
-            // Add other validation rules as needed
         ]);
 
-        $city = City::create($request->all());
-        return response()->json($city, 201);
+        City::create($request->all());
+        return redirect()->route('cities.index');
     }
 
-    public function show(City $city)
+    public function edit(City $city)
     {
-        return response()->json($city);
+        $states = State::all();
+        return view('cities.edit', compact('city', 'states'));
     }
 
     public function update(Request $request, City $city)
@@ -34,16 +41,20 @@ class CityController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'state_id' => 'required|exists:states,id',
-            // Add other validation rules as needed
         ]);
 
         $city->update($request->all());
-        return response()->json($city);
+        return redirect()->route('cities.index');
+    }
+
+    public function show(City $city)
+    {
+        return view('cities.show', compact('city'));
     }
 
     public function destroy(City $city)
     {
         $city->delete();
-        return response()->json(null, 204);
+        return redirect()->route('cities.index');
     }
 }
