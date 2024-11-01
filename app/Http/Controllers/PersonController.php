@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Person;
 use App\Models\City;
+use App\Models\State;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
