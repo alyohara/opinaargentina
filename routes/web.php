@@ -8,6 +8,8 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\PersonController;
+
 
 
 
@@ -29,7 +31,7 @@ Route::middleware([
     Route::resource('equipos', EquipoController::class);
     Route::resource('states', StateController::class);
     Route::resource('cities', CityController::class);
-
+    Route::resource('people', PersonController::class);
 
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
   //  Route::post('/roles', [RolePermissionController::class, 'store'])->name('roles.store');
