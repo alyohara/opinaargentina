@@ -32,11 +32,18 @@
                             <input type="text" id="cellphone" name="cellphone" class="form-control">
                         </div>
                         <div class="mb-3">
+                            <label for="state_id" class="form-label">Estado</label>
+                            <select id="state_id" name="state_id" class="form-control" required>
+                                <option value="">Seleccione un estado</option>
+                                @foreach($states as $state)
+                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label for="city_id" class="form-label">Ciudad</label>
                             <select id="city_id" name="city_id" class="form-control" required>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
-                                @endforeach
+                                <option value="">Seleccione una ciudad</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Crear</button>
@@ -45,4 +52,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('state_id').addEventListener('change', function () {
+            const stateId = this.value;
+            const citySelect = document.getElementById('city_id');
+            citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+
+            if (stateId) {
+                fetch(`/api/states/${stateId}/cities`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.id;
+                            option.textContent = city.name;
+                            citySelect.appendChild(option);
+                        });
+                    });
+            }
+        });
+    </script>
 </x-app-layout>

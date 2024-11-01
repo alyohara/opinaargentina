@@ -16,8 +16,8 @@ class PersonController extends Controller
 
     public function create()
     {
-        $cities = City::all();
-        return view('people.create', compact('cities'));
+        $states = State::all();
+        return view('people.create', compact('states'));
     }
 
     public function store(Request $request)
@@ -46,8 +46,9 @@ class PersonController extends Controller
 
     public function edit(Person $person)
     {
-        $cities = City::all();
-        return view('people.edit', compact('person', 'cities'));
+        $states = State::all();
+        $cities = City::where('state_id', $person->city->state_id)->get();
+        return view('people.edit', compact('person', 'states', 'cities'));
     }
 
     public function update(Request $request, Person $person)
