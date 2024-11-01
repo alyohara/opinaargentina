@@ -6,6 +6,7 @@ use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\EquipoController;
+use App\Http\Controllers\StateController;
 
 
 
@@ -25,6 +26,7 @@ Route::middleware([
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('equipos', EquipoController::class);
+    Route::resource('states', StateController::class);
 
 
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
