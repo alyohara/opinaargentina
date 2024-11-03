@@ -14,6 +14,8 @@
                         <thead>
                         <tr>
                             <th>Nombre</th>
+                            <th>Código</th>
+                            <th>Región</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -21,6 +23,8 @@
                         @foreach($states as $state)
                             <tr>
                                 <td>{{ $state->name }}</td>
+                                <td>{{ $state->code }}</td>
+                                <td>{{ $state->region }}</td>
                                 <td>
                                     <a href="{{ route('states.show', $state) }}" class="btn btn-info btn-sm">Ver Provincia</a>
                                     <a href="{{ route('states.edit', $state) }}" class="btn btn-warning btn-sm">Editar</a>
@@ -34,7 +38,6 @@
                         @endforeach
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>

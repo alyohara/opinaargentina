@@ -9,14 +9,22 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <form action="{{ route('states.update', $state->id) }}" method="POST">
+                    <form action="{{ route('states.update', $state) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre</label>
-                            <input type="text" id="name" name="name" class="form-control" value="{{ $state->name }}" required>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $state->name }}" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <div class="mb-3">
+                            <label for="code" class="form-label">Código</label>
+                            <input type="text" class="form-control" id="code" name="code" value="{{ $state->code }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="region" class="form-label">Región</label>
+                            <input type="text" class="form-control" id="region" name="region" value="{{ $state->region }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Actualizar</button>
                     </form>
                 </div>
             </div>
