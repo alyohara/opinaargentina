@@ -9,8 +9,19 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h3>{{ $state->name }}</h3>
-                    <a href="{{ route('states.index') }}" class="btn btn-secondary">Back</a>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="name" value="{{ $state->name }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="code" class="form-label">Código</label>
+                        <input type="text" class="form-control" id="code" value="{{ $state->code }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="region" class="form-label">Región</label>
+                        <input type="text" class="form-control" id="region" value="{{ $state->region }}" readonly>
+                    </div>
+                    <a href="{{ route('states.index') }}" class="btn btn-primary">Volver</a>
                 </div>
             </div>
         </div>
