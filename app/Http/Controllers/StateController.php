@@ -8,7 +8,7 @@ class StateController extends Controller
 {
     public function index()
     {
-        $states = State::paginate(10); // Adjust the number as needed
+        $states = State::all();
         return view('states.index', compact('states'));
     }
 
@@ -20,11 +20,17 @@ class StateController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required',
+            'code' => 'required',
+            'region' => 'required'
         ]);
-
         State::create($request->all());
         return redirect()->route('states.index');
+    }
+
+    public function show(State $state)
+    {
+        return view('states.show', compact('state'));
     }
 
     public function edit(State $state)
@@ -35,9 +41,10 @@ class StateController extends Controller
     public function update(Request $request, State $state)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required',
+            'code' => 'required',
+            'region' => 'required'
         ]);
-
         $state->update($request->all());
         return redirect()->route('states.index');
     }
@@ -46,10 +53,5 @@ class StateController extends Controller
     {
         $state->delete();
         return redirect()->route('states.index');
-    }
-
-    public function show(State $state)
-    {
-        return view('states.show', compact('state'));
     }
 }
