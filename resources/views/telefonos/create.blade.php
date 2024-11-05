@@ -20,8 +20,8 @@
                             <input type="text" class="form-control" id="movil" name="movil" required>
                         </div>
                         <div class="mb-3">
-                            <label for="provincia" class="form-label">Provincia</label>
-                            <select class="form-control" id="provincia" name="provincia" required>
+                            <label for="state_id" class="form-label">Provincia</label>
+                            <select class="form-control" id="state_id" name="state_id" required>
                                 <option value="">Seleccione una provincia</option>
                                 @foreach($provincias as $provincia)
                                     <option value="{{ $provincia->id }}">{{ $provincia->name }}</option>
@@ -32,33 +32,15 @@
                             <label for="city_id" class="form-label">Ciudad</label>
                             <select class="form-control" id="city_id" name="city_id" required>
                                 <option value="">Seleccione una ciudad</option>
+                                @foreach($ciudades as $ciudad)
+                                    <option value="{{ $ciudad->id }}">{{ $ciudad->name }}</option>
+                                @endforeach
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('provincia').addEventListener('change', function () {
-            const provinciaId = this.value;
-            const citySelect = document.getElementById('city_id');
-            citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-
-            if (provinciaId) {
-                fetch(`/api/states/${provinciaId}/cities`)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(city => {
-                            const option = document.createElement('option');
-                            option.value = city.id;
-                            option.textContent = city.name;
-                            citySelect.appendChild(option);
-                        });
-                    });
-            }
-        });
-    </script>
 </x-app-layout>

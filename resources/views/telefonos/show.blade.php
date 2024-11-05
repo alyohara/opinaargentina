@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Ver Teléfono') }}
+            {{ __('Detalles del Teléfono') }}
         </h2>
     </x-slot>
 
@@ -18,10 +18,14 @@
                         <input type="text" class="form-control" id="movil" value="{{ $telefono->movil }}" readonly>
                     </div>
                     <div class="mb-3">
+                        <label for="state" class="form-label">Provincia</label>
+                        <input type="text" class="form-control" id="state" value="{{ $telefono->state->name }}" readonly>
+                    </div>
+                    <div class="mb-3">
                         <label for="city" class="form-label">Ciudad</label>
                         <input type="text" class="form-control" id="city" value="{{ $telefono->city->name }}" readonly>
                     </div>
-                    <a href="{{ route('telefonos.index') }}" class="btn btn-primary">Volver</a>
+                    <a href="{{ route('telefonos.index') }}" class="btn btn-secondary">Volver</a>
                 </div>
             </div>
         </div>

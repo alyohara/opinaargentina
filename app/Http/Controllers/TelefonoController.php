@@ -26,7 +26,8 @@ class TelefonoController extends Controller
         $request->validate([
             'telefono' => 'required',
             'movil' => 'required',
-            'city_id' => 'required|exists:cities,id'
+            'city_id' => 'required|exists:cities,id',
+            'state_id' => 'required|exists:states,id'
         ]);
 
         Telefono::create($request->all());
@@ -41,7 +42,7 @@ class TelefonoController extends Controller
     public function edit(Telefono $telefono)
     {
         $provincias = State::all();
-        $ciudades = City::where('state_id', $telefono->city->state_id)->get();
+        $ciudades = City::where('state_id', $telefono->state_id)->get();
         return view('telefonos.edit', compact('telefono', 'provincias', 'ciudades'));
     }
 
@@ -50,7 +51,8 @@ class TelefonoController extends Controller
         $request->validate([
             'telefono' => 'required',
             'movil' => 'required',
-            'city_id' => 'required|exists:cities,id'
+            'city_id' => 'required|exists:cities,id',
+            'state_id' => 'required|exists:states,id'
         ]);
 
         $telefono->update($request->all());
@@ -62,14 +64,13 @@ class TelefonoController extends Controller
         $telefono->delete();
         return redirect()->route('telefonos.index');
     }
+
     public function filter(Request $request)
     {
         $query = Telefono::with(['city.state']);
 
         if ($request->has('state_id') && $request->state_id) {
-            $query->whereHas('city.state', function ($q) use ($request) {
-                $q->where('id', $request->state_id);
-            });
+            $query->where('state_id', $request->state_id);
         }
 
         if ($request->has('city_id') && $request->city_id) {
