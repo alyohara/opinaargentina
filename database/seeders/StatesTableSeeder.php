@@ -10,7 +10,7 @@ class StatesTableSeeder extends Seeder
     {
         $states = [
             ['id' => 1, 'name' => 'Buenos Aires', 'code' => 'BA', 'region' => 'Pampeana'],
-            ['id' => 2, 'name' => 'Ciudad de Buenos Aires', 'code' => 'CABA', 'region' => 'CABA'],
+            ['id' => 2, 'name' => 'Ciudad Autónoma de Buenos Aires', 'code' => 'CABA', 'region' => 'CABA'],
             ['id' => 3, 'name' => 'Catamarca', 'code' => 'CA', 'region' => 'Noroeste'],
             ['id' => 4, 'name' => 'Chaco', 'code' => 'CH', 'region' => 'Noreste'],
             ['id' => 5, 'name' => 'Chubut', 'code' => 'CH', 'region' => 'Patagonia'],
