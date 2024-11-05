@@ -10,7 +10,7 @@ class AddStateIdToTelefonosTable extends Migration
     {
         Schema::table('telefonos', function (Blueprint $table) {
             $table->unsignedBigInteger('state_id')->after('city_id');
-            $table->foreign('state_id')->references('id')->on('states')->onDelete('cascade');
+            $table->foreign('state_id');
         });
     }
 
