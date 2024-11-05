@@ -18,8 +18,8 @@
                         <input type="text" class="form-control" id="movil" value="{{ $telefono->movil }}" readonly>
                     </div>
                     <div class="mb-3">
-                        <label for="city_id" class="form-label">City ID</label>
-                        <input type="number" class="form-control" id="city_id" value="{{ $telefono->city_id }}" readonly>
+                        <label for="city" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="city" value="{{ $telefono->city->name }}" readonly>
                     </div>
                     <a href="{{ route('telefonos.index') }}" class="btn btn-primary">Volver</a>
                 </div>

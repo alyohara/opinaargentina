@@ -15,7 +15,8 @@
                         <tr>
                             <th>Teléfono</th>
                             <th>Móvil</th>
-                            <th>City ID</th>
+                            <th>Ciudad</th>
+                            <th>Provincia</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -24,7 +25,8 @@
                             <tr>
                                 <td>{{ $telefono->telefono }}</td>
                                 <td>{{ $telefono->movil }}</td>
-                                <td>{{ $telefono->city_id }}</td>
+                                <td>{{ $telefono->city->name }}</td>
+                                <td>{{ $telefono->city->state->name }}</td>
                                 <td>
                                     <a href="{{ route('telefonos.show', $telefono) }}" class="btn btn-info btn-sm">Ver</a>
                                     <a href="{{ route('telefonos.edit', $telefono) }}" class="btn btn-warning btn-sm">Editar</a>
