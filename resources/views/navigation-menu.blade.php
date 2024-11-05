@@ -30,6 +30,10 @@
 {{--                    <x-nav-link href="{{ route('equipos.index') }}" :active="request()->routeIs('equipos.index')">--}}
 {{--                        {{ __('Administrar Equipos') }}--}}
 {{--                    </x-nav-link>--}}
+                    <x-nav-link href="{{ route('telefonos.index') }}" :active="request()->routeIs('telefonos.index')">
+                        {{ __('Administrar Teléfonos') }}
+                    </x-nav-link>
+   
 
                 </div>
 

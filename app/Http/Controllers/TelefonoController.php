@@ -1,64 +1,59 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\Telefono;
 use Illuminate\Http\Request;
 
 class TelefonoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $telefonos = Telefono::all();
+        return view('telefonos.index', compact('telefonos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('telefonos.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'telefono' => 'required',
+            'movil' => 'required',
+            'city_id' => 'required|exists:cities,id'
+        ]);
+
+        Telefono::create($request->all());
+        return redirect()->route('telefonos.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Telefono $telefono)
     {
-        //
+        return view('telefonos.show', compact('telefono'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Telefono $telefono)
     {
-        //
+        return view('telefonos.edit', compact('telefono'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Telefono $telefono)
     {
-        //
+        $request->validate([
+            'telefono' => 'required',
+            'movil' => 'required',
+            'city_id' => 'required|exists:cities,id'
+        ]);
+
+        $telefono->update($request->all());
+        return redirect()->route('telefonos.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Telefono $telefono)
     {
-        //
+        $telefono->delete();
+        return redirect()->route('telefonos.index');
     }
 }
