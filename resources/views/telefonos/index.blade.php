@@ -10,17 +10,24 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-3">
-                        <button onclick="window.location.href='{{ route('telefonos.create') }}'" class="btn btn-success">Agregar Teléfono</button>
                         <div>
-                            <input type="text" id="filter" class="form-control" placeholder="Filtrar" value="{{ $filter }}">
+                            <select id="state" class="form-control">
+                                <option value="">Seleccione una provincia</option>
+                                @foreach($states as $state)
+                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div>
-                            <select id="per_page" class="form-control">
-                                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                                <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                                <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                            <select id="city" class="form-control">
+                                <option value="">Seleccione una ciudad</option>
+                                @foreach($cities as $city)
+                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                @endforeach
                             </select>
+                        </div>
+                        <div>
+                            <button id="filter-button" class="btn btn-primary">Filtrar</button>
                         </div>
                     </div>
                     <table class="table table-striped">
@@ -33,64 +40,52 @@
                             <th>Acciones</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        @foreach($telefonos as $telefono)
-                            <tr>
-                                <td>{{ $telefono->telefono }}</td>
-                                <td>{{ $telefono->movil }}</td>
-                                <td>{{ $telefono->city->name }}</td>
-                                <td>{{ $telefono->city->state->name }}</td>
-                                <td>
-                                    <a href="{{ route('telefonos.show', $telefono) }}" class="btn btn-info btn-sm">Ver</a>
-                                    <a href="{{ route('telefonos.edit', $telefono) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <form action="{{ route('telefonos.destroy', $telefono) }}" method="POST" class="d-inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm delete-button">Eliminar</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
+                        <tbody id="telefonos-table-body">
+                        <!-- Data will be populated here -->
                         </tbody>
                     </table>
-                    {{ $telefonos->appends(['per_page' => $perPage, 'filter' => $filter])->links() }}
+                    <div id="pagination-links">
+                        <!-- Pagination links will be populated here -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.getElementById('per_page').addEventListener('change', function () {
-            const perPage = this.value;
-            const filter = document.getElementById('filter').value;
-            window.location.href = `?per_page=${perPage}&filter=${filter}`;
-        });
+        document.getElementById('filter-button').addEventListener('click', function () {
+            const stateId = document.getElementById('state').value;
+            const cityId = document.getElementById('city').value;
 
-        document.getElementById('filter').addEventListener('input', function () {
-            const perPage = document.getElementById('per_page').value;
-            const filter = this.value;
-            window.location.href = `?per_page=${perPage}&filter=${filter}`;
-        });
+            fetch(`/api/telefonos?state_id=${stateId}&city_id=${cityId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('telefonos-table-body');
+                    tableBody.innerHTML = '';
 
-        document.querySelectorAll('.delete-button').forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                const form = this.closest('form');
+                    data.data.forEach(telefono => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${telefono.telefono}</td>
+                            <td>${telefono.movil}</td>
+                            <td>${telefono.city.name}</td>
+                            <td>${telefono.city.state.name}</td>
+                            <td>
+                                <a href="/telefonos/${telefono.id}" class="btn btn-info btn-sm">Ver</a>
+                                <a href="/telefonos/${telefono.id}/edit" class="btn btn-warning btn-sm">Editar</a>
+                                <form action="/telefonos/${telefono.id}" method="POST" class="d-inline delete-form">
+                                    @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-danger btn-sm delete-button">Eliminar</button>
+                    </form>
+                </td>
+`;
+                        tableBody.appendChild(row);
+                    });
 
-                Swal.fire({
-                    title: '¿Está seguro?',
-                    text: "No podrá deshacer esta elección",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '¡Sí, borrar!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        form.submit();
-                    }
+                    const paginationLinks = document.getElementById('pagination-links');
+                    paginationLinks.innerHTML = data.links;
                 });
-            });
         });
     </script>
 </x-app-layout>

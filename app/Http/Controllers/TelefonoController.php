@@ -10,15 +10,9 @@ class TelefonoController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = $request->get('per_page', 10);
-        $filter = $request->get('filter', '');
-
-        $telefonos = Telefono::with(['city.state'])
-            ->where('telefono', 'like', "%{$filter}%")
-            ->orWhere('movil', 'like', "%{$filter}%")
-            ->paginate($perPage);
-
-        return view('telefonos.index', compact('telefonos', 'perPage', 'filter'));
+        $states = State::all();
+        $cities = City::all();
+        return view('telefonos.index', compact('states', 'cities'));
     }
 
     public function create()
@@ -67,5 +61,23 @@ class TelefonoController extends Controller
     {
         $telefono->delete();
         return redirect()->route('telefonos.index');
+    }
+    public function filter(Request $request)
+    {
+        $query = Telefono::with(['city.state']);
+
+        if ($request->has('state_id') && $request->state_id) {
+            $query->whereHas('city.state', function ($q) use ($request) {
+                $q->where('id', $request->state_id);
+            });
+        }
+
+        if ($request->has('city_id') && $request->city_id) {
+            $query->where('city_id', $request->city_id);
+        }
+
+        $telefonos = $query->paginate(10);
+
+        return response()->json($telefonos);
     }
 }
