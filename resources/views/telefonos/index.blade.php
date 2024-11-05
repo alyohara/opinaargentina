@@ -9,7 +9,20 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <button onclick="window.location.href='{{ route('telefonos.create') }}'" class="btn btn-success mb-3">Agregar Teléfono</button>
+                    <div class="d-flex justify-content-between mb-3">
+                        <button onclick="window.location.href='{{ route('telefonos.create') }}'" class="btn btn-success">Agregar Teléfono</button>
+                        <div>
+                            <input type="text" id="filter" class="form-control" placeholder="Filtrar" value="{{ $filter }}">
+                        </div>
+                        <div>
+                            <select id="per_page" class="form-control">
+                                <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                            </select>
+                        </div>
+                    </div>
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -40,12 +53,25 @@
                         @endforeach
                         </tbody>
                     </table>
+                    {{ $telefonos->appends(['per_page' => $perPage, 'filter' => $filter])->links() }}
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        document.getElementById('per_page').addEventListener('change', function () {
+            const perPage = this.value;
+            const filter = document.getElementById('filter').value;
+            window.location.href = `?per_page=${perPage}&filter=${filter}`;
+        });
+
+        document.getElementById('filter').addEventListener('input', function () {
+            const perPage = document.getElementById('per_page').value;
+            const filter = this.value;
+            window.location.href = `?per_page=${perPage}&filter=${filter}`;
+        });
+
         document.querySelectorAll('.delete-button').forEach(button => {
             button.addEventListener('click', function (event) {
                 event.preventDefault();

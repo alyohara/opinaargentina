@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 
 class TelefonoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $telefonos = Telefono::all();
-        return view('telefonos.index', compact('telefonos'));
+        $perPage = $request->get('per_page', 10);
+        $filter = $request->get('filter', '');
+
+        $telefonos = Telefono::with(['city.state'])
+            ->where('telefono', 'like', "%{$filter}%")
+            ->orWhere('movil', 'like', "%{$filter}%")
+            ->paginate($perPage);
+
+        return view('telefonos.index', compact('telefonos', 'perPage', 'filter'));
     }
 
     public function create()
