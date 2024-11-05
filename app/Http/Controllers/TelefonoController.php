@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Telefono;
+use App\Models\City;
+use App\Models\State;
 use Illuminate\Http\Request;
 
 class TelefonoController extends Controller
@@ -14,7 +16,8 @@ class TelefonoController extends Controller
 
     public function create()
     {
-        return view('telefonos.create');
+        $provincias = State::all();
+        return view('telefonos.create', compact('provincias'));
     }
 
     public function store(Request $request)
@@ -36,7 +39,9 @@ class TelefonoController extends Controller
 
     public function edit(Telefono $telefono)
     {
-        return view('telefonos.edit', compact('telefono'));
+        $provincias = State::all();
+        $ciudades = City::where('state_id', $telefono->city->state_id)->get();
+        return view('telefonos.edit', compact('telefono', 'provincias', 'ciudades'));
     }
 
     public function update(Request $request, Telefono $telefono)
