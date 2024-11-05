@@ -33,7 +33,7 @@
                     <x-nav-link href="{{ route('telefonos.index') }}" :active="request()->routeIs('telefonos.index')">
                         {{ __('Administrar Teléfonos') }}
                     </x-nav-link>
-   
+
 
                 </div>
 
