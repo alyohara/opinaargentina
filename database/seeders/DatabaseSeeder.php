@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
             StatesTableSeeder::class,
             DefaultUserSeeder::class,
         ]);
+        $this->call(CitiesTableSeeder::class);
     }
 }
