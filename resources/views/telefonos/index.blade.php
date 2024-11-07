@@ -9,6 +9,27 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <div>
+                            <select id="state" class="form-control">
+                                <option value="">Seleccione una provincia</option>
+                                @foreach($states as $state)
+                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <select id="city" class="form-control">
+                                <option value="">Seleccione una ciudad</option>
+                                @foreach($cities as $city)
+                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <button id="filter-button" class="btn btn-primary">Filtrar</button>
+                        </div>
+                    </div>
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -44,4 +65,42 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('state').addEventListener('change', function () {
+            const stateId = this.value;
+            const citySelect = document.getElementById('city');
+
+            if (stateId) {
+                fetch(`/api/cities?state_id=${stateId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+                        data.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.id;
+                            option.textContent = city.name;
+                            citySelect.appendChild(option);
+                        });
+                    });
+            } else {
+                citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+                @foreach($cities as $city)
+                const option = document.createElement('option');
+                option.value = "{{ $city->id }}";
+                option.textContent = "{{ $city->name }}";
+                citySelect.appendChild(option);
+                @endforeach
+            }
+        });
+
+        document.getElementById('filter-button').addEventListener('click', function () {
+            const stateId = document.getElementById('state').value;
+            const cityId = document.getElementById('city').value;
+            const url = new URL(window.location.href);
+            url.searchParams.set('state_id', stateId);
+            url.searchParams.set('city_id', cityId);
+            window.location.href = url.toString();
+        });
+    </script>
 </x-app-layout>

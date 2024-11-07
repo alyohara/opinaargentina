@@ -10,8 +10,21 @@ class TelefonoController extends Controller
 {
     public function index(Request $request)
     {
-        $telefonos = Telefono::with(['city.state'])->cursorPaginate(100);
-        return view('telefonos.index', compact('telefonos'));
+        $states = State::all();
+        $cities = City::all();
+        $query = Telefono::with(['city.state']);
+
+        if ($request->has('state_id') && $request->state_id) {
+            $query->where('state_id', $request->state_id);
+        }
+
+        if ($request->has('city_id') && $request->city_id) {
+            $query->where('city_id', $request->city_id);
+        }
+
+        $telefonos = $query->cursorPaginate(100);
+
+        return view('telefonos.index', compact('states', 'cities', 'telefonos'));
     }
 
     public function create()
