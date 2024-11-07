@@ -6,6 +6,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\TelefonoController;
 
 Route::get('/states/{state}/cities', [CityController::class, 'getCitiesByState']);
+Route::get('/cities', [CityController::class, 'getCitiesByState']);
 Route::get('/telefonos', [TelefonoController::class, 'filter']);
 Route::get('/user', function (Request $request) {
     return $request->user();
