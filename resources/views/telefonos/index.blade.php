@@ -9,6 +9,8 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
+                    <button onclick="window.location.href='{{ route('telefonos.create') }}'" class="btn btn-success mb-3">Agregar Teléfono</button>
+                    <div>
                         <div>
                             <select id="state" name="state" class="form-control">
                                 <option value="">Seleccione una provincia</option>
@@ -28,6 +30,7 @@
                         <div>
                             <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                         </div>
+                    </div>
 
                     <table class="table table-striped">
                         <thead>
