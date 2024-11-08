@@ -9,7 +9,7 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('telefonos.index') }}" class="d-flex justify-content-between mb-3">
+                    <form method="POST" action="{{ route('telefonos.index') }}" class="d-flex justify-content-between mb-3">
                         <div>
                             <select id="state" name="state" class="form-control">
                                 <option value="">Seleccione una provincia</option>
