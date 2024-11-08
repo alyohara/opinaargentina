@@ -21,7 +21,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="state_id" class="form-label">Provincia</label>
-                            <select class="form-control" id="state_id" name="state_id" required>
+                            <select class="form-control select2" id="state_id" name="state_id" required>
                                 <option value="">Seleccione una provincia</option>
                                 @foreach($provincias as $provincia)
                                     <option value="{{ $provincia->id }}">{{ $provincia->name }}</option>
@@ -30,11 +30,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="city_id" class="form-label">Ciudad</label>
-                            <select class="form-control" id="city_id" name="city_id" required>
+                            <select class="form-control select2" id="city_id" name="city_id" required>
                                 <option value="">Seleccione una ciudad</option>
-{{--                                @foreach($ciudades as $ciudad)--}}
-{{--                                    <option value="{{ $ciudad->id }}">{{ $ciudad->name }}</option>--}}
-{{--                                @endforeach--}}
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -43,24 +40,29 @@
             </div>
         </div>
     </div>
-    <script>
-        document.getElementById('state_id').addEventListener('change', function () {
-            const stateId = this.value;
-            const citySelect = document.getElementById('city_id');
-            citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
 
-            if (stateId) {
-                fetch(`/api/states/${stateId}/cities`)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(city => {
-                            const option = document.createElement('option');
-                            option.value = city.id;
-                            option.textContent = city.name;
-                            citySelect.appendChild(option);
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2();
+
+            $('#state_id').on('change', function () {
+                const stateId = this.value;
+                const citySelect = $('#city_id');
+                citySelect.empty().append('<option value="">Seleccione una ciudad</option>');
+
+                if (stateId) {
+                    fetch(`/api/states/${stateId}/cities`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(city => {
+                                const option = new Option(city.name, city.id);
+                                citySelect.append(option);
+                            });
                         });
-                    });
-            }
+                }
+            });
         });
     </script>
 </x-app-layout>
