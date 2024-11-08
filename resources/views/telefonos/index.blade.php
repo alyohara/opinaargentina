@@ -86,9 +86,9 @@
                 });
             });
         });
-        document.getElementById('state_id').addEventListener('change', function () {
+        document.getElementById('state').addEventListener('change', function () {
             const stateId = this.value;
-            const citySelect = document.getElementById('city_id');
+            const citySelect = document.getElementById('city');
             citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
 
             if (stateId) {
