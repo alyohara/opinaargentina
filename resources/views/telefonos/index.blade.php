@@ -100,8 +100,9 @@
         $(document).ready(function() {
             $('.select2').select2();
 
-
+alert('hola');
             document.getElementById('state').addEventListener('change', function () {
+                alert('hola');
                 const stateId = this.value;
                 const citySelect = document.getElementById('city');
                 citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
