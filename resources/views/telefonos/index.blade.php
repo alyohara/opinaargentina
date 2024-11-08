@@ -100,10 +100,9 @@
         $(document).ready(function() {
             $('.select2').select2();
 
-alert('hola');
-            document.getElementById('state').addEventListener('change', function () {
+            function updateCities() {
                 alert('hola');
-                const stateId = this.value;
+                const stateId = document.getElementById('state').value;
                 const citySelect = document.getElementById('city');
                 citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
                 if (stateId) {
@@ -118,7 +117,9 @@ alert('hola');
                             });
                         });
                 }
-            });
+            }
+
+            document.getElementById('state').addEventListener('change', updateCities);
         });
     </script>
 </x-app-layout>
