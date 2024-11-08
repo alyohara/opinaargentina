@@ -16,6 +16,7 @@ class TelefonoController extends Controller
 
         if ($request->has('state_id') && $request->state_id) {
             $query->where('state_id', $request->state_id);
+            dd($request->state_id);
         }
 
         if ($request->has('city_id') && $request->city_id) {
