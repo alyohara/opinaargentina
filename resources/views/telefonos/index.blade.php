@@ -66,41 +66,5 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('state').addEventListener('change', function () {
-            const stateId = this.value;
-            const citySelect = document.getElementById('city');
 
-            if (stateId) {
-                fetch(`/api/cities?state_id=${stateId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-                        data.forEach(city => {
-                            const option = document.createElement('option');
-                            option.value = city.id;
-                            option.textContent = city.name;
-                            citySelect.appendChild(option);
-                        });
-                    });
-            } else {
-                citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-                @foreach($cities as $city)
-                const option = document.createElement('option');
-                option.value = "{{ $city->id }}";
-                option.textContent = "{{ $city->name }}";
-                citySelect.appendChild(option);
-                @endforeach
-            }
-        });
-
-        document.getElementById('filter-button').addEventListener('click', function () {
-            const stateId = document.getElementById('state').value;
-            const cityId = document.getElementById('city').value;
-            const url = new URL(window.location.href);
-            url.searchParams.set('state_id', stateId);
-            url.searchParams.set('city_id', cityId);
-            window.location.href = url.toString();
-        });
-    </script>
 </x-app-layout>
