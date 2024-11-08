@@ -1,43 +1,20 @@
 <?php
 namespace App\Exports;
 
-use App\Models\Telefono;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class TelefonosExport implements FromCollection, WithHeadings
+class TelefonosExport implements FromView
 {
-    protected $request;
+    protected $telefonos;
 
-    public function __construct(Request $request)
+    public function __construct($telefonos)
     {
-        $this->request = $request;
+        $this->telefonos = $telefonos;
     }
 
-    public function collection()
+    public function view(): View
     {
-        $query = Telefono::with(['city.state']);
-
-        if ($this->request->has('state') && $this->request->state != '') {
-            $cityIds = City::where('state_id', $this->request->state)->pluck('id');
-            $query->whereIn('city_id', $cityIds);
-        }
-
-        if ($this->request->has('city') && $this->request->city != '') {
-            $query->where('city_id', $this->request->city);
-        }
-
-        return $query->get();
-    }
-
-    public function headings(): array
-    {
-        return [
-            'Teléfono',
-            'Móvil',
-            'Ciudad',
-            'Provincia',
-        ];
+        return view('exports.telefonos', ['telefonos' => $this->telefonos]);
     }
 }
