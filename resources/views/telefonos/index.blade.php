@@ -15,7 +15,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <select id="state" name="state" class="form-control select2">
+                                    <select id="state" name="state" class="form-control select2" onchange="updateCities()">
                                         <option value="">Seleccione una provincia</option>
                                         @foreach($states as $state)
                                             <option value="{{ $state->id }}">{{ $state->name }}</option>
@@ -94,8 +94,6 @@
                 });
             });
         });
-
-
 
         $(document).ready(function() {
             $('.select2').select2();
