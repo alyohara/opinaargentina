@@ -34,10 +34,24 @@
                                     <div class="col-md-2 text-right">
                                         <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                                     </div>
+                                    <div class="col-md-2 text-right">
+                                        <button type="button" id="export-button" class="btn btn-secondary" onclick="exportData()">Exportar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </form>
+
+                    <script>
+                        function exportData() {
+                            const state = document.getElementById('state').value;
+                            const city = document.getElementById('city').value;
+                            const url = new URL('{{ route('telefonos.export') }}');
+                            if (state) url.searchParams.append('state', state);
+                            if (city) url.searchParams.append('city', city);
+                            window.location.href = url.toString();
+                        }
+                    </script>
 
                     <table class="table table-striped">
                         <thead>

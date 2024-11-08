@@ -5,7 +5,8 @@ use App\Models\Telefono;
 use App\Models\City;
 use App\Models\State;
 use Illuminate\Http\Request;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TelefonosExport;
 class TelefonoController extends Controller
 {
     public function index(Request $request)
@@ -94,5 +95,10 @@ class TelefonoController extends Controller
         $telefonos = $query->paginate(10);
 
         return response()->json($telefonos);
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(new TelefonosExport($request), 'telefonos.xlsx');
     }
 }
