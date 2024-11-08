@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Exports\TelsExport;
 use App\Models\Telefono;
 use App\Models\City;
 use App\Models\State;
