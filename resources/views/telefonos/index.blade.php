@@ -102,8 +102,6 @@
 
 
             document.getElementById('state').addEventListener('change', function () {
-                alert(stateId);
-
                 const stateId = this.value;
                 const citySelect = document.getElementById('city');
                 citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
