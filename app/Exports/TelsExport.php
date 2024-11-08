@@ -12,6 +12,6 @@ class TelsExport implements FromCollection
     */
     public function collection()
     {
-        return Telefono::all();
+        return Telefono::all()->where('state_id', 24);
     }
 }

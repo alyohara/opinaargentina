@@ -97,23 +97,8 @@ class TelefonoController extends Controller
         return response()->json($telefonos);
     }
 
-    public function export(Request $request)
+    public function export()
     {
-        $state = $request->query('state');
-        $city = $request->query('city');
-
-        // Filtrar datos según los parámetros de estado y ciudad
-        $query = Telefono::query();
-        if ($state) {
-            $query->whereHas('city.state', fn($q) => $q->where('id', $state));
-        }
-        if ($city) {
-            $query->where('city_id', $city);
-        }
-
-        $telefonos = $query->get();
-
-        // Exportar a Excel utilizando Maatwebsite Excel
-        return Excel::download(new TelefonosExport($telefonos), 'telefonos.xlsx');
+        return Excel::download(new TelsExport, 'tels.xlsx');
     }
 }
