@@ -99,7 +99,7 @@
             const stateId = this.value;
             const citySelect = document.getElementById('city');
             citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-
+alert(stateId);
             if (stateId) {
                 fetch(`/api/states/${stateId}/cities`)
                     .then(response => response.json())
