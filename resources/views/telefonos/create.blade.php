@@ -44,20 +44,23 @@
         </div>
     </div>
     <script>
-        document.getElementById('state_id').addEventListener('change', function () {
+        document.getElementById('state').addEventListener('change', function () {
             const stateId = this.value;
-            const citySelect = document.getElementById('city_id');
+            const citySelect = document.getElementById('city');
             citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-            fetch(`/ciudades/${stateId}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(city => {
-                        const option = document.createElement('option');
-                        option.value = city.id;
-                        option.innerText = city.name;
-                        citySelect.appendChild(option);
+
+            if (stateId) {
+                fetch(`/api/states/${stateId}/cities`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.id;
+                            option.textContent = city.name;
+                            citySelect.appendChild(option);
+                        });
                     });
-                });
+            }
         });
     </script>
 </x-app-layout>
