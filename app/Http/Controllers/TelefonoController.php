@@ -30,6 +30,7 @@ class TelefonoController extends Controller
     public function create()
     {
         $provincias = State::all();
+
         return view('telefonos.create', compact('provincias'));
     }
 

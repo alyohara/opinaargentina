@@ -32,9 +32,9 @@
                             <label for="city_id" class="form-label">Ciudad</label>
                             <select class="form-control" id="city_id" name="city_id" required>
                                 <option value="">Seleccione una ciudad</option>
-                                @foreach($ciudades as $ciudad)
-                                    <option value="{{ $ciudad->id }}">{{ $ciudad->name }}</option>
-                                @endforeach
+{{--                                @foreach($ciudades as $ciudad)--}}
+{{--                                    <option value="{{ $ciudad->id }}">{{ $ciudad->name }}</option>--}}
+{{--                                @endforeach--}}
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
