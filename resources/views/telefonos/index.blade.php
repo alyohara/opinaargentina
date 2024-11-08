@@ -11,31 +11,33 @@
                 <div class="card-body">
                     <button onclick="window.location.href='{{ route('telefonos.create') }}'" class="btn btn-success mb-3">Agregar Teléfono</button>
 
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <select id="state" name="state" class="form-control select2" onchange="updateCities()">
-                                        <option value="">Seleccione una provincia</option>
-                                        @foreach($states as $state)
-                                            <option value="{{ $state->id }}">{{ $state->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select id="city" name="city" class="form-control select2">
-                                        <option value="">Seleccione una ciudad</option>
-                                        @foreach($cities as $city)
-                                            <option value="{{ $city->id }}">{{ $city->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+                    <form method="GET" action="{{ route('telefonos.index') }}">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <select id="state" name="state" class="form-control select2" onchange="updateCities()">
+                                            <option value="">Seleccione una provincia</option>
+                                            @foreach($states as $state)
+                                                <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <select id="city" name="city" class="form-control select2">
+                                            <option value="">Seleccione una ciudad</option>
+                                            @foreach($cities as $city)
+                                                <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
 
                     <table class="table table-striped">
                         <thead>
@@ -95,7 +97,6 @@
             });
         });
         function updateCities() {
-            alert('hola');
             const stateId = document.getElementById('state').value;
             const citySelect = document.getElementById('city');
             citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';

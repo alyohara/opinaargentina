@@ -14,12 +14,14 @@ class TelefonoController extends Controller
         $cities = City::all();
         $query = Telefono::with(['city.state']);
 
-        if ($request->has('state_id') && $request->state_id) {
-            $query->where('state_id', $request->state_id);
+        if ($request->has('state') && $request->state != '') {
+            $query->whereHas('city.state', function ($q) use ($request) {
+                $q->where('id', $request->state);
+            });
         }
 
-        if ($request->has('city_id') && $request->city_id) {
-            $query->where('city_id', $request->city_id);
+        if ($request->has('city') && $request->city != '') {
+            $query->where('city_id', $request->city);
         }
 
         $telefonos = $query->cursorPaginate(100);
