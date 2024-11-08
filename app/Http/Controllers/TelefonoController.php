@@ -15,9 +15,8 @@ class TelefonoController extends Controller
         $query = Telefono::with(['city.state']);
 
         if ($request->has('state') && $request->state != '') {
-            $query->whereHas('city.state', function ($q) use ($request) {
-                $q->where('id', $request->state);
-            });
+            $cityIds = City::where('state_id', $request->state)->pluck('id');
+            $query->whereIn('city_id', $cityIds);
         }
 
         if ($request->has('city') && $request->city != '') {
