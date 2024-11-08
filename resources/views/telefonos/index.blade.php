@@ -9,9 +9,9 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3">
+                    <form method="GET" action="{{ route('telefonos.index') }}" class="d-flex justify-content-between mb-3">
                         <div>
-                            <select id="state" class="form-control">
+                            <select id="state" name="state" class="form-control">
                                 <option value="">Seleccione una provincia</option>
                                 @foreach($states as $state)
                                     <option value="{{ $state->id }}">{{ $state->name }}</option>
@@ -19,7 +19,7 @@
                             </select>
                         </div>
                         <div>
-                            <select id="city" class="form-control">
+                            <select id="city" name="city" class="form-control">
                                 <option value="">Seleccione una ciudad</option>
                                 @foreach($cities as $city)
                                     <option value="{{ $city->id }}">{{ $city->name }}</option>
@@ -27,9 +27,9 @@
                             </select>
                         </div>
                         <div>
-                            <button id="filter-button" class="btn btn-primary">Filtrar</button>
+                            <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                         </div>
-                    </div>
+                    </form>
                     <table class="table table-striped">
                         <thead>
                         <tr>
