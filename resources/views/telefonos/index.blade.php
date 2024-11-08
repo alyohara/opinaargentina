@@ -9,7 +9,6 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('telefonos.index') }}" class="d-flex justify-content-between mb-3">
                         <div>
                             <select id="state" name="state" class="form-control">
                                 <option value="">Seleccione una provincia</option>
@@ -29,7 +28,7 @@
                         <div>
                             <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                         </div>
-                    </form>
+
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -87,5 +86,24 @@
                 });
             });
         });
+        document.getElementById('state_id').addEventListener('change', function () {
+            const stateId = this.value;
+            const citySelect = document.getElementById('city_id');
+            citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+
+            if (stateId) {
+                fetch(`/api/states/${stateId}/cities`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.id;
+                            option.textContent = city.name;
+                            citySelect.appendChild(option);
+                        });
+                    });
+            }
+        });
+
     </script>
 </x-app-layout>
