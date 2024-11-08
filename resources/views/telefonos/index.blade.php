@@ -19,7 +19,7 @@
                             </select>
                         </div>
                         <div>
-                            <select id="city" class="form-control">
+                            <select id="city" class="form-control" data-cities='@json($cities)'>
                                 <option value="">Seleccione una ciudad</option>
                                 @foreach($cities as $city)
                                     <option value="{{ $city->id }}">{{ $city->name }}</option>
