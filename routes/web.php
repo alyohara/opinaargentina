@@ -16,6 +16,7 @@ use App\Http\Controllers\TelefonoController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('telefonos/export/', [TelefonoController::class, 'export'])->name('telefonos.export');
 
 Route::middleware([
     'auth:sanctum',
@@ -33,7 +34,6 @@ Route::middleware([
     Route::resource('cities', CityController::class);
     Route::resource('people', PersonController::class);
     Route::resource('telefonos', TelefonoController::class);
-    Route::get('telefonos/export/', [TelefonoController::class, 'export'] )->name('telefonos.export');
 
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
   //  Route::post('/roles', [RolePermissionController::class, 'store'])->name('roles.store');
