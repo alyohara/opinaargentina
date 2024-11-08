@@ -95,27 +95,31 @@
             });
         });
 
-        document.getElementById('state').addEventListener('change', function () {
-            const stateId = this.value;
-            const citySelect = document.getElementById('city');
-            citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-alert(stateId);
-            if (stateId) {
-                fetch(`/api/states/${stateId}/cities`)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(city => {
-                            const option = document.createElement('option');
-                            option.value = city.id;
-                            option.textContent = city.name;
-                            citySelect.appendChild(option);
-                        });
-                    });
-            }
-        });
+
 
         $(document).ready(function() {
             $('.select2').select2();
+
+
+            document.getElementById('state').addEventListener('change', function () {
+                alert(stateId);
+
+                const stateId = this.value;
+                const citySelect = document.getElementById('city');
+                citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+                if (stateId) {
+                    fetch(`/api/states/${stateId}/cities`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(city => {
+                                const option = document.createElement('option');
+                                option.value = city.id;
+                                option.textContent = city.name;
+                                citySelect.appendChild(option);
+                            });
+                        });
+                }
+            });
         });
     </script>
 </x-app-layout>
