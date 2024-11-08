@@ -94,28 +94,27 @@
                 });
             });
         });
+        function updateCities() {
+            alert('hola');
+            const stateId = document.getElementById('state').value;
+            const citySelect = document.getElementById('city');
+            citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+            if (stateId) {
+                fetch(`/api/states/${stateId}/cities`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.id;
+                            option.textContent = city.name;
+                            citySelect.appendChild(option);
+                        });
+                    });
+            }
+        }
 
         $(document).ready(function() {
             $('.select2').select2();
-
-            function updateCities() {
-                alert('hola');
-                const stateId = document.getElementById('state').value;
-                const citySelect = document.getElementById('city');
-                citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-                if (stateId) {
-                    fetch(`/api/states/${stateId}/cities`)
-                        .then(response => response.json())
-                        .then(data => {
-                            data.forEach(city => {
-                                const option = document.createElement('option');
-                                option.value = city.id;
-                                option.textContent = city.name;
-                                citySelect.appendChild(option);
-                            });
-                        });
-                }
-            }
 
             document.getElementById('state').addEventListener('change', updateCities);
         });
