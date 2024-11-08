@@ -66,5 +66,26 @@
         </div>
     </div>
 
+    <script>
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const form = this.closest('form');
 
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "No podrá deshacer esta elección",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '¡Sí, borrar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
