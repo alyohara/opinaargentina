@@ -44,9 +44,9 @@
         </div>
     </div>
     <script>
-        document.getElementById('state').addEventListener('change', function () {
+        document.getElementById('state_id').addEventListener('change', function () {
             const stateId = this.value;
-            const citySelect = document.getElementById('city');
+            const citySelect = document.getElementById('city_id');
             citySelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
 
             if (stateId) {
