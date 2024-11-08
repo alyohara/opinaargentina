@@ -10,25 +10,30 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <button onclick="window.location.href='{{ route('telefonos.create') }}'" class="btn btn-success mb-3">Agregar Teléfono</button>
-                    <div>
-                        <div>
-                            <select id="state" name="state" class="form-control">
-                                <option value="">Seleccione una provincia</option>
-                                @foreach($states as $state)
-                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <select id="city" name="city" class="form-control">
-                                <option value="">Seleccione una ciudad</option>
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <select id="state" name="state" class="form-control select2">
+                                        <option value="">Seleccione una provincia</option>
+                                        @foreach($states as $state)
+                                            <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <select id="city" name="city" class="form-control select2">
+                                        <option value="">Seleccione una ciudad</option>
+                                        @foreach($cities as $city)
+                                            <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -89,6 +94,7 @@
                 });
             });
         });
+
         document.getElementById('state').addEventListener('change', function () {
             const stateId = this.value;
             const citySelect = document.getElementById('city');
@@ -108,5 +114,8 @@
             }
         });
 
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
     </script>
 </x-app-layout>
