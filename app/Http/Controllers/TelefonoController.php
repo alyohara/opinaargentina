@@ -101,8 +101,12 @@ class TelefonoController extends Controller
         return response()->json($telefonos);
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        return Excel::download(new TelsExport, 'tels.xlsx');
+        $stateId = $request->input('state_id');
+        $cityId = $request->input('city_id');
+        $quantity = $request->input('quantity', 1000); // Default to 1000 if not specified
+
+        return Excel::download(new TelsExport($stateId, $cityId, $quantity), 'tels.xlsx');
     }
 }
