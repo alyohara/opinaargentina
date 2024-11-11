@@ -17,6 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('telefonos/export/', [TelefonoController::class, 'export'])->name('telefonos.export');
+Route::post('telefonos/export/', [TelefonoController::class, 'export'])->name('telefonos.export');
+
 
 Route::middleware([
     'auth:sanctum',
