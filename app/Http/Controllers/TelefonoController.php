@@ -16,18 +16,21 @@ class TelefonoController extends Controller
         $cities = City::all();
         $query = Telefono::with(['city.state']);
 
-        if ($request->has('state') && $request->state != '') {
-            $cityIds = City::where('state_id', $request->state)->pluck('id');
+        $selectedState = $request->state;
+        $selectedCity = $request->city;
+
+        if ($selectedState) {
+            $cityIds = City::where('state_id', $selectedState)->pluck('id');
             $query->whereIn('city_id', $cityIds);
         }
 
-        if ($request->has('city') && $request->city != '') {
-            $query->where('city_id', $request->city);
+        if ($selectedCity) {
+            $query->where('city_id', $selectedCity);
         }
 
         $telefonos = $query->cursorPaginate(100);
 
-        return view('telefonos.index', compact('states', 'cities', 'telefonos'));
+        return view('telefonos.index', compact('states', 'cities', 'telefonos', 'selectedState', 'selectedCity'));
     }
 
     public function create()
