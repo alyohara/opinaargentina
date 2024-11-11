@@ -24,7 +24,7 @@
                                             <select id="state" name="state" class="form-control select2" onchange="updateCities()">
                                                 <option value="">Seleccione una provincia</option>
                                                 @foreach($states as $state)
-                                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                                    <option value="{{ $state->id }}" {{ $selectedState == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -32,7 +32,7 @@
                                             <select id="city" name="city" class="form-control select2">
                                                 <option value="">Seleccione una ciudad</option>
                                                 @foreach($cities as $city)
-                                                    <option value="{{ $city->id }}">{{ $city->name }}</option>
+                                                    <option value="{{ $city->id }}" {{ $selectedCity == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
