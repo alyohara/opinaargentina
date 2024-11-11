@@ -162,7 +162,11 @@
         }
 
         $(document).ready(function() {
-            $('.select2').select2();
+            $('.select2').select2({
+                placeholder: 'Seleccione una opción',
+                allowClear: true,
+                width: '100%'
+            });
 
             document.getElementById('state').addEventListener('change', updateCities);
 
