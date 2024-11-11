@@ -3,15 +3,50 @@
 namespace App\Exports;
 
 use App\Models\Telefono;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class TelsExport implements FromCollection
+class TelsExport implements FromQuery, WithChunkReading, WithHeadings
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    protected $stateId;
+    protected $cityId;
+    protected $quantity;
+
+    public function __construct($stateId, $cityId, $quantity)
     {
-        return Telefono::all()->where('state_id', 24);
+        $this->stateId = $stateId;
+        $this->cityId = $cityId;
+        $this->quantity = $quantity;
+    }
+
+    public function query()
+    {
+        $query = Telefono::query();
+
+        if ($this->stateId) {
+            $query->where('state_id', $this->stateId);
+        }
+
+        if ($this->cityId) {
+            $query->where('city_id', $this->cityId);
+        }
+
+        return $query->limit($this->quantity);
+    }
+
+    public function chunkSize(): int
+    {
+        return 1000; // Adjust the chunk size as needed
+    }
+
+    public function headings(): array
+    {
+        return [
+            'Teléfono',
+            'Móvil',
+            'Ciudad',
+            'Provincia',
+        ];
     }
 }

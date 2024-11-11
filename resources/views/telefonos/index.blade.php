@@ -52,7 +52,7 @@
                         </div>
                         <div id="exportCard" class="collapse">
                             <div class="card-body">
-                                <form method="POST" action="#">
+                                <form method="POST" action="{{ route('telefonos.export') }}">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-4">
@@ -77,6 +77,9 @@
                                             <button type="submit" class="btn btn-secondary">Exportar</button>
                                         </div>
                                     </div>
+                                    <!-- Hidden fields to store the selected state and city IDs -->
+                                    <input type="hidden" id="export-state-id" name="state_id" value="{{ $selectedState }}">
+                                    <input type="hidden" id="export-city-id" name="city_id" value="{{ $selectedCity }}">
                                 </form>
                             </div>
                         </div>
@@ -162,6 +165,27 @@
             $('.select2').select2();
 
             document.getElementById('state').addEventListener('change', updateCities);
+
+            document.getElementById('state').addEventListener('change', function() {
+                const selectedState = this.options[this.selectedIndex].text;
+                const selectedStateId = this.value;
+                document.getElementById('selected-state').value = selectedState;
+                document.getElementById('export-state-id').value = selectedStateId;
+                updateCities();
+            });
+
+            document.getElementById('city').addEventListener('change', function() {
+                const selectedCity = this.options[this.selectedIndex].text;
+                const selectedCityId = this.value;
+                document.getElementById('selected-city').value = selectedCity;
+                document.getElementById('export-city-id').value = selectedCityId;
+            });
+
+            // Set initial values for export form fields
+            document.getElementById('selected-state').value = $('#state option:selected').text();
+            document.getElementById('selected-city').value = $('#city option:selected').text();
+            document.getElementById('export-state-id').value = $('#state').val();
+            document.getElementById('export-city-id').value = $('#city').val();
 
             // Update selected state and city fields
             document.getElementById('state').addEventListener('change', function() {
