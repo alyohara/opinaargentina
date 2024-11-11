@@ -34,14 +34,42 @@
                                     <div class="col-md-2 text-right">
                                         <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                                     </div>
-                                    <div class="col-md-2 text-right">
-                                        <button type="button" id="export-button" class="btn btn-secondary" onclick="window.location.href='{{ route('telefonos.export') }}'">Exportar</button>                                    </div>
                                 </div>
                             </div>
                         </div>
                     </form>
 
-
+                    <!-- Nueva Card Section -->
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <form method="POST" action="#">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="selected-state">Provincia Seleccionada</label>
+                                        <input type="text" id="selected-state" name="selected_state" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="selected-city">Ciudad Seleccionada</label>
+                                        <input type="text" id="selected-city" name="selected_city" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="quantity">Cantidad</label>
+                                        <select id="quantity" name="quantity" class="form-control">
+                                            @foreach([100, 200, 300, 500, 700, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000] as $quantity)
+                                                <option value="{{ $quantity }}">{{ $quantity }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12 text-right">
+                                        <button type="submit" class="btn btn-secondary">Exportar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
                     <table class="table table-striped">
                         <thead>
@@ -100,6 +128,7 @@
                 });
             });
         });
+
         function updateCities() {
             const stateId = document.getElementById('state').value;
             const citySelect = document.getElementById('city');
@@ -122,6 +151,17 @@
             $('.select2').select2();
 
             document.getElementById('state').addEventListener('change', updateCities);
+
+            // Update selected state and city fields
+            document.getElementById('state').addEventListener('change', function() {
+                const selectedState = this.options[this.selectedIndex].text;
+                document.getElementById('selected-state').value = selectedState;
+            });
+
+            document.getElementById('city').addEventListener('change', function() {
+                const selectedCity = this.options[this.selectedIndex].text;
+                document.getElementById('selected-city').value = selectedCity;
+            });
         });
     </script>
 </x-app-layout>
