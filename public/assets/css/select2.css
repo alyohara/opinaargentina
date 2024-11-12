@@ -19,7 +19,7 @@
 .select2-container .select2-selection__clear {
     margin-right: 8px; /* Espacio entre el texto y el icono */
     color: #dc3545; /* Estilo Bootstrap para el icono de eliminación */
-    margin-top: 0; /* Ajuste para centrar el icono verticalmente */
+    margin-top: -10px; /* Ajuste para centrar el icono verticalmente */
 }
 
 /* Ajustar el dropdown */
