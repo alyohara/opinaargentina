@@ -36,8 +36,8 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
-{{--                                    <div class="row mt-3">--}}
+                                        {{--                                    </div>--}}
+                                        {{--                                    <div class="row mt-3">--}}
 {{--                                        <div class="col-md-5">--}}
 {{--                                            <label>Ordenar por:</label>--}}
 {{--                                            <div class="form-check">--}}
@@ -57,10 +57,10 @@
 {{--                                                <label class="form-check-label" for="orderByStateDesc">Provincia Descendente</label>--}}
 {{--                                            </div>--}}
 {{--                                        </div>--}}
-{{--                                        <div class="col-md-2 text-right">--}}
-{{--                                            <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                        <div class="col-md-2 text-right">
+                                            <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
