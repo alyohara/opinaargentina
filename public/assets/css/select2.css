@@ -1,55 +1,28 @@
-/*!* Adjust the height, border, and padding to match Bootstrap *!*/
+/* Aumentar la altura del contenedor select2 */
 .select2-container .select2-selection--single {
-/*    !*height: calc(2.25rem + 2px); !* Match Bootstrap's form-control height *!*!*/
-/*    !*padding: 0.375rem 0.75rem;*!*/
-/*    !*border: 1px solid #ced4da;*!*/
-/*    !*border-radius: 0.375rem;*!*/
-/*    !*background-color: #fff;*!*/
-/*    !*display: flex;*!*/
-/*    !*align-items: center;*!*/
-    padding-top: 0.375rem;
-    padding-bottom: 0.375rem;
-    height: 100px;
+    height: 38px !important; /* Ajustar según la altura deseada */
+    line-height: 36px !important; /* Centrar el texto verticalmente */
+    padding: 6px 12px !important; /* Añadir un poco de espacio interior */
+    border-radius: 0.375rem; /* Ajuste para emular el estilo Bootstrap */
+    border: 1px solid #ced4da; /* Alineado con el estilo de Bootstrap */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-/*.select2-container--default .select2-selection--single .select2-selection__rendered {*/
-/*    !*color: #495057;*!*/
-/*    !*line-height: normal;*!*/
-/*}*/
+/* Aumentar la altura del contenedor al enfocarse */
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default .select2-selection--single:hover {
+    border-color: #80bdff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
 
-/*.select2-container--default .select2-selection--single .select2-selection__arrow {*/
-/*    !*height: 100%;*!*/
-/*    !*right: 0.75rem; !* Adjust position to match Bootstrap's *!*!*/
-/*    !*color: #495057;*!*/
-/*}*/
+/* Ajuste para el ícono de eliminación en select2 */
+.select2-container .select2-selection__clear {
+    margin-right: 8px; /* Espacio entre el texto y el icono */
+    color: #dc3545; /* Estilo Bootstrap para el icono de eliminación */
+}
 
-/*.select2-container--default .select2-selection--multiple {*/
-/*    !*border: 1px solid #ced4da;*!*/
-/*    !*border-radius: 0.375rem;*!*/
-/*    !*padding: 0.375rem;*!*/
-/*}*/
-
-/*.select2-container--default .select2-selection--multiple .select2-selection__choice {*/
-/*    background-color: #0d6efd;*/
-/*    color: #fff;*/
-/*    border-radius: 0.2rem;*/
-/*    padding: 0.25rem 0.5rem;*/
-/*    margin-right: 0.25rem;*/
-/*    margin-top: 0.25rem;*/
-/*}*/
-
-/*.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {*/
-/*    color: #fff;*/
-/*    margin-left: 0.5rem;*/
-/*}*/
-
-/*!* Dropdown Styling *!*/
-/*.select2-dropdown {*/
-/*    border-radius: 0.375rem;*/
-/*    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);*/
-/*}*/
-
-/*.select2-results__option--highlighted[aria-selected] {*/
-/*    background-color: #0d6efd; !* Bootstrap primary color *!*/
-/*    color: #fff;*/
-/*}*/
+/* Ajustar el dropdown */
+.select2-dropdown {
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
