@@ -201,6 +201,30 @@
                 const selectedCity = this.options[this.selectedIndex].text;
                 document.getElementById('selected-city').value = selectedCity;
             });
+
+            function updateExportFields() {
+                const selectedState = $('#state option:selected').text() || 'Sin selección';
+                const selectedCity = $('#city option:selected').text() || 'Sin selección';
+                const selectedStateId = $('#state').val();
+                const selectedCityId = $('#city').val();
+
+                $('#selected-state').val(selectedState);
+                $('#selected-city').val(selectedCity);
+                $('#export-state-id').val(selectedStateId);
+                $('#export-city-id').val(selectedCityId);
+            }
+
+            $('#state').on('change', function() {
+                updateExportFields();
+                updateCities();
+            });
+
+            $('#city').on('change', function() {
+                updateExportFields();
+            });
+
+            // Set initial values for export form fields
+            updateExportFields();
         });
     </script>
 </x-app-layout>
