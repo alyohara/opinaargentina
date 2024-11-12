@@ -15,37 +15,9 @@
                     <div class="card mb-3">
                         <div class="card-header" data-toggle="collapse" data-target="#filterCard" aria-expanded="false" aria-controls="filterCard">
                             <h5 class="mb-0">Filtros de Búsqueda</h5>
-                        </div>
-                        <div id="filterCard" class="collapse">
-                            <div class="card-body">
-                                <form method="GET" action="{{ route('telefonos.index') }}">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <select id="state" name="state" class="form-control select2" onchange="updateCities()">
-                                                <option value="">Seleccione una provincia</option>
-                                                @foreach($states as $state)
-                                                    <option value="{{ $state->id }}" {{ $selectedState == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <select id="city" name="city" class="form-control select2">
-                                                <option value="">Seleccione una ciudad</option>
-                                                @foreach($cities as $city)
-                                                    <option value="{{ $city->id }}" {{ $selectedCity == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2 text-right">
-                                            <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Card de Exportar -->
+
+                            <!-- Card de Exportar -->
                     <div class="card mb-3">
                         <div class="card-header" data-toggle="collapse" data-target="#exportCard" aria-expanded="false" aria-controls="exportCard">
                             <h5 class="mb-0">Exportar Datos</h5>
