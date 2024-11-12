@@ -168,40 +168,6 @@
                 width: '100%'
             });
 
-            document.getElementById('state').addEventListener('change', updateCities);
-
-            document.getElementById('state').addEventListener('change', function() {
-                const selectedState = this.options[this.selectedIndex].text;
-                const selectedStateId = this.value;
-                document.getElementById('selected-state').value = selectedState;
-                document.getElementById('export-state-id').value = selectedStateId;
-                updateCities();
-            });
-
-            document.getElementById('city').addEventListener('change', function() {
-                const selectedCity = this.options[this.selectedIndex].text;
-                const selectedCityId = this.value;
-                document.getElementById('selected-city').value = selectedCity;
-                document.getElementById('export-city-id').value = selectedCityId;
-            });
-
-            // Set initial values for export form fields
-            document.getElementById('selected-state').value = $('#state option:selected').text();
-            document.getElementById('selected-city').value = $('#city option:selected').text();
-            document.getElementById('export-state-id').value = $('#state').val();
-            document.getElementById('export-city-id').value = $('#city').val();
-
-            // Update selected state and city fields
-            document.getElementById('state').addEventListener('change', function() {
-                const selectedState = this.options[this.selectedIndex].text;
-                document.getElementById('selected-state').value = selectedState;
-            });
-
-            document.getElementById('city').addEventListener('change', function() {
-                const selectedCity = this.options[this.selectedIndex].text;
-                document.getElementById('selected-city').value = selectedCity;
-            });
-
             function updateExportFields() {
                 const selectedState = $('#state option:selected').text() || 'Sin selección';
                 const selectedCity = $('#city option:selected').text() || 'Sin selección';
