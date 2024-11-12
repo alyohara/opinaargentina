@@ -18,6 +18,7 @@ class TelefonoController extends Controller
 
         $selectedState = $request->state;
         $selectedCity = $request->city;
+        $orderBy = $request->order_by;
 
         if ($selectedState) {
             $cityIds = City::where('state_id', $selectedState)->pluck('id');
@@ -26,6 +27,21 @@ class TelefonoController extends Controller
 
         if ($selectedCity) {
             $query->where('city_id', $selectedCity);
+        }
+
+        switch ($orderBy) {
+            case 'city_asc':
+                $query->orderBy('city_id', 'asc');
+                break;
+            case 'city_desc':
+                $query->orderBy('city_id', 'desc');
+                break;
+            case 'state_asc':
+                $query->orderBy('state_id', 'asc');
+                break;
+            case 'state_desc':
+                $query->orderBy('state_id', 'desc');
+                break;
         }
 
         $telefonos = $query->cursorPaginate(100);
