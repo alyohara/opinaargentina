@@ -15,7 +15,56 @@
                     <div class="card mb-3">
                         <div class="card-header" data-toggle="collapse" data-target="#filterCard" aria-expanded="false" aria-controls="filterCard">
                             <h5 class="mb-0">Filtros de Búsqueda</h5>
-
+                        </div>
+                        <div id="filterCard" class="collapse">
+                            <div class="card-body">
+                                <form method="GET" action="{{ route('telefonos.index') }}">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <select id="state" name="state" class="form-control select2" onchange="updateCities()">
+                                                <option value="">Seleccione una provincia</option>
+                                                @foreach($states as $state)
+                                                    <option value="{{ $state->id }}" {{ $selectedState == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <select id="city" name="city" class="form-control select2">
+                                                <option value="">Seleccione una ciudad</option>
+                                                @foreach($cities as $city)
+                                                    <option value="{{ $city->id }}" {{ $selectedCity == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-5">
+                                            <label>Ordenar por:</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="order_by" id="orderByCityAsc" value="city_asc">
+                                                <label class="form-check-label" for="orderByCityAsc">Ciudad Ascendente</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="order_by" id="orderByCityDesc" value="city_desc">
+                                                <label class="form-check-label" for="orderByCityDesc">Ciudad Descendente</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="order_by" id="orderByStateAsc" value="state_asc">
+                                                <label class="form-check-label" for="orderByStateAsc">Provincia Ascendente</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="order_by" id="orderByStateDesc" value="state_desc">
+                                                <label class="form-check-label" for="orderByStateDesc">Provincia Descendente</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 text-right">
+                                            <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
                             <!-- Card de Exportar -->
                     <div class="card mb-3">
