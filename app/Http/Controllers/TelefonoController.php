@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Exports\TelsExport;
@@ -10,7 +11,6 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TelefonosExport;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
-
 
 
 class TelefonoController extends Controller
@@ -126,7 +126,7 @@ class TelefonoController extends Controller
     {
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
-        $quantity = $request->input('quantity', 1000); // Default to 1000 if not specified
+        $quantity = $request->input('quantity', 1000);
 
         $query = Telefono::query()->with(['city.state']);
 
@@ -146,24 +146,28 @@ class TelefonoController extends Controller
             for ($i = 0; $i < $chunks; $i++) {
                 $data = $query->skip($i * 10000)->take(10000)->get();
                 $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
-                Excel::store(new TelsExport($data), $fileName, 'local');
-                $fileNames[] = storage_path('app/' . $fileName);
+                Excel::store(new TelsExport($data), $fileName, 'public');
+                $fileNames[] = $fileName;
             }
 
-            // Create a zip file containing all the Excel files
             $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
-            $zipFilePath = storage_path('app/' . $zipFileName);
             $zip = new ZipArchive;
-            if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+
+            if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
                 foreach ($fileNames as $file) {
-                    if (file_exists($file)) {
-                        $zip->addFile($file, basename($file));
+                    if (Storage::disk('public')->exists($file)) {
+                        $zip->addFile(storage_path('app/public/' . $file), $file);
                     }
                 }
                 $zip->close();
             }
 
-            return response()->download($zipFilePath);
+            // Eliminar los archivos Excel individuales
+            foreach ($fileNames as $file) {
+                Storage::disk('public')->delete($file);
+            }
+
+            return response()->download(storage_path('app/public/' . $zipFileName))->deleteFileAfterSend(true);
         } else {
             $data = $query->limit($quantity)->get();
             $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
