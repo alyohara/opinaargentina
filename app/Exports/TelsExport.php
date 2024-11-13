@@ -7,37 +7,25 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class TelsExport implements FromQuery, WithChunkReading, WithHeadings
+class TelsExport implements FromQuery, WithChunkReading, WithHeadings, WithMapping
 {
-    protected $stateId;
-    protected $cityId;
+    protected $query;
     protected $quantity;
 
-    public function __construct($stateId, $cityId, $quantity)
+    public function __construct($query, $quantity)
     {
-        $this->stateId = $stateId;
-        $this->cityId = $cityId;
+        $this->query = $query;
         $this->quantity = $quantity;
     }
 
     public function query()
     {
-        $query = Telefono::query();
-
-        if ($this->stateId) {
-            $query->where('state_id', $this->stateId);
-        }
-
-        if ($this->cityId) {
-            $query->where('city_id', $this->cityId);
-        }
-
-        return $query->limit($this->quantity);
+        return $this->query->limit($this->quantity);
     }
 
     public function chunkSize(): int
     {
-        return 1000; // Adjust the chunk size as needed
+        return 1000;
     }
 
     public function headings(): array
@@ -47,6 +35,16 @@ class TelsExport implements FromQuery, WithChunkReading, WithHeadings
             'Móvil',
             'Ciudad',
             'Provincia',
+        ];
+    }
+
+    public function map($telefono): array
+    {
+        return [
+            $telefono->telefono,
+            $telefono->movil,
+            $telefono->city->name,
+            $telefono->city->state->name,
         ];
     }
 }
