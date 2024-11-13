@@ -126,7 +126,7 @@ class TelefonoController extends Controller
     {
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
-        $quantity = $request->input('quantity', 50000);
+        $quantity = $request->input('quantity', 10000);
 
         $query = Telefono::query()->with(['city.state']);
 
@@ -142,7 +142,7 @@ class TelefonoController extends Controller
         $totalRecords = $query->count();
         $batchSize = 10000;
         $batches = ceil($totalRecords / $batchSize);
-dd($batches);
+dd($quantity);
         if ($batches > 1) {
             $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
             $zip = new ZipArchive();
