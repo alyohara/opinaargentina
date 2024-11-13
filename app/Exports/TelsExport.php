@@ -7,7 +7,10 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\FromCollection;
+
 use Illuminate\Database\Eloquent\Builder;
+
 class TelsExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $data;
