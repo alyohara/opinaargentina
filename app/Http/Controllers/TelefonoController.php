@@ -122,6 +122,23 @@ class TelefonoController extends Controller
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
         $quantity = $request->input('quantity', 1000); // Default to 1000 if not specified
+        $data = Telefono::with(['city.state']);
+
+        if ($stateId) {
+            $cityIds = City::where('state_id', $stateId)->pluck('id');
+            $data->whereIn('city_id', $cityIds);
+        }
+
+        if ($cityId) {
+            $data->where('city_id', $cityId);
+        }
+
+        $data = $data->limit($quantity)->get();
+
+        dd($data);
+
+
+
 
         return Excel::download(new TelsExport($stateId, $cityId, $quantity), 'tels.xlsx');
     }
