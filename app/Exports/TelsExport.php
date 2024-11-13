@@ -8,25 +8,18 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Illuminate\Database\Eloquent\Builder;
-class TelsExport implements FromQuery, WithChunkReading, WithHeadings, WithMapping
+class TelsExport implements FromCollection, WithHeadings, WithMapping
 {
-    protected $query;
-    protected $quantity;
+    protected $data;
 
-    public function __construct($query, $quantity)
+    public function __construct($data)
     {
-        $this->query = $query;
-        $this->quantity = $quantity;
+        $this->data = $data;
     }
 
-    public function query()
+    public function collection()
     {
-        return $this->query->limit($this->quantity);
-    }
-
-    public function chunkSize(): int
-    {
-        return 1000;
+        return $this->data;
     }
 
     public function headings(): array

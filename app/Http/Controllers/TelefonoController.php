@@ -126,7 +126,7 @@ class TelefonoController extends Controller
     {
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
-        $quantity = $request->input('quantity', 10000);
+        $quantity = $request->input('quantity', 1000); // Default to 1000 if not specified
 
         $query = Telefono::query()->with(['city.state']);
 
@@ -139,44 +139,9 @@ class TelefonoController extends Controller
             $query->where('city_id', $cityId);
         }
 
-        if ($quantity <= 10000) {
-            // Si la cantidad es 10000 o menos, exportar directamente
-            $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
-            return Excel::download(new TelsExport($query, $quantity), $fileName);
-        } else {
-            // Si la cantidad es más de 10000, usar el sistema de lotes
-            $batchSize = 10000;
-            $batches = ceil($quantity / $batchSize);
+        $data = $query->limit($quantity)->get();
 
-            $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
-            $zip = new ZipArchive();
-            $zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
-            $remainingQuantity = $quantity;
-
-            for ($i = 0; $i < $batches; $i++) {
-                $currentBatchSize = min($batchSize, $remainingQuantity);
-                $offset = $i * $batchSize;
-                $currentQuery = clone $query;
-                $currentQuery->offset($offset)->limit($currentBatchSize);
-
-                $fileName = 'tels_part_' . ($i + 1) . '.xlsx';
-                $tempPath = storage_path('app/temp/' . $fileName);
-
-                Excel::store(new TelsExport($currentQuery, $currentBatchSize), 'temp/' . $fileName);
-                $zip->addFile($tempPath, $fileName);
-
-                $remainingQuantity -= $currentBatchSize;
-            }
-
-            $zip->close();
-
-            // Limpiar archivos temporales
-            foreach (Storage::files('temp') as $file) {
-                Storage::delete($file);
-            }
-
-            return response()->download(storage_path('app/public/' . $zipFileName))->deleteFileAfterSend(true);
-        }
+        $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
+        return Excel::download(new TelsExport($data), $fileName);
     }
 }
