@@ -133,6 +133,17 @@ class TelefonoController extends Controller
             $data->where('city_id', $cityId);
         }
 
+        // if quantity > 50000, chunk the data to avoid memory issues
+
+         if ($quantity > 50000) {
+             $data = $data->chunk(50000);
+         } else {
+             $data = $data->get();
+         }
+
+         dd($data);
+
+
         $data = $data->limit($quantity)->get();
 
         dd($data);
