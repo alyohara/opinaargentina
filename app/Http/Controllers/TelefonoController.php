@@ -139,9 +139,32 @@ class TelefonoController extends Controller
             $query->where('city_id', $cityId);
         }
 
-        $data = $query->limit($quantity)->get();
+        if ($quantity > 10000) {
+            $chunks = ceil($quantity / 10000);
+            $fileNames = [];
 
-        $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
-        return Excel::download(new TelsExport($data), $fileName);
+            for ($i = 0; $i < $chunks; $i++) {
+                $data = $query->skip($i * 10000)->take(10000)->get();
+                $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
+                Excel::store(new TelsExport($data), $fileName);
+                $fileNames[] = $fileName;
+            }
+
+            // Create a zip file containing all the Excel files
+            $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
+            $zip = new ZipArchive;
+            if ($zip->open(storage_path('app/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
+                foreach ($fileNames as $file) {
+                    $zip->addFile(storage_path('app/' . $file), $file);
+                }
+                $zip->close();
+            }
+
+            return response()->download(storage_path('app/' . $zipFileName));
+        } else {
+            $data = $query->limit($quantity)->get();
+            $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
+            return Excel::download(new TelsExport($data), $fileName);
+        }
     }
 }
