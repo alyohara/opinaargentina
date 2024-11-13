@@ -139,25 +139,34 @@ class TelefonoController extends Controller
             $query->where('city_id', $cityId);
         }
 
-        $totalRecords = $query->count();
-        $batchSize = 10000;
-        $batches = ceil($totalRecords / $batchSize);
-dd($batches);
-        if ($batches > 1) {
+        if ($quantity <= 10000) {
+            // Si la cantidad es 10000 o menos, exportar directamente
+            $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
+            return Excel::download(new TelsExport($query, $quantity), $fileName);
+        } else {
+            // Si la cantidad es más de 10000, usar el sistema de lotes
+            $batchSize = 10000;
+            $batches = ceil($quantity / $batchSize);
+
             $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
             $zip = new ZipArchive();
             $zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
+            $remainingQuantity = $quantity;
+
             for ($i = 0; $i < $batches; $i++) {
+                $currentBatchSize = min($batchSize, $remainingQuantity);
                 $offset = $i * $batchSize;
                 $currentQuery = clone $query;
-                $currentQuery->offset($offset)->limit($batchSize);
+                $currentQuery->offset($offset)->limit($currentBatchSize);
 
                 $fileName = 'tels_part_' . ($i + 1) . '.xlsx';
                 $tempPath = storage_path('app/temp/' . $fileName);
 
-                Excel::store(new TelsExport($currentQuery, $batchSize), 'temp/' . $fileName);
+                Excel::store(new TelsExport($currentQuery, $currentBatchSize), 'temp/' . $fileName);
                 $zip->addFile($tempPath, $fileName);
+
+                $remainingQuantity -= $currentBatchSize;
             }
 
             $zip->close();
@@ -168,9 +177,6 @@ dd($batches);
             }
 
             return response()->download(storage_path('app/public/' . $zipFileName))->deleteFileAfterSend(true);
-        } else {
-            $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
-            return Excel::download(new TelsExport($query, $quantity), $fileName);
         }
     }
 }
