@@ -142,7 +142,7 @@ class TelefonoController extends Controller
         $totalRecords = $query->count();
         $batchSize = 10000;
         $batches = ceil($totalRecords / $batchSize);
-dd($query);
+dd($batches);
         if ($batches > 1) {
             $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
             $zip = new ZipArchive();
