@@ -6,7 +6,8 @@ use App\Models\Telefono;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Database\Eloquent\Builder;
 class TelsExport implements FromQuery, WithChunkReading, WithHeadings, WithMapping
 {
     protected $query;
