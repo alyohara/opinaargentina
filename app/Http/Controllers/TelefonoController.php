@@ -133,24 +133,17 @@ class TelefonoController extends Controller
             $data->where('city_id', $cityId);
         }
 
-        // if quantity > 50000, chunk the data to avoid memory issues
 
-         if ($quantity > 50000) {
-             $data = $data->chunk(50000);
-         } else {
-             $data = $data->get();
-         }
-
-         dd($data);
-
-
-        $data = $data->limit($quantity)->get();
-
-        dd($data);
-
-
-
-
-        return Excel::download(new TelsExport($stateId, $cityId, $quantity), 'tels.xlsx');
+        if ($quantity > 50000) {
+            $fileName = 'tels.xlsx';
+            return Excel::download(new TelsExport($stateId, $cityId, $quantity), $fileName, \Maatwebsite\Excel\Excel::XLSX, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ])->chunk($quantity, function($rows) use ($fileName) {
+                Excel::store(new TelsExport($rows), $fileName, 'local');
+            });
+        } else {
+            $data = $data->limit($quantity)->get();
+            return Excel::download(new TelsExport($stateId, $cityId, $quantity), 'tels.xlsx');
+        }
     }
 }
