@@ -146,8 +146,8 @@ class TelefonoController extends Controller
             for ($i = 0; $i < $chunks; $i++) {
                 $data = $query->skip($i * 10000)->take(10000)->get();
                 $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
-                Excel::store(new TelsExport($data), $fileName);
-                $fileNames[] = $fileName;
+                Excel::store(new TelsExport($data), $fileName, 'local');
+                $fileNames[] = storage_path('app/' . $fileName);
             }
 
             // Create a zip file containing all the Excel files
@@ -155,7 +155,9 @@ class TelefonoController extends Controller
             $zip = new ZipArchive;
             if ($zip->open(storage_path('app/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
                 foreach ($fileNames as $file) {
-                    $zip->addFile(storage_path('app/' . $file), $file);
+                    if (file_exists($file)) {
+                        $zip->addFile($file, basename($file));
+                    }
                 }
                 $zip->close();
             }
