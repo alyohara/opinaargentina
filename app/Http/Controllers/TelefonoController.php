@@ -8,6 +8,11 @@ use App\Models\State;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TelefonosExport;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+
+
+
 class TelefonoController extends Controller
 {
     public function index(Request $request)
@@ -121,29 +126,51 @@ class TelefonoController extends Controller
     {
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
-        $quantity = $request->input('quantity', 1000); // Default to 1000 if not specified
-        $data = Telefono::with(['city.state']);
+        $quantity = $request->input('quantity', 50000);
+
+        $query = Telefono::query()->with(['city.state']);
 
         if ($stateId) {
             $cityIds = City::where('state_id', $stateId)->pluck('id');
-            $data->whereIn('city_id', $cityIds);
+            $query->whereIn('city_id', $cityIds);
         }
 
         if ($cityId) {
-            $data->where('city_id', $cityId);
+            $query->where('city_id', $cityId);
         }
 
+        $totalRecords = $query->count();
+        $batchSize = 10000;
+        $batches = ceil($totalRecords / $batchSize);
 
-        if ($quantity > 50000) {
-            $fileName = 'tels.xlsx';
-            return Excel::download(new TelsExport($stateId, $cityId, $quantity), $fileName, \Maatwebsite\Excel\Excel::XLSX, [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ])->chunk($quantity, function($rows) use ($fileName) {
-                Excel::store(new TelsExport($rows), $fileName, 'local');
-            });
+        if ($batches > 1) {
+            $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
+            $zip = new ZipArchive();
+            $zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+            for ($i = 0; $i < $batches; $i++) {
+                $offset = $i * $batchSize;
+                $currentQuery = clone $query;
+                $currentQuery->offset($offset)->limit($batchSize);
+
+                $fileName = 'tels_part_' . ($i + 1) . '.xlsx';
+                $tempPath = storage_path('app/temp/' . $fileName);
+
+                Excel::store(new TelsExport($currentQuery, $batchSize), 'temp/' . $fileName);
+                $zip->addFile($tempPath, $fileName);
+            }
+
+            $zip->close();
+
+            // Limpiar archivos temporales
+            foreach (Storage::files('temp') as $file) {
+                Storage::delete($file);
+            }
+
+            return response()->download(storage_path('app/public/' . $zipFileName))->deleteFileAfterSend(true);
         } else {
-            $data = $data->limit($quantity)->get();
-            return Excel::download(new TelsExport($stateId, $cityId, $quantity), 'tels.xlsx');
+            $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
+            return Excel::download(new TelsExport($query, $quantity), $fileName);
         }
     }
 }
