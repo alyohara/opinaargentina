@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\TelsExport;
+use App\Jobs\ExportTelefonosJob;
 use App\Models\Telefono;
 use App\Models\City;
 use App\Models\State;
@@ -122,7 +123,7 @@ class TelefonoController extends Controller
         return response()->json($telefonos);
     }
 
-    public function export(Request $request)
+    public function export2(Request $request)
     {
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
@@ -173,5 +174,17 @@ class TelefonoController extends Controller
             $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
             return Excel::download(new TelsExport($data), $fileName);
         }
+    }
+
+    public function export(Request $request)
+    {
+        $stateId = $request->input('state_id');
+        $cityId = $request->input('city_id');
+        $quantity = $request->input('quantity', 1000);
+        $userId = $request->user()->id;
+
+        ExportTelefonosJob::dispatch($stateId, $cityId, $quantity, $userId);
+
+        return response()->json(['message' => 'Exportación en proceso.']);
     }
 }
