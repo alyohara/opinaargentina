@@ -87,6 +87,8 @@ class ExportTelefonosJob implements ShouldQueue
                 $filePath = $fileName;
             }
 
+            $filePath = 'public/' . $filePath;
+
             Export::create([
                 'file_path' => $filePath,
                 'user_id' => $this->userId,
