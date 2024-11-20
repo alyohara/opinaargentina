@@ -10,6 +10,7 @@ use App\Http\Controllers\StateController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\TelefonoController;
+use App\Http\Controllers\ExportController;
 
 
 
@@ -36,6 +37,7 @@ Route::middleware([
     Route::resource('cities', CityController::class);
     Route::resource('people', PersonController::class);
     Route::resource('telefonos', TelefonoController::class);
+    Route::get('/exports', [ExportController::class, 'index'])->name('exports.index');
 
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
   //  Route::post('/roles', [RolePermissionController::class, 'store'])->name('roles.store');
