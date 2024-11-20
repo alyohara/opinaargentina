@@ -9,8 +9,10 @@ class AddStateIdToTelefonosTable extends Migration
     public function up()
     {
         Schema::table('telefonos', function (Blueprint $table) {
-            $table->unsignedBigInteger('state_id')->after('city_id');
-            $table->foreign('state_id');
+            if (!Schema::hasColumn('telefonos', 'state_id')) {
+                $table->unsignedBigInteger('state_id')->after('city_id');
+                $table->foreign('state_id');
+            }
         });
     }
 
