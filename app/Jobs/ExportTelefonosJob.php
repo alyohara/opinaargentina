@@ -64,17 +64,18 @@ class ExportTelefonosJob implements ShouldQueue
                 }
 
                 $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
-                $zip = new ZipArchive;
+                $zipPath = Storage::disk('public')->path($zipFileName);
 
-                if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
+                if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
                     foreach ($fileNames as $file) {
                         if (Storage::disk('public')->exists($file)) {
-                            $zip->addFile(storage_path('app/public/' . $file), $file);
+                            $zip->addFile(Storage::disk('public')->path($file), $file);
                         }
                     }
                     $zip->close();
                 }
 
+// Eliminar los archivos después de agregarlos al ZIP
                 foreach ($fileNames as $file) {
                     Storage::disk('public')->delete($file);
                 }
@@ -87,7 +88,6 @@ class ExportTelefonosJob implements ShouldQueue
                 $filePath = $fileName;
             }
 
-            $filePath = 'public/' . $filePath;
 
             Export::create([
                 'file_path' => $filePath,
