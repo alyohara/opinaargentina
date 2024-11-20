@@ -80,12 +80,12 @@ class ExportTelefonosJob implements ShouldQueue
                     Storage::disk('public')->delete($file);
                 }
 
-                $filePath = 'storage/' . $zipFileName;
+                $filePath = $zipFileName;
             } else {
                 $data = $query->limit($this->quantity)->get();
                 $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
                 Excel::store(new TelsExport($data), $fileName, 'public');
-                $filePath = 'storage/' . $fileName;
+                $filePath = $fileName;
             }
 
             Export::create([
