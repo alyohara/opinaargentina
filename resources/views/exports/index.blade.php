@@ -23,12 +23,10 @@
                         @foreach($exports as $export)
                             <tr>
                                 <td>{{ $export->id }}</td>
-                                <td><a href="{{ asset($export->file_path) }}" target="_blank">{{ $export->file_path }}</a></td>
-                                <td>{{ $export->created_at }}</td>
+                                <td><a href="{{ Storage::url($export->file_path) }}" target="_blank">{{ $export->file_path }}</a></td>                                <td>{{ $export->created_at }}</td>
                                 <td>{{ $export->user->name }}</td>
                                 <td>
-                                    <a href="{{ asset($export->file_path) }}" class="btn btn-primary" target="_blank">Download</a>
-                                </td>
+                                    <a href="{{ Storage::url($export->file_path) }}" class="btn btn-primary" target="_blank">Download</a>                                </td>
                             </tr>
                         @endforeach
                         </tbody>
