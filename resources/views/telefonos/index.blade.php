@@ -213,7 +213,7 @@
                     .then(data => {
                         Swal.fire({
                             title: 'Exportación Iniciada',
-                            text: data.message,
+                            html: `${data.message} <br><a href="{{ route('exports.index') }}">Ver Archivos Exportados</a>`,
                             icon: 'success',
                             confirmButtonText: 'Aceptar'
                         });
