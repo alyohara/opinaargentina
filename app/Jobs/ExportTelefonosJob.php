@@ -40,7 +40,9 @@ class ExportTelefonosJob implements ShouldQueue
         $export = Export::create([
             'user_id' => $this->userId,
             'job_started_at' => Carbon::now(),
-            'status' => 'in_progress'
+            'status' => 'in_progress',
+            'file_path' => '',
+            'file_size' => 0
         ]);
         // need to log this sql
         Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
