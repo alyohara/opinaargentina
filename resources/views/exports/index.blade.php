@@ -24,9 +24,7 @@
                             <tr>
                                 <td>{{ $export->id }}</td>
                                 <td><a href="{{ $export->file_path }}" target="_blank">{{ str_replace('/storage/storage/', '', $export->file_path) }}</a></td>
-                                <script>
-                                    console.log({{ $export->file_path }});
-                                </script>
+                                {{$export->file_path}}
                                 <td>{{ $export->created_at }}</td>
                                                               <td>{{ $export->created_at }}</td>
                                 <td>{{ $export->user->name }}</td>
