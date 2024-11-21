@@ -36,27 +36,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        {{--                                    </div>--}}
-                                        {{--                                    <div class="row mt-3">--}}
-{{--                                        <div class="col-md-5">--}}
-{{--                                            <label>Ordenar por:</label>--}}
-{{--                                            <div class="form-check">--}}
-{{--                                                <input class="form-check-input" type="radio" name="order_by" id="orderByCityAsc" value="city_asc">--}}
-{{--                                                <label class="form-check-label" for="orderByCityAsc">Ciudad Ascendente</label>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="form-check">--}}
-{{--                                                <input class="form-check-input" type="radio" name="order_by" id="orderByCityDesc" value="city_desc">--}}
-{{--                                                <label class="form-check-label" for="orderByCityDesc">Ciudad Descendente</label>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="form-check">--}}
-{{--                                                <input class="form-check-input" type="radio" name="order_by" id="orderByStateAsc" value="state_asc">--}}
-{{--                                                <label class="form-check-label" for="orderByStateAsc">Provincia Ascendente</label>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="form-check">--}}
-{{--                                                <input class="form-check-input" type="radio" name="order_by" id="orderByStateDesc" value="state_desc">--}}
-{{--                                                <label class="form-check-label" for="orderByStateDesc">Provincia Descendente</label>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
                                         <div class="col-md-2 text-right">
                                             <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                                         </div>
@@ -66,7 +45,7 @@
                         </div>
                     </div>
 
-                            <!-- Card de Exportar -->
+                    <!-- Card de Exportar -->
                     <div class="card mb-3">
                         <div class="card-header" data-toggle="collapse" data-target="#exportCard" aria-expanded="false" aria-controls="exportCard">
                             <h5 class="mb-0">Exportar Datos</h5>

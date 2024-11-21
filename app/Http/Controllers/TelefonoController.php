@@ -185,6 +185,6 @@ class TelefonoController extends Controller
 
         ExportTelefonosJob::dispatch($stateId, $cityId, $quantity, $userId);
 
-        return response()->json(['message' => 'Exportación en proceso.']);
+        return response()->json(['message' => 'Exportación iniciada, aguarde unos minutos.']);
     }
 }
