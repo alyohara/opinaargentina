@@ -52,7 +52,7 @@
                         </div>
                         <div id="exportCard" class="collapse">
                             <div class="card-body">
-                                <form id="exportForm">
+                                <form method="POST" action="{{ route('telefonos.export') }}">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-4">
@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col-md-12 text-right">
-                                            <button type="button" id="exportButton" class="btn btn-secondary">Exportar</button>
+                                            <button type="submit" class="btn btn-secondary">Exportar</button>
                                         </div>
                                     </div>
                                     <!-- Hidden fields to store the selected state and city IDs -->
@@ -191,23 +191,7 @@
 
             // Set initial values for export form fields
             updateExportFields();
+        });
 
-            // Handle export button click
-            $('#exportButton').on('click', function() {
-                fetch('{{ route('telefonos.export') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        state_id: $('#export-state-id').val(),
-                        city_id: $('#export-city-id').val(),
-                        quantity: $('#quantity').val()
-                    })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message);
-                    })
-                    .catch(error => console.error('Error:', error));
+    </script>
+</x-app-layout>
