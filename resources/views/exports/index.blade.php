@@ -27,7 +27,7 @@
                             <tr>
                                 <td>{{ $export->id }}</td>
                                 <td><a href="{{ str_replace('/storage/storage/', 'storage/', $export->file_path) }}"
-                                       target="_blank">{{ str_replace('/storage/storage/', '', $export->file_path) }}</a>
+                                       target="_blank">{{ str_replace('/storage/', '', $export->file_path) }}</a>
                                 </td>
                                 <td>{{ $export->file_size }}</td>
                                 <td>{{ $export->job_started_at }}</td>
