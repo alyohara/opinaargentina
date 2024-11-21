@@ -42,6 +42,8 @@ class ExportTelefonosJob implements ShouldQueue
             'job_started_at' => Carbon::now(),
             'status' => 'in_progress'
         ]);
+        // need to log this sql
+        Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
 
         Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
 
