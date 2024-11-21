@@ -23,8 +23,9 @@
                         @foreach($exports as $export)
                             <tr>
                                 <td>{{ $export->id }}</td>
-                                <td><a href="{{ url($export->file_path) }}" target="_blank">{{ $export->file_path }}</a></td>
+                                <td><a href="{{ Storage::url(str_replace('storage/storage', 'storage', $export->file_path)) }}" target="_blank">{{ str_replace('storage/storage', 'storage', $export->file_path) }}</a></td>
                                 <td>{{ $export->created_at }}</td>
+                                                              <td>{{ $export->created_at }}</td>
                                 <td>{{ $export->user->name }}</td>
                                 <td>
                                     <a href="{{ Storage::url($export->file_path) }}" class="btn btn-primary" target="_blank">Download</a>                                </td>
