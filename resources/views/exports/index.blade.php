@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Exported Files') }}
+            {{ __('Archivos Exportados') }}
         </h2>
     </x-slot>
 
@@ -13,10 +13,13 @@
                         <thead>
                         <tr>
                             <th>ID</th>
-                            <th>File Path</th>
-                            <th>Created At</th>
-                            <th>User</th>
-                            <th>Actions</th>
+                            <th>Nombre</th>
+                            <th>Tamaño (KB)</th>
+                            <th>Comienzo Exportación</th>
+                            <th>Fin Exportación</th>
+                            <th>Status</th>
+                            <th>Usuario</th>
+                            <th>Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -26,8 +29,10 @@
                                 <td><a href="{{ str_replace('/storage/storage/', 'storage/', $export->file_path) }}"
                                        target="_blank">{{ str_replace('/storage/storage/', '', $export->file_path) }}</a>
                                 </td>
-                                <td>{{ $export->created_at }}</td>
-                                <td>{{ $export->created_at }}</td>
+                                <td>{{ $export->file_size }}</td>
+                                <td>{{ $export->job_started_at }}</td>
+                                <td>{{ $export->job_ended_at }}</td>
+                                <td>{{ $export->status }}</td>
                                 <td>{{ $export->user->name }}</td>
                                 <td>
                                     <a href="{{ str_replace('/storage/storage/', 'storage/', $export->file_path) }}" class="btn btn-primary"

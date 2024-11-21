@@ -1,5 +1,4 @@
 <?php
-// app/Jobs/ExportTelefonosJob.php
 namespace App\Jobs;
 
 use App\Exports\TelsExport;
@@ -15,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use ZipArchive;
+use Carbon\Carbon;
 
 class ExportTelefonosJob implements ShouldQueue
 {
@@ -25,7 +25,6 @@ class ExportTelefonosJob implements ShouldQueue
     protected $quantity;
     protected $userId;
 
-    // Set the timeout to 20 minutes (1200 seconds)
     public $timeout = 1200;
 
     public function __construct($stateId, $cityId, $quantity, $userId)
@@ -38,6 +37,12 @@ class ExportTelefonosJob implements ShouldQueue
 
     public function handle()
     {
+        $export = Export::create([
+            'user_id' => $this->userId,
+            'job_started_at' => Carbon::now(),
+            'status' => 'in_progress'
+        ]);
+
         Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
 
         try {
@@ -64,40 +69,45 @@ class ExportTelefonosJob implements ShouldQueue
                 }
 
                 $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
-                $zipPath = Storage::disk('public')->path($zipFileName);
+                $zip = new ZipArchive;
 
-                if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+                if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
                     foreach ($fileNames as $file) {
                         if (Storage::disk('public')->exists($file)) {
-                            $zip->addFile(Storage::disk('public')->path($file), $file);
+                            $zip->addFile(storage_path('app/public/' . $file), $file);
                         }
                     }
                     $zip->close();
                 }
 
-// Eliminar los archivos después de agregarlos al ZIP
                 foreach ($fileNames as $file) {
                     Storage::disk('public')->delete($file);
                 }
 
                 $filePath = $zipFileName;
+                $fileSize = Storage::disk('public')->size($zipFileName) / 1024; // size in KB
             } else {
                 $data = $query->limit($this->quantity)->get();
                 $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $filePath = $fileName;
+                $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
             }
 
-            // $filePath must not have storage/ prefix
-            $filePath = str_replace('storage/', '', $filePath);
-
-            Export::create([
+            $export->update([
                 'file_path' => $filePath,
-                'user_id' => $this->userId,
+                'file_size' => $fileSize,
+                'job_ended_at' => Carbon::now(),
+                'status' => 'creado'
             ]);
 
             Log::info('ExportTelefonosJob completed successfully', ['filePath' => $filePath]);
         } catch (\Exception $e) {
+            $export->update([
+                'job_ended_at' => Carbon::now(),
+                'status' => 'fail'
+            ]);
+
             Log::error('ExportTelefonosJob failed', ['error' => $e->getMessage()]);
             throw $e;
         }
