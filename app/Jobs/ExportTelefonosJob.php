@@ -88,6 +88,8 @@ class ExportTelefonosJob implements ShouldQueue
                 $filePath = $fileName;
             }
 
+            // $filePath must not have storage/ prefix
+            $filePath = str_replace('storage/', '', $filePath);
 
             Export::create([
                 'file_path' => $filePath,
