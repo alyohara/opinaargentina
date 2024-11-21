@@ -23,8 +23,8 @@
                         @foreach($exports as $export)
                             <tr>
                                 <td>{{ $export->id }}</td>
-                                <td><a href="{{ str_replace('/storage/storage/', '', $export->file_path) }}" target="_blank">{{ str_replace('/storage/storage/', '', $export->file_path) }}</a></td>
-                                {{ str_replace('/storage/storage/', '', $export->file_path) }}
+                                <td><a href="{{ str_replace('/storage/storage/', 'storage/', $export->file_path) }}" target="_blank">{{ str_replace('/storage/storage/', '', $export->file_path) }}</a></td>
+                                {{ str_replace('/storage/storage/', 'storage/', $export->file_path) }}
                                 <td>{{ $export->created_at }}</td>
                                                               <td>{{ $export->created_at }}</td>
                                 <td>{{ $export->user->name }}</td>
