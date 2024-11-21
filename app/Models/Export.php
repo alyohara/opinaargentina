@@ -11,7 +11,7 @@ class Export extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['file_path', 'user_id'];
+    protected $fillable = ['file_path', 'user_id', 'file_size', 'job_started_at', 'job_ended_at', 'status'];
 
     public function user()
     {
