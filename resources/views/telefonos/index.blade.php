@@ -52,7 +52,7 @@
                         </div>
                         <div id="exportCard" class="collapse">
                             <div class="card-body">
-                                <form method="POST" action="{{ route('telefonos.export') }}">
+                                <form method="POST" action="{{ route('telefonos.export') }}" id="export-form">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-4">
@@ -77,10 +77,10 @@
                                             <button type="submit" class="btn btn-secondary">Exportar</button>
                                         </div>
                                     </div>
-                                    <!-- Hidden fields to store the selected state and city IDs -->
                                     <input type="hidden" id="export-state-id" name="state_id" value="{{ $selectedState }}">
                                     <input type="hidden" id="export-city-id" name="city_id" value="{{ $selectedCity }}">
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -192,6 +192,44 @@
             // Set initial values for export form fields
             updateExportFields();
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const exportForm = document.querySelector('form[action="{{ route('telefonos.export') }}"]');
+
+            exportForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const formData = new FormData(exportForm);
+
+                fetch(exportForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            title: 'Exportación Iniciada',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error en la exportación:', error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Ocurrió un error al iniciar la exportación. Intente nuevamente.',
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
+                    });
+            });
+        });
+
 
     </script>
 </x-app-layout>
