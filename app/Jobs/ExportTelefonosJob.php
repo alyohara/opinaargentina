@@ -49,7 +49,7 @@ class ExportTelefonosJob implements ShouldQueue
         Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
 
         try {
-            $query = Telefono::query()->with(['city.state']);
+            $query = Telefono::query()->select('id')->with(['city.state']);
 
             if ($this->stateId) {
                 $cityIds = City::where('state_id', $this->stateId)->pluck('id');
@@ -61,44 +61,39 @@ class ExportTelefonosJob implements ShouldQueue
             }
 
             $totalRecords = $query->count();
-            $randomOffset = rand(0, max(0, $totalRecords - $this->quantity));
+            $selectedIds = $query->inRandomOrder()->take($this->quantity)->pluck('id');
 
             $fileNames = [];
-            if ($this->quantity > 10000) {
-                $chunks = ceil($this->quantity / 10000);
+            $chunkSize = 10000;
+            $chunks = ceil($this->quantity / $chunkSize);
 
-                for ($i = 0; $i < $chunks; $i++) {
-                    $data = $query->skip($randomOffset + $i * 10000)->take(10000)->get();
-                    $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
-                    Excel::store(new TelsExport($data), $fileName, 'public');
-                    $fileNames[] = $fileName;
-                }
+            for ($i = 0; $i < $chunks; $i++) {
+                $chunkIds = $selectedIds->slice($i * $chunkSize, $chunkSize);
+                $data = Telefono::whereIn('id', $chunkIds)->with(['city.state'])->get();
 
-                $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
-                $zip = new ZipArchive;
-
-                if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
-                    foreach ($fileNames as $file) {
-                        if (Storage::disk('public')->exists($file)) {
-                            $zip->addFile(storage_path('app/public/' . $file), $file);
-                        }
-                    }
-                    $zip->close();
-                }
-
-                foreach ($fileNames as $file) {
-                    Storage::disk('public')->delete($file);
-                }
-
-                $filePath = $zipFileName;
-                $fileSize = Storage::disk('public')->size($zipFileName) / 1024; // size in KB
-            } else {
-                $data = $query->skip($randomOffset)->limit($this->quantity)->get();
-                $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
+                $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
                 Excel::store(new TelsExport($data), $fileName, 'public');
-                $filePath = $fileName;
-                $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
+                $fileNames[] = $fileName;
             }
+
+            $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
+            $zip = new ZipArchive;
+
+            if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
+                foreach ($fileNames as $file) {
+                    if (Storage::disk('public')->exists($file)) {
+                        $zip->addFile(storage_path('app/public/' . $file), $file);
+                    }
+                }
+                $zip->close();
+            }
+
+            foreach ($fileNames as $file) {
+                Storage::disk('public')->delete($file);
+            }
+
+            $filePath = $zipFileName;
+            $fileSize = Storage::disk('public')->size($zipFileName) / 1024; // size in KB
 
             $export->update([
                 'file_path' => $filePath,
