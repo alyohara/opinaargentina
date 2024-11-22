@@ -49,18 +49,8 @@ class ExportTelefonosJob implements ShouldQueue
         Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
 
         try {
-            // Obtener el rango de IDs
-            $minId = Telefono::min('id');
-            $maxId = Telefono::max('id');
-
-            // Generar una lista de IDs aleatorios
-            $randomIds = [];
-            for ($i = 0; $i < $this->quantity; $i++) {
-                $randomIds[] = rand($minId, $maxId);
-            }
-
             // Filtrar por estado y ciudad si es necesario
-            $query = Telefono::query()->whereIn('id', $randomIds)->with(['city.state']);
+            $query = Telefono::query()->with(['city.state']);
 
             if ($this->stateId) {
                 $cityIds = City::where('state_id', $this->stateId)->pluck('id');
@@ -72,7 +62,7 @@ class ExportTelefonosJob implements ShouldQueue
             }
 
             // Obtener los datos
-            $data = $query->get();
+            $data = $query->inRandomOrder()->limit($this->quantity)->get();
 
             // Exportar los datos
             if ($data->count() > 10000) {
