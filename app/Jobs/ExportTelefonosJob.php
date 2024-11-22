@@ -25,7 +25,7 @@ class ExportTelefonosJob implements ShouldQueue
     protected $quantity;
     protected $userId;
 
-    public $timeout = 1200;
+    public $timeout = 12000;
 
     public function __construct($stateId, $cityId, $quantity, $userId)
     {
