@@ -61,8 +61,8 @@ class ExportTelefonosJob implements ShouldQueue
                 $query->where('city_id', $this->cityId);
             }
 
-            // Obtener los datos
-            $data = $query->inRandomOrder()->limit($this->quantity)->get();
+            // Obtener los datos sin orden aleatorio
+            $data = $query->limit($this->quantity)->get();
 
             // Exportar los datos
             if ($data->count() > 10000) {
