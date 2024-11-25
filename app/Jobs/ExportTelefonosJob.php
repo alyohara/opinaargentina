@@ -44,7 +44,6 @@ class ExportTelefonosJob implements ShouldQueue
             'file_path' => '',
             'file_size' => 0
         ]);
-        // need to log this sql
         Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
 
         Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
@@ -62,11 +61,11 @@ class ExportTelefonosJob implements ShouldQueue
             }
 
             $fileNames = [];
-            if ($this->quantity > 10000) {
+            if ($this->quantity > 20000) {
                 $chunks = ceil($this->quantity / 10000);
 
                 for ($i = 0; $i < $chunks; $i++) {
-                    $data = $query->skip($i * 10000)->take(10000)->get();
+                    $data = $query->skip($i * 10000)->take(10000)->get()->shuffle();
                     $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
                     Excel::store(new TelsExport($data), $fileName, 'public');
                     $fileNames[] = $fileName;
@@ -91,7 +90,9 @@ class ExportTelefonosJob implements ShouldQueue
                 $filePath = $zipFileName;
                 $fileSize = Storage::disk('public')->size($zipFileName) / 1024; // size in KB
             } else {
-                $data = $query->limit($this->quantity)->get();
+                $totalRecords = $query->count();
+                $randomStart = rand(0, max(0, $totalRecords - $this->quantity));
+                $data = $query->skip($randomStart)->take($this->quantity)->get();
                 $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $filePath = $fileName;
