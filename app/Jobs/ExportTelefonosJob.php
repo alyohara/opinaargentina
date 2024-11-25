@@ -25,7 +25,7 @@ class ExportTelefonosJob implements ShouldQueue
     protected $quantity;
     protected $userId;
 
-    public $timeout = 12000;
+    public $timeout = 1200;
 
     public function __construct($stateId, $cityId, $quantity, $userId)
     {
@@ -44,12 +44,12 @@ class ExportTelefonosJob implements ShouldQueue
             'file_path' => '',
             'file_size' => 0
         ]);
+        // need to log this sql
         Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
 
         Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
 
         try {
-            // Filtrar por estado y ciudad si es necesario
             $query = Telefono::query()->with(['city.state']);
 
             if ($this->stateId) {
@@ -61,32 +61,52 @@ class ExportTelefonosJob implements ShouldQueue
                 $query->where('city_id', $this->cityId);
             }
 
-            // Obtener los datos sin orden aleatorio
-            $data = $query->limit($this->quantity)->get();
+            $fileNames = [];
+            if ($this->quantity > 10000) {
+                $chunks = ceil($this->quantity / 10000);
 
-            // Exportar los datos
-            if ($data->count() > 10000) {
-                // Lógica para manejar grandes cantidades de datos (dividir en chunks y comprimir)
-                // ...
+                for ($i = 0; $i < $chunks; $i++) {
+                    $data = $query->skip($i * 10000)->take(10000)->get();
+                    $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
+                    Excel::store(new TelsExport($data), $fileName, 'public');
+                    $fileNames[] = $fileName;
+                }
+
+                $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
+                $zip = new ZipArchive;
+
+                if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
+                    foreach ($fileNames as $file) {
+                        if (Storage::disk('public')->exists($file)) {
+                            $zip->addFile(storage_path('app/public/' . $file), $file);
+                        }
+                    }
+                    $zip->close();
+                }
+
+                foreach ($fileNames as $file) {
+                    Storage::disk('public')->delete($file);
+                }
+
+                $filePath = $zipFileName;
+                $fileSize = Storage::disk('public')->size($zipFileName) / 1024; // size in KB
             } else {
-                // Exportación directa si la cantidad es manejable
+                $data = $query->limit($this->quantity)->get();
                 $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $filePath = $fileName;
                 $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
             }
 
-            // Actualizar el registro de exportación
             $export->update([
-                'file_path' => isset($filePath) ? $filePath : '',
-                'file_size' => isset($fileSize) ? $fileSize : 0,
+                'file_path' => $filePath,
+                'file_size' => $fileSize,
                 'job_ended_at' => Carbon::now(),
                 'status' => 'creado'
             ]);
 
-            Log::info('ExportTelefonosJob completed successfully', ['filePath' => isset($filePath) ? $filePath : '']);
+            Log::info('ExportTelefonosJob completed successfully', ['filePath' => $filePath]);
         } catch (\Exception $e) {
-            // Manejo de errores
             $export->update([
                 'job_ended_at' => Carbon::now(),
                 'status' => 'fail'
