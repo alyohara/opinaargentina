@@ -26,13 +26,13 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <!-- Compiled CSS -->
-    <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('resources/css/app.css') }}" rel="stylesheet">
 
 
     <!-- Livewire Styles -->
     @livewireStyles
 
-    <script src="{{ asset('assets/js/app.js') }}" defer></script>
+    <script src="{{ asset('resources/js/app.js') }}" defer></script>
 </head>
 <body class="font-sans antialiased">
 <x-banner />
