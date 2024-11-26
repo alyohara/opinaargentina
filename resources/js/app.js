@@ -3,5 +3,9 @@ import './telefonos.js';
 
 Echo.channel('exports.' + userId)
     .listen('.export.completed', (e) => {
-        alert('Export job completed!');
+        let notification = document.getElementById('notification');
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 5000); // Hide after 5 seconds
     });
