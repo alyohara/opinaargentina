@@ -16,20 +16,20 @@
     <link href="{{ asset('assets/css/select2.css') }}" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Compiled CSS -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
-    <!-- Livewire Styles -->
-    @livewireStyles
-
     <!-- Other head elements -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Compiled CSS -->
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+
+    <!-- Livewire Styles -->
+    @livewireStyles
 
     <script src="{{ mix('js/app.js') }}" defer></script>
 </head>
