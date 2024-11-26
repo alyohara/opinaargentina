@@ -26,13 +26,12 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <!-- Compiled CSS -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-
+    <link href="http://201.220.23.104:50089/css/app.css" rel="stylesheet">
 
     <!-- Livewire Styles -->
     @livewireStyles
 
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script src="http://201.220.23.104:50089/js/app.js" defer></script>
 </head>
 <body class="font-sans antialiased">
 <x-banner />
