@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use ZipArchive;
 use Carbon\Carbon;
+use App\Events\ExportCompleted;
 
 class ExportTelefonosJob implements ShouldQueue
 {
@@ -105,6 +106,7 @@ class ExportTelefonosJob implements ShouldQueue
                 'job_ended_at' => Carbon::now(),
                 'status' => 'creado'
             ]);
+            event(new ExportCompleted($this->userId));
 
             Log::info('ExportTelefonosJob completed successfully', ['filePath' => $filePath]);
         } catch (\Exception $e) {
