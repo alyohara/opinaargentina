@@ -28,6 +28,7 @@
     <!-- Compiled CSS -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
+
     <!-- Livewire Styles -->
     @livewireStyles
 
