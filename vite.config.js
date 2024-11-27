@@ -13,7 +13,12 @@ export default defineConfig({
         host: '0.0.0.0',
         port: 5173,
         hmr: {
-            host: 'http://201.220.23.104:50089',
+            host: '201.220.23.104',
+        },
+        cors: {
+            origin: 'http://201.220.23.104:50089',
+            methods: ['GET', 'POST'],
+            allowedHeaders: ['Content-Type'],
         },
     },
 });
