@@ -1,3 +1,4 @@
+// vite.config.js
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 
@@ -10,8 +11,9 @@ export default defineConfig({
     ],
     server: {
         host: '0.0.0.0',
+        port: 5173,
         hmr: {
-            host: 'localhost'
+            host: 'http://201.220.23.104:50089',
         },
     },
 });
