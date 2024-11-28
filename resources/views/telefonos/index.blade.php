@@ -7,83 +7,84 @@
 
     <div class="py-12">
         <div class="container">
+            <!-- Card de Filtros -->
+            <div class="card mb-3">
+                <div class="card-header" data-toggle="collapse" data-target="#filterCard" aria-expanded="false" aria-controls="filterCard">
+                    <h5 class="mb-0">Filtros de Búsqueda</h5>
+                </div>
+                <div id="filterCard" class="collapse">
+                    <div class="card-body">
+                        <form method="GET" action="{{ route('telefonos.index') }}">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <select id="state" name="state" class="form-control select2" onchange="updateCities()">
+                                        <option value="">Seleccione una provincia</option>
+                                        @foreach($states as $state)
+                                            <option value="{{ $state->id }}" {{ $selectedState == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <select id="city" name="city" class="form-control select2">
+                                        <option value="">Seleccione una ciudad</option>
+                                        @foreach($cities as $city)
+                                            <option value="{{ $city->id }}" {{ $selectedCity == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card de Exportar -->
+            <div class="card mb-3">
+                <div class="card-header" data-toggle="collapse" data-target="#exportCard" aria-expanded="false" aria-controls="exportCard">
+                    <h5 class="mb-0">Exportar Datos</h5>
+                </div>
+                <div id="exportCard" class="collapse">
+                    <div class="card-body">
+                        <form method="POST" action="{{ route('telefonos.export') }}" id="export-form">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="selected-state">Provincia Seleccionada</label>
+                                    <input type="text" id="selected-state" name="selected_state" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="selected-city">Ciudad Seleccionada</label>
+                                    <input type="text" id="selected-city" name="selected_city" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="quantity">Cantidad</label>
+                                    <select id="quantity" name="quantity" class="form-control">
+                                        @foreach([100, 200, 300, 500, 700, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000] as $quantity)
+                                            <option value="{{ $quantity }}">{{ $quantity }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-12 text-right">
+                                    <button type="submit" class="btn btn-secondary">Exportar</button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="export-state-id" name="state_id" value="{{ $selectedState }}">
+                            <input type="hidden" id="export-city-id" name="city_id" value="{{ $selectedCity }}">
+                        </form>
+
+                    </div>
+                </div>
+            </div>
             <div class="card shadow-sm">
                 <div class="card-body">
                     <button onclick="window.location.href='{{ route('telefonos.create') }}'" class="btn btn-success mb-3">Agregar Teléfono</button>
 
-                    <!-- Card de Filtros -->
-                    <div class="card mb-3">
-                        <div class="card-header" data-toggle="collapse" data-target="#filterCard" aria-expanded="false" aria-controls="filterCard">
-                            <h5 class="mb-0">Filtros de Búsqueda</h5>
-                        </div>
-                        <div id="filterCard" class="collapse">
-                            <div class="card-body">
-                                <form method="GET" action="{{ route('telefonos.index') }}">
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <select id="state" name="state" class="form-control select2" onchange="updateCities()">
-                                                <option value="">Seleccione una provincia</option>
-                                                @foreach($states as $state)
-                                                    <option value="{{ $state->id }}" {{ $selectedState == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <select id="city" name="city" class="form-control select2">
-                                                <option value="">Seleccione una ciudad</option>
-                                                @foreach($cities as $city)
-                                                    <option value="{{ $city->id }}" {{ $selectedCity == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2 text-right">
-                                            <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Card de Exportar -->
-                    <div class="card mb-3">
-                        <div class="card-header" data-toggle="collapse" data-target="#exportCard" aria-expanded="false" aria-controls="exportCard">
-                            <h5 class="mb-0">Exportar Datos</h5>
-                        </div>
-                        <div id="exportCard" class="collapse">
-                            <div class="card-body">
-                                <form method="POST" action="{{ route('telefonos.export') }}" id="export-form">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label for="selected-state">Provincia Seleccionada</label>
-                                            <input type="text" id="selected-state" name="selected_state" class="form-control" readonly>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="selected-city">Ciudad Seleccionada</label>
-                                            <input type="text" id="selected-city" name="selected_city" class="form-control" readonly>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="quantity">Cantidad</label>
-                                            <select id="quantity" name="quantity" class="form-control">
-                                                @foreach([100, 200, 300, 500, 700, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000] as $quantity)
-                                                    <option value="{{ $quantity }}">{{ $quantity }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-3">
-                                        <div class="col-md-12 text-right">
-                                            <button type="submit" class="btn btn-secondary">Exportar</button>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="export-state-id" name="state_id" value="{{ $selectedState }}">
-                                    <input type="hidden" id="export-city-id" name="city_id" value="{{ $selectedCity }}">
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
 
                     <table class="table table-striped">
                         <thead>
