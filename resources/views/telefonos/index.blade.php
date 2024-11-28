@@ -8,11 +8,11 @@
     <div class="py-12">
         <div class="container">
             <div class="row">
-                <!-- Card de Filtros -->
-                <div class="col-md-6 mb-3">
+                <!-- Combined Card -->
+                <div class="col-md-12 mb-3">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="mb-0">Filtros de Búsqueda</h5>
+                            <h5 class="mb-0">Filtros de Búsqueda y Exportar Datos</h5>
                         </div>
                         <div class="card-body">
                             <form method="GET" action="{{ route('telefonos.index') }}">
@@ -38,28 +38,9 @@
                                     </div>
                                 </div>
                             </form>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card de Exportar -->
-                <div class="col-md-6 mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Exportar Datos</h5>
-                        </div>
-                        <div class="card-body">
-                            <form method="POST" action="{{ route('telefonos.export') }}" id="export-form">
+                            <form method="POST" action="{{ route('telefonos.export') }}" id="export-form" class="mt-3">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <label for="selected-state">Provincia Seleccionada</label>
-                                        <input type="text" id="selected-state" name="selected_state" class="form-control" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="selected-city">Ciudad Seleccionada</label>
-                                        <input type="text" id="selected-city" name="selected_city" class="form-control" readonly>
-                                    </div>
                                     <div class="col-md-4">
                                         <label for="quantity">Cantidad</label>
                                         <select id="quantity" name="quantity" class="form-control">
@@ -68,10 +49,8 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-12 text-right">
-                                        <button type="submit" class="btn btn-secondary">Exportar</button>
+                                    <div class="col-md-8 text-right">
+                                        <button type="submit" class="btn btn-secondary mt-4">Exportar</button>
                                     </div>
                                 </div>
                                 <input type="hidden" id="export-state-id" name="state_id" value="{{ $selectedState }}">
@@ -170,13 +149,9 @@
             });
 
             function updateExportFields() {
-                const selectedState = $('#state option:selected').text() || 'Sin selección';
-                const selectedCity = $('#city option:selected').text() || 'Sin selección';
                 const selectedStateId = $('#state').val();
                 const selectedCityId = $('#city').val();
 
-                $('#selected-state').val(selectedState);
-                $('#selected-city').val(selectedCity);
                 $('#export-state-id').val(selectedStateId);
                 $('#export-city-id').val(selectedCityId);
             }
