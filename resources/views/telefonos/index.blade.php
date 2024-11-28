@@ -195,6 +195,9 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const exportForm = document.querySelector('form[action="{{ route('telefonos.export') }}"]');
+            // Ensure Bootstrap collapse is initialized
+            $('#filterCard').collapse();
+            $('#exportCard').collapse();
 
             exportForm.addEventListener('submit', function (event) {
                 event.preventDefault();
