@@ -72,19 +72,20 @@
      style="display: none; position: fixed; top: 10px; right: 10px; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px;">
     Export job completed!
 </div>
-<script>
-    Echo.channel('exports')
-        .listen('ExportStatusUpdated', (event) => {
-            if (event.status === 'completed') {
-                Swal.fire({
-                    title: 'Exportación Completada',
-                    html: `La exportación del archivo <strong>${event.filename}</strong> ha sido completada. <br><a href="{{ route('exports.index') }}">Ver Archivos Exportados</a>`,
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar'
-                });
-            }
-        });
-</script>
+
+@auth
+    <script>
+        const userId = {{ Auth::id() }};
+
+        window.Echo.channel(`exports.${userId}`)
+            .listen('.export.completed', (e) => {
+                console.log('Export completed for user:', e.userId);
+                // You can add more code here to handle the notification,
+                // such as displaying an alert or updating the UI
+            });
+    </script>
+@endauth
+
 
 </body>
 </html>
