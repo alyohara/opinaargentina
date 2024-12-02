@@ -12,8 +12,8 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="{{ asset('assets/css/select2.css') }}" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>
+    <link href="{{ asset('assets/css/select2.css') }}" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Bootstrap CSS -->
@@ -23,7 +23,7 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
     <!-- Other head elements -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
 
     <!-- Compiled CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -35,7 +35,7 @@
 
 </head>
 <body class="font-sans antialiased">
-<x-banner />
+<x-banner/>
 
 <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
     @livewire('navigation-menu')
@@ -68,8 +68,23 @@
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<div id="notification" style="display: none; position: fixed; top: 10px; right: 10px; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px;">
+<div id="notification"
+     style="display: none; position: fixed; top: 10px; right: 10px; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px;">
     Export job completed!
 </div>
+<script>
+    Echo.channel('exports')
+        .listen('ExportStatusUpdated', (event) => {
+            if (event.status === 'completed') {
+                Swal.fire({
+                    title: 'Exportación Completada',
+                    html: `La exportación del archivo <strong>${event.filename}</strong> ha sido completada. <br><a href="{{ route('exports.index') }}">Ver Archivos Exportados</a>`,
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+</script>
+
 </body>
 </html>
