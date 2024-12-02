@@ -1,8 +1,8 @@
 <?php
 return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout', 'register', 'password/email', 'password/reset', 'email/verify', 'email/verification-notification', 'broadcasting/auth'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => [env('APP_URL', 'http://localhost', 'http://127.0.0.1', 'http://192.168.0.123:8089', 'http://http://201.220.23.104:50089/' )],
+    'allowed_origins' => ['*'],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],
