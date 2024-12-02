@@ -6,6 +6,8 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Models\Order;
+use Illuminate\Broadcasting\PresenceChannel;
 
 class ExportCompleted implements ShouldBroadcast
 {

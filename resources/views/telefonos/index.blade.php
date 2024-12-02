@@ -205,5 +205,20 @@
                     });
             });
         });
+
+        Echo.channel('exports')
+            .listen('ExportStatusUpdated', (event) => {
+                if (event.status === 'completed') {
+                    Swal.fire({
+                        title: 'Exportación Completada',
+                        html: `La exportación del archivo <strong>${event.filename}</strong> ha sido completada. <br><a href="{{ route('exports.index') }}">Ver Archivos Exportados</a>`,
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        
+
+
     </script>
 </x-app-layout>
