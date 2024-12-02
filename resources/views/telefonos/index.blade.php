@@ -206,7 +206,7 @@
             });
         });
 
-        Echo.channel('exports')
+       Echo.channel('exports')
             .listen('ExportStatusUpdated', (event) => {
                 if (event.status === 'completed') {
                     Swal.fire({
@@ -217,7 +217,6 @@
                     });
                 }
             });
-        
 
 
     </script>
