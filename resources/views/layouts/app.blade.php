@@ -67,10 +67,10 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 <div id="notification"
      style="display: none; position: fixed; top: 10px; right: 10px; background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px;">
     Export job completed!
+    <button id="close-notification" style="background: none; border: none; color: white; font-size: 16px; margin-left: 10px;">&times;</button>
 </div>
 
 @auth
@@ -80,9 +80,12 @@
         window.Echo.channel(`exports.${userId}`)
             .listen('.export.completed', (e) => {
                 console.log('Export completed for user:', e.userId);
-                // You can add more code here to handle the notification,
-                // such as displaying an alert or updating the UI
+                document.getElementById('notification').style.display = 'block';
             });
+
+        document.getElementById('close-notification').addEventListener('click', function() {
+            document.getElementById('notification').style.display = 'none';
+        });
     </script>
 @endauth
 
