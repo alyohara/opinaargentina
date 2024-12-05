@@ -44,4 +44,28 @@ class TelsExport implements FromCollection, WithHeadings, WithMapping
             $telefono->city->state->name,
         ];
     }
+
+    public function view(): View
+    {
+        $formattedData = [];
+
+        foreach ($this->data as $telefono) {
+            if ($telefono->movil) {
+                $formattedData[] = [
+                    'telefono' => $telefono->movil,
+                    'localidad' => $telefono->city->name,
+                ];
+            }
+            if ($telefono->telefono) {
+                $formattedData[] = [
+                    'telefono' => $telefono->telefono,
+                    'localidad' => $telefono->city->name,
+                ];
+            }
+        }
+
+        return view('exports.telefonosSimplificado', [
+            'telefonos' => $formattedData
+        ]);
+    }
 }
