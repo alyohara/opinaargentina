@@ -28,10 +28,8 @@ class TelsExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'Teléfono',
-            'Móvil',
-            'Ciudad',
-            'Provincia',
+            'Telefono',
+            'Localidad',
         ];
     }
 
@@ -39,9 +37,7 @@ class TelsExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             $telefono->telefono,
-            $telefono->movil,
             $telefono->city->name,
-            $telefono->city->state->name,
         ];
     }
 
