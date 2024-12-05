@@ -5,13 +5,14 @@ namespace App\Exports;
 use App\Models\Telefono;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
+//use Maatwebsite\Excel\Concerns\WithHeadings;
+//use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class TelsExport implements FromCollection, WithHeadings, WithMapping
+class TelsExport implements FromView
 {
     protected $data;
 
@@ -25,21 +26,21 @@ class TelsExport implements FromCollection, WithHeadings, WithMapping
         return $this->data;
     }
 
-    public function headings(): array
-    {
-        return [
-            'Telefono',
-            'Localidad',
-        ];
-    }
-
-    public function map($telefono): array
-    {
-        return [
-            $telefono->telefono,
-            $telefono->city->name,
-        ];
-    }
+//    public function headings(): array
+//    {
+//        return [
+//            'Telefono',
+//            'Localidad',
+//        ];
+//    }
+//
+//    public function map($telefono): array
+//    {
+//        return [
+//            $telefono->telefono,
+//            $telefono->city->name,
+//        ];
+//    }
 
     public function view(): View
     {
