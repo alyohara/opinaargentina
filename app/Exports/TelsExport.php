@@ -25,25 +25,25 @@ class TelsExport implements FromCollection, WithHeadings, WithMapping
         return $this->data;
     }
 
-    public function headings(): array
-    {
-        return [
-            'Teléfono',
-            'Móvil',
-            'Ciudad',
-            'Provincia',
-        ];
-    }
-
-    public function map($telefono): array
-    {
-        return [
-            $telefono->telefono,
-            $telefono->movil,
-            $telefono->city->name,
-            $telefono->city->state->name,
-        ];
-    }
+//    public function headings(): array
+//    {
+//        return [
+//            'Teléfono',
+//            'Móvil',
+//            'Ciudad',
+//            'Provincia',
+//        ];
+//    }
+//
+//    public function map($telefono): array
+//    {
+//        return [
+//            $telefono->telefono,
+//            $telefono->movil,
+//            $telefono->city->name,
+//            $telefono->city->state->name,
+//        ];
+//    }
 
     public function view(): View
     {
