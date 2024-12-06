@@ -39,20 +39,20 @@
                             </table>
                         </div>
 
-                        <!-- Chart for Teléfonos por Provincia -->
-                        <div class="mt-6">
+                        <!-- Card for Teléfonos por Provincia -->
+                        <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
                             <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Teléfonos por Provincia</h4>
                             <canvas id="telefonosPorProvinciaChart"></canvas>
                         </div>
 
-                        <!-- Chart for Usuarios por Rol -->
-                        <div class="mt-6">
+                        <!-- Card for Usuarios por Rol -->
+                        <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
                             <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Usuarios por Rol</h4>
                             <canvas id="usuariosPorRolChart"></canvas>
                         </div>
 
-                        <!-- Chart for Ranking de Provincias -->
-                        <div class="mt-6">
+                        <!-- Card for Ranking de Provincias -->
+                        <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
                             <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Ranking de Provincias</h4>
                             <canvas id="rankingProvinciasChart"></canvas>
                         </div>
