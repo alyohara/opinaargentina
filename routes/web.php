@@ -27,9 +27,9 @@ Route::middleware([
     'verified',
 ])->group(function () {
 //    Route::get('/dashboard', function () {
-//        return view('dashboard.index');
-//    })->name('dashboard.index');
-    Route::resource('dashboard', DashboardController::class);
+//        return view('dashboard');
+//    })->name('dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);

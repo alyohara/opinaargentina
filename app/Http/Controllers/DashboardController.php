@@ -10,6 +10,6 @@ class DashboardController extends Controller
     public function index()
     {
         $analytics = Analytics::latest()->first();
-        return view('dashboard.index', compact('analytics'));
+        return view('dashboard', compact('analytics'));
     }
 }
