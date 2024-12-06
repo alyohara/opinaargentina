@@ -8,54 +8,58 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Existing links -->
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Analytics Data -->
+                    @if($analytics)
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Analytics Data</h3>
 
-                <!-- Analytics Data -->
-                @if($analytics)
-                    <div class="mt-6">
-                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Analytics Data</h3>
-
-                        <!-- Table for Analytics Data -->
-                        <table class="min-w-full bg-white dark:bg-gray-800">
-                            <thead>
-                            <tr>
-                                <th class="py-2">Metric</th>
-                                <th class="py-2">Value</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Total Teléfonos</td>
-                                <td>{{ $analytics->total_telefonos }}</td>
-                            </tr>
-                            <tr>
-                                <td>Total Usuarios</td>
-                                <td>{{ $analytics->total_usuarios }}</td>
-                            </tr>
-                            <tr>
-                                <td>Localidad con más Teléfonos</td>
-                                <td>{{ $analytics->localidad_con_mas_telefonos }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                            <!-- Table for Analytics Data -->
+                            <table class="min-w-full bg-white dark:bg-gray-800">
+                                <thead>
+                                <tr>
+                                    <th class="py-2">Metric</th>
+                                    <th class="py-2">Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Total Teléfonos</td>
+                                    <td>{{ $analytics->total_telefonos }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Usuarios</td>
+                                    <td>{{ $analytics->total_usuarios }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Localidad con más Teléfonos</td>
+                                    <td>{{ $analytics->localidad_con_mas_telefonos }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
                         <!-- Chart for Teléfonos por Provincia -->
-                        <h4 class="mt-4 text-md font-semibold text-gray-800 dark:text-gray-200">Teléfonos por Provincia</h4>
-                        <canvas id="telefonosPorProvinciaChart"></canvas>
+                        <div class="mt-6">
+                            <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Teléfonos por Provincia</h4>
+                            <canvas id="telefonosPorProvinciaChart"></canvas>
+                        </div>
 
                         <!-- Chart for Usuarios por Rol -->
-                        <h4 class="mt-4 text-md font-semibold text-gray-800 dark:text-gray-200">Usuarios por Rol</h4>
-                        <canvas id="usuariosPorRolChart"></canvas>
+                        <div class="mt-6">
+                            <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Usuarios por Rol</h4>
+                            <canvas id="usuariosPorRolChart"></canvas>
+                        </div>
 
                         <!-- Chart for Ranking de Provincias -->
-                        <h4 class="mt-4 text-md font-semibold text-gray-800 dark:text-gray-200">Ranking de Provincias</h4>
-                        <canvas id="rankingProvinciasChart"></canvas>
-                    </div>
-                @else
-                    <p class="mt-6 text-gray-800 dark:text-gray-200">No analytics data available.</p>
-                @endif
+                        <div class="mt-6">
+                            <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Ranking de Provincias</h4>
+                            <canvas id="rankingProvinciasChart"></canvas>
+                        </div>
+                    @else
+                        <p class="mt-6 text-gray-800 dark:text-gray-200">No analytics data available.</p>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
