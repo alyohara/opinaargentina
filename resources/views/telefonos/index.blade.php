@@ -56,10 +56,9 @@
                                     <div class="col-md-4">
                                         <label for="file_name">Nombre del Archivo (opcional):</label>
                                         <input type="text" name="file_name" id="file_name" class="form-control">
-
-                                        <div class="col-md-8 text-right">
-                                            <button type="submit" class="btn btn-secondary mt-4">Exportar</button>
-                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <button type="submit" class="btn btn-secondary mt-4">Exportar</button>
                                     </div>
                                     <input type="hidden" id="export-state-id" name="state_id"
                                            value="{{ $selectedState }}">
