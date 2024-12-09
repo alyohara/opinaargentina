@@ -123,11 +123,67 @@ class TelefonoController extends Controller
         return response()->json($telefonos);
     }
 
+//    public function export2(Request $request)
+//    {
+//        $stateId = $request->input('state_id');
+//        $cityId = $request->input('city_id');
+//        $quantity = $request->input('quantity', 1000);
+//        $userId = auth()->id();
+//        $fileName = $request->input('file_name');
+//
+//        $query = Telefono::query()->with(['city.state']);
+//
+//        if ($stateId) {
+//            $cityIds = City::where('state_id', $stateId)->pluck('id');
+//            $query->whereIn('city_id', $cityIds);
+//        }
+//
+//        if ($cityId) {
+//            $query->where('city_id', $cityId);
+//        }
+//
+//        if ($quantity > 10000) {
+//            $chunks = ceil($quantity / 10000);
+//            $fileNames = [];
+//
+//            for ($i = 0; $i < $chunks; $i++) {
+//                $data = $query->skip($i * 10000)->take(10000)->get();
+//                $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
+//                Excel::store(new TelsExport($data), $fileName, 'public');
+//                $fileNames[] = $fileName;
+//            }
+//
+//            $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
+//            $zip = new ZipArchive;
+//
+//            if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
+//                foreach ($fileNames as $file) {
+//                    if (Storage::disk('public')->exists($file)) {
+//                        $zip->addFile(storage_path('app/public/' . $file), $file);
+//                    }
+//                }
+//                $zip->close();
+//            }
+//
+//            // Eliminar los archivos Excel individuales
+//            foreach ($fileNames as $file) {
+//                Storage::disk('public')->delete($file);
+//            }
+//
+//            return response()->download(storage_path('app/public/' . $zipFileName))->deleteFileAfterSend(true);
+//        } else {
+//            $data = $query->limit($quantity)->get();
+//            $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
+//            return Excel::download(new TelsExport($data), $fileName);
+//        }
+//    }
+
     public function export2(Request $request)
     {
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
         $quantity = $request->input('quantity', 1000);
+        $fileName = $request->input('file_name') ?: 'tels_export_' . now()->format('YmdHis') . '.xlsx';
 
         $query = Telefono::query()->with(['city.state']);
 
@@ -140,50 +196,20 @@ class TelefonoController extends Controller
             $query->where('city_id', $cityId);
         }
 
-        if ($quantity > 10000) {
-            $chunks = ceil($quantity / 10000);
-            $fileNames = [];
-
-            for ($i = 0; $i < $chunks; $i++) {
-                $data = $query->skip($i * 10000)->take(10000)->get();
-                $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
-                Excel::store(new TelsExport($data), $fileName, 'public');
-                $fileNames[] = $fileName;
-            }
-
-            $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
-            $zip = new ZipArchive;
-
-            if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
-                foreach ($fileNames as $file) {
-                    if (Storage::disk('public')->exists($file)) {
-                        $zip->addFile(storage_path('app/public/' . $file), $file);
-                    }
-                }
-                $zip->close();
-            }
-
-            // Eliminar los archivos Excel individuales
-            foreach ($fileNames as $file) {
-                Storage::disk('public')->delete($file);
-            }
-
-            return response()->download(storage_path('app/public/' . $zipFileName))->deleteFileAfterSend(true);
-        } else {
-            $data = $query->limit($quantity)->get();
-            $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
-            return Excel::download(new TelsExport($data), $fileName);
-        }
+        $data = $query->limit($quantity)->get();
+        return Excel::download(new TelsExport($data), $fileName);
     }
 
     public function export(Request $request)
     {
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
-        $quantity = $request->input('quantity', 1000);
-        $userId = $request->user()->id;
+        $quantity = $request->input('quantity');
+        $userId = auth()->id();
+        $fileName = $request->input('file_name');
 
-        ExportTelefonosJob::dispatch($stateId, $cityId, $quantity, $userId);
+        ExportTelefonosJob::dispatch($stateId, $cityId, $quantity, $userId, $fileName);
+
 
         return response()->json(['message' => 'Exportación iniciada, aguarde unos minutos.']);
     }

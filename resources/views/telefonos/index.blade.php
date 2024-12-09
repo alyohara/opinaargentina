@@ -18,10 +18,12 @@
                             <form method="GET" action="{{ route('telefonos.index') }}">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <select id="state" name="state" class="form-control select2" onchange="updateCities()">
+                                        <select id="state" name="state" class="form-control select2"
+                                                onchange="updateCities()">
                                             <option value="">Seleccione una provincia</option>
                                             @foreach($states as $state)
-                                                <option value="{{ $state->id }}" {{ $selectedState == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
+                                                <option
+                                                    value="{{ $state->id }}" {{ $selectedState == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -29,12 +31,14 @@
                                         <select id="city" name="city" class="form-control select2">
                                             <option value="">Seleccione una ciudad</option>
                                             @foreach($cities as $city)
-                                                <option value="{{ $city->id }}" {{ $selectedCity == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+                                                <option
+                                                    value="{{ $city->id }}" {{ $selectedCity == $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-right">
-                                        <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+                                        <button type="submit" id="filter-button" class="btn btn-primary">Filtrar
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -49,12 +53,17 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-8 text-right">
-                                        <button type="submit" class="btn btn-secondary mt-4">Exportar</button>
+                                    <div class="col-md-4">
+                                        <label for="file_name">Nombre del Archivo (opcional):</label>
+                                        <input type="text" name="file_name" id="file_name" class="form-control">
+
+                                        <div class="col-md-8 text-right">
+                                            <button type="submit" class="btn btn-secondary mt-4">Exportar</button>
+                                        </div>
                                     </div>
-                                </div>
-                                <input type="hidden" id="export-state-id" name="state_id" value="{{ $selectedState }}">
-                                <input type="hidden" id="export-city-id" name="city_id" value="{{ $selectedCity }}">
+                                    <input type="hidden" id="export-state-id" name="state_id"
+                                           value="{{ $selectedState }}">
+                                    <input type="hidden" id="export-city-id" name="city_id" value="{{ $selectedCity }}">
                             </form>
                         </div>
                     </div>
@@ -63,7 +72,9 @@
 
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <button onclick="window.location.href='{{ route('telefonos.create') }}'" class="btn btn-success mb-3">Agregar Teléfono</button>
+                    <button onclick="window.location.href='{{ route('telefonos.create') }}'"
+                            class="btn btn-success mb-3">Agregar Teléfono
+                    </button>
 
                     <table class="table table-striped">
                         <thead>
@@ -83,12 +94,15 @@
                                 <td>{{ $telefono->city->name }}</td>
                                 <td>{{ $telefono->city->state->name }}</td>
                                 <td>
-                                    <a href="{{ route('telefonos.show', $telefono) }}" class="btn btn-info btn-sm">Ver</a>
+                                    <a href="{{ route('telefonos.show', $telefono) }}"
+                                       class="btn btn-info btn-sm">Ver</a>
                                     <a href="{{ route('telefonos.edit', $telefono) }}" class="btn btn-warning btn-sm">Editar</a>
-                                    <form action="{{ route('telefonos.destroy', $telefono) }}" method="POST" class="d-inline delete-form">
+                                    <form action="{{ route('telefonos.destroy', $telefono) }}" method="POST"
+                                          class="d-inline delete-form">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-sm delete-button">Eliminar</button>
+                                        <button type="button" class="btn btn-danger btn-sm delete-button">Eliminar
+                                        </button>
                                     </form>
                                 </td>
                             </tr>
@@ -141,7 +155,7 @@
             }
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.select2').select2({
                 placeholder: 'Seleccione una opción',
                 allowClear: true,
@@ -156,12 +170,12 @@
                 $('#export-city-id').val(selectedCityId);
             }
 
-            $('#state').on('change', function() {
+            $('#state').on('change', function () {
                 updateExportFields();
                 updateCities();
             });
 
-            $('#city').on('change', function() {
+            $('#city').on('change', function () {
                 updateExportFields();
             });
 
@@ -205,7 +219,6 @@
                     });
             });
         });
-
 
 
     </script>
