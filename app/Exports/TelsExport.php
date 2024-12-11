@@ -10,10 +10,11 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 //use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Database\Eloquent\Builder;
 
-class TelsExport implements FromView
+class TelsExport implements FromView, WithChunkReading
 {
     protected $data;
 
@@ -25,6 +26,10 @@ class TelsExport implements FromView
     public function collection()
     {
         return $this->data;
+    }
+    public function chunkSize(): int
+    {
+        return 1000; // Process 1000 rows at a time
     }
 
 //    public function headings(): array
