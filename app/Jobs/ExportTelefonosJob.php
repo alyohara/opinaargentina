@@ -223,8 +223,8 @@ class ExportTelefonosJob implements ShouldQueue
 
                         $sheetData = $sheetData->map(function($row) {
                             return [
-                                'telefono' => $row['telefono'],
-                                'localidad' => $row['localidad']
+                                'Telefono' => $row['Telefono'],
+                                'Localidad' => $row['Localidad']
                             ];
                         });
 
