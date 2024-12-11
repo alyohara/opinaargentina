@@ -41,6 +41,9 @@ class ExportTelefonosJob implements ShouldQueue
 
     public function handle()
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(3000); // 50 minutes
+
         $export = Export::create([
             'user_id' => $this->userId,
             'job_started_at' => Carbon::now(),
@@ -68,7 +71,6 @@ class ExportTelefonosJob implements ShouldQueue
             $baseFileName = $this->fileName ?: 'tels_export';
             $timestamp = now()->format('YmdHis');
 
-
             $totalRecords = $query->count();
             if ($this->quantity > 250000) {
                 $data = $query->take($this->quantity)->get()->shuffle();
@@ -80,7 +82,6 @@ class ExportTelefonosJob implements ShouldQueue
             Excel::store(new TelsExport($data), $fileName, 'public');
             $filePath = $fileName;
             $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
-
 
             $export->update([
                 'file_path' => $filePath,
