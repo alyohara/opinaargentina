@@ -216,15 +216,24 @@ class ExportTelefonosJob implements ShouldQueue
                 $mergedData = collect();
 
                 foreach ($fileNames as $file) {
-                    // Load the data from the file
                     $data = Excel::toCollection(null, storage_path('app/public/' . $file));
 
                     if ($data->isNotEmpty()) {
-                        // Get the first sheet and skip the first row
                         $sheetData = $data->first()->slice(1);
+
+                        $sheetData = $sheetData->map(function($row) {
+                            return [
+                                'telefono' => $row['telefono'],
+                                'localidad' => $row['localidad']
+                            ];
+                        });
+
                         $mergedData = $mergedData->merge($sheetData);
                     }
                 }
+
+                $mergedFileName = "{$baseFileName}_{$timestamp}_merged.xlsx";
+                Excel::store(new TelsExport($mergedData), $mergedFileName, 'public');
 
 
 
