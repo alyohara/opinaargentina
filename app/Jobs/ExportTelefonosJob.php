@@ -224,7 +224,6 @@ class ExportTelefonosJob implements ShouldQueue
                     if (!isset($item['movil'])) {
                         $item['movil'] = null; // or any default value
                     }
-                    return $item;
                 });
 
                 $mergedFileName = "{$baseFileName}_{$timestamp}_merged.xlsx";
