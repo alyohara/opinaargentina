@@ -217,7 +217,7 @@ class ExportTelefonosJob implements ShouldQueue
 
                 foreach ($fileNames as $file) {
                     $data = Excel::toCollection(null, storage_path('app/public/' . $file));
-                    $mergedData = $mergedData->concat($data->first());
+                    $mergedData = $mergedData->merge($data->first());
                 }
 
 
