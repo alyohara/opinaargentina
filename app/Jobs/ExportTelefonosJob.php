@@ -14,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use ZipArchive;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use App\Events\ExportCompleted;
 
@@ -28,7 +28,7 @@ class ExportTelefonosJob implements ShouldQueue
     protected $userId;
     protected $fileName;
 
-    public $timeout = 1200;
+    public $timeout = 3600; // 1 hour
 
     public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null)
     {
@@ -41,8 +41,8 @@ class ExportTelefonosJob implements ShouldQueue
 
     public function handle()
     {
-        ini_set('memory_limit', '1G'); // Increase as needed
-        set_time_limit(3000); // Adjust timeout
+        ini_set('memory_limit', '1024M');
+        set_time_limit(3600); // 1 hour
 
         $export = Export::create([
             'user_id' => $this->userId,
@@ -51,11 +51,14 @@ class ExportTelefonosJob implements ShouldQueue
             'file_path' => '',
             'file_size' => 0
         ]);
+        Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
 
-        Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId]);
+        Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
 
         try {
-            $query = Telefono::query()->with(['city.state']);
+            $query = Telefono::query()->with(['city.state' => function ($query) {
+                $query->select('id', 'name');
+            }]);
 
             if ($this->stateId) {
                 $cityIds = City::where('state_id', $this->stateId)->pluck('id');
@@ -66,15 +69,30 @@ class ExportTelefonosJob implements ShouldQueue
                 $query->where('city_id', $this->cityId);
             }
 
-            $fileName = $this->fileName ?: 'tels_export_' . now()->format('YmdHis');
-            $filePath = "{$fileName}.xlsx";
+            $baseFileName = $this->fileName ?: 'tels_export';
+            $timestamp = now()->format('YmdHis');
+            $fileName = "{$baseFileName}_{$timestamp}.xlsx";
 
-            // Export in chunks
-            $query->chunk(1000, function ($rows) use ($fileName) {
-                Excel::store(new TelsExport($rows), $fileName, 'public');
-            });
+            $totalRecords = $query->count();
+            $progress = 0;
+            $chunkSize = 1000;
 
-            $fileSize = Storage::disk('public')->size($filePath) / 1024; // size in KB
+            if ($this->quantity > 250000) {
+                $query->inRandomOrder()->take($this->quantity);
+            } else {
+                $randomStart = rand(0, max(0, $totalRecords - $this->quantity));
+                $query->skip($randomStart)->take($this->quantity);
+            }
+
+            Excel::store(
+                new TelsExport($query),
+                $fileName,
+                'public',
+                \Maatwebsite\Excel\Excel::XLSX
+            );
+
+            $filePath = $fileName;
+            $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
 
             $export->update([
                 'file_path' => $filePath,
@@ -82,19 +100,20 @@ class ExportTelefonosJob implements ShouldQueue
                 'job_ended_at' => Carbon::now(),
                 'status' => 'creado'
             ]);
-
             event(new ExportCompleted($this->userId));
 
             Log::info('ExportTelefonosJob completed successfully', ['filePath' => $filePath]);
         } catch (\Exception $e) {
+            Log::error('ExportTelefonosJob failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             $export->update([
                 'job_ended_at' => Carbon::now(),
-                'status' => 'fail'
+                'status' => 'fail',
+                'error_message' => $e->getMessage()
             ]);
-
-            Log::error('ExportTelefonosJob failed', ['error' => $e->getMessage()]);
             throw $e;
         }
     }
-
 }
