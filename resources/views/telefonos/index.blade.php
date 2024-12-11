@@ -63,6 +63,7 @@
                                     <input type="hidden" id="export-state-id" name="state_id"
                                            value="{{ $selectedState }}">
                                     <input type="hidden" id="export-city-id" name="city_id" value="{{ $selectedCity }}">
+                                </div>
                             </form>
                         </div>
                     </div>
