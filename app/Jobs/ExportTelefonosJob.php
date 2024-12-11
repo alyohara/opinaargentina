@@ -41,8 +41,8 @@ class ExportTelefonosJob implements ShouldQueue
 
     public function handle()
     {
-        ini_set('memory_limit', '512M');
-        set_time_limit(3000); // 50 minutes
+        ini_set('memory_limit', '1G'); // Increase as needed
+        set_time_limit(3000); // Adjust timeout
 
         $export = Export::create([
             'user_id' => $this->userId,
@@ -51,9 +51,8 @@ class ExportTelefonosJob implements ShouldQueue
             'file_path' => '',
             'file_size' => 0
         ]);
-        Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
 
-        Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
+        Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId]);
 
         try {
             $query = Telefono::query()->with(['city.state']);
@@ -67,21 +66,15 @@ class ExportTelefonosJob implements ShouldQueue
                 $query->where('city_id', $this->cityId);
             }
 
-            $fileNames = [];
-            $baseFileName = $this->fileName ?: 'tels_export';
-            $timestamp = now()->format('YmdHis');
+            $fileName = $this->fileName ?: 'tels_export_' . now()->format('YmdHis');
+            $filePath = "{$fileName}.xlsx";
 
-            $totalRecords = $query->count();
-            if ($this->quantity > 250000) {
-                $data = $query->take($this->quantity)->get()->shuffle();
-            } else {
-                $randomStart = rand(0, max(0, $totalRecords - $this->quantity));
-                $data = $query->skip($randomStart)->take($this->quantity)->get();
-            }
-            $fileName = "{$baseFileName}_{$timestamp}.xlsx";
-            Excel::store(new TelsExport($data), $fileName, 'public');
-            $filePath = $fileName;
-            $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
+            // Export in chunks
+            $query->chunk(1000, function ($rows) use ($fileName) {
+                Excel::store(new TelsExport($rows), $fileName, 'public');
+            });
+
+            $fileSize = Storage::disk('public')->size($filePath) / 1024; // size in KB
 
             $export->update([
                 'file_path' => $filePath,
@@ -89,6 +82,7 @@ class ExportTelefonosJob implements ShouldQueue
                 'job_ended_at' => Carbon::now(),
                 'status' => 'creado'
             ]);
+
             event(new ExportCompleted($this->userId));
 
             Log::info('ExportTelefonosJob completed successfully', ['filePath' => $filePath]);
@@ -102,4 +96,5 @@ class ExportTelefonosJob implements ShouldQueue
             throw $e;
         }
     }
+
 }
