@@ -220,11 +220,7 @@ class ExportTelefonosJob implements ShouldQueue
                     $mergedData = $mergedData->merge($data[0]);
                 }
 
-                $mergedData = $mergedData->map(function ($item) {
-                    if (!isset($item['movil'])) {
-                        $item['movil'] = null; // or any default value
-                    }
-                });
+
 
                 $mergedFileName = "{$baseFileName}_{$timestamp}_merged.xlsx";
                 Excel::store(new TelsExport($mergedData), $mergedFileName, 'public');
