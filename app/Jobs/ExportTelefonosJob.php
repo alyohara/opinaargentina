@@ -190,7 +190,7 @@ class ExportTelefonosJob implements ShouldQueue
             $baseFileName = $this->fileName ?: 'tels_export';
             $timestamp = now()->format('YmdHis');
 
-            if ($this->quantity > 20000) {
+            if ($this->quantity > 200000) {
                 $chunks = ceil($this->quantity / 10000);
 
                 for ($i = 0; $i < $chunks; $i++) {
