@@ -74,22 +74,19 @@ class ExportTelefonosJob implements ShouldQueue
             $fileName = "{$baseFileName}_{$timestamp}.xlsx";
 
             $totalRecords = $query->count();
-            $progress = 0;
             $chunkSize = 1000;
+            $progress = 0;
 
-            if ($this->quantity > 250000) {
-                $query->inRandomOrder()->take($this->quantity);
-            } else {
-                $randomStart = rand(0, max(0, $totalRecords - $this->quantity));
-                $query->skip($randomStart)->take($this->quantity);
-            }
-
-            Excel::store(
-                new TelsExport($query),
-                $fileName,
-                'public',
-                \Maatwebsite\Excel\Excel::XLSX
-            );
+            $query->chunk($chunkSize, function ($data) use (&$progress, $fileName) {
+                Excel::store(
+                    new TelsExport($data),
+                    $fileName,
+                    'public',
+                    \Maatwebsite\Excel\Excel::XLSX
+                );
+                $progress += count($data);
+                Log::info('ExportTelefonosJob progress', ['progress' => $progress]);
+            });
 
             $filePath = $fileName;
             $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
