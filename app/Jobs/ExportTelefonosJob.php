@@ -192,6 +192,7 @@ class ExportTelefonosJob implements ShouldQueue
 
             if ($this->quantity > 20000) {
                 $chunks = ceil($this->quantity / 10000);
+                $allData = $query->get()->shuffle();
 
                 for ($i = 0; $i < $chunks; $i++) {
                     $data = $query->skip($i * 10000)->take(10000)->get()->shuffle();
@@ -211,34 +212,10 @@ class ExportTelefonosJob implements ShouldQueue
                     }
                     $zip->close();
                 }
-                // need to merge all excels in one excel
-
-                $mergedData = collect();
-
-                foreach ($fileNames as $file) {
-                    $data = Excel::toCollection(null, storage_path('app/public/' . $file));
-
-                    if ($data->isNotEmpty()) {
-                        $sheetData = $data->first()->slice(1);
-
-                        $sheetData = $sheetData->map(function($row) {
-                            return [
-                                'Telefono' => isset($row['Telefono']) ? $row['Telefono'] : null,
-                                'Localidad' => isset($row['Localidad']) ? $row['Localidad'] : null,
-                            ];
-                        });
-
-                        $mergedData = $mergedData->merge($sheetData);
-                    }
-                }
 
                 $mergedFileName = "{$baseFileName}_{$timestamp}_merged.xlsx";
-                Excel::store(new TelsExport($mergedData), $mergedFileName, 'public');
+                Excel::store(new TelsExport($allData), $mergedFileName, 'public');
 
-
-
-                $mergedFileName = "{$baseFileName}_{$timestamp}_merged.xlsx";
-                Excel::store(new TelsExport($mergedData), $mergedFileName, 'public');
 
                 foreach ($fileNames as $file) {
                     Storage::disk('public')->delete($file);
