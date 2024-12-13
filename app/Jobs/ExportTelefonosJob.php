@@ -193,7 +193,7 @@ class ExportTelefonosJob implements ShouldQueue
             if ($this->quantity > 20000) {
                 $chunks = ceil($this->quantity / 10000);
                 $allData = [];
-                $allData = $query->get()->shuffle()->toArray();
+                $allData = $query->get();
 
                 for ($i = 0; $i < $chunks; $i++) {
                     $data = $query->skip($i * 10000)->take(10000)->get()->shuffle();
