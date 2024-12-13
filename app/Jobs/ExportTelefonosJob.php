@@ -121,7 +121,6 @@
 //    }
 //}
 
-
 namespace App\Jobs;
 
 use App\Exports\TelsExport;
@@ -171,17 +170,14 @@ class ExportTelefonosJob implements ShouldQueue
             'file_size' => 0
         ]);
         Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
-
         Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
 
         try {
             $query = Telefono::query()->with(['city.state']);
-
             if ($this->stateId) {
                 $cityIds = City::where('state_id', $this->stateId)->pluck('id');
                 $query->whereIn('city_id', $cityIds);
             }
-
             if ($this->cityId) {
                 $query->where('city_id', $this->cityId);
             }
@@ -192,40 +188,6 @@ class ExportTelefonosJob implements ShouldQueue
 
             if ($this->quantity > 20000) {
                 $chunks = ceil($this->quantity / 10000);
-                $allData = [];
-
-                // make it in chunks
-
-
-
-//                for ($i = 0; $i < $chunks; $i++) {
-//                    $data = $query->skip($i * 10000)->take(10000)->get()->shuffle();
-//                    $fileName = "{$baseFileName}_{$timestamp}_part_" . ($i + 1) . '.xlsx';
-//                    Excel::store(new TelsExport($data), $fileName, 'public');
-//                    $fileNames[] = $fileName;
-//                    //$allData = array_merge($allData, $data->toArray());
-//                }
-//
-//                $zipFileName = "{$baseFileName}_{$timestamp}.zip";
-//                $zip = new ZipArchive;
-//
-//                if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
-//                    foreach ($fileNames as $file) {
-//                        if (Storage::disk('public')->exists($file)) {
-//                            $zip->addFile(storage_path('app/public/' . $file), $file);
-//                        }
-//                    }
-//                    $zip->close();
-//                }
-
-                //$mergedFileName = "{$baseFileName}_{$timestamp}_merged.xlsx";
-                //Excel::store(new TelsExport($allData), $mergedFileName, 'public');
-
-
-//                foreach ($fileNames as $file) {
-//                    Storage::disk('public')->delete($file);
-//                }
-
                 $allData = collect();
 
                 for ($i = 0; $i < $chunks; $i++) {
@@ -237,9 +199,6 @@ class ExportTelefonosJob implements ShouldQueue
                 Excel::store(new TelsExport($allData), $fileName, 'public');
                 $filePath = $fileName;
                 $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
-
-//                $filePath = $zipFileName;
-//                $fileSize = Storage::disk('public')->size($zipFileName) / 1024; // size in KB
             } else {
                 $totalRecords = $query->count();
                 $randomStart = rand(0, max(0, $totalRecords - $this->quantity));
@@ -250,21 +209,21 @@ class ExportTelefonosJob implements ShouldQueue
                 $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
             }
 
+            // Update the export record regardless of quantity
             $export->update([
                 'file_path' => $filePath,
                 'file_size' => $fileSize,
                 'job_ended_at' => Carbon::now(),
                 'status' => 'creado'
             ]);
-            event(new ExportCompleted($this->userId));
 
+            event(new ExportCompleted($this->userId));
             Log::info('ExportTelefonosJob completed successfully', ['filePath' => $filePath]);
         } catch (\Exception $e) {
             $export->update([
                 'job_ended_at' => Carbon::now(),
                 'status' => 'fail'
             ]);
-
             Log::error('ExportTelefonosJob failed', ['error' => $e->getMessage()]);
             throw $e;
         }
