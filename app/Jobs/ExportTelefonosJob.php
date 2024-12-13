@@ -199,7 +199,7 @@ class ExportTelefonosJob implements ShouldQueue
                     $fileName = "{$baseFileName}_{$timestamp}_part_" . ($i + 1) . '.xlsx';
                     Excel::store(new TelsExport($data), $fileName, 'public');
                     $fileNames[] = $fileName;
-                    $allData = array_merge($allData, $data->toArray());
+                    //$allData = array_merge($allData, $data->toArray());
                 }
 
                 $zipFileName = "{$baseFileName}_{$timestamp}.zip";
@@ -214,8 +214,8 @@ class ExportTelefonosJob implements ShouldQueue
                     $zip->close();
                 }
 
-                $mergedFileName = "{$baseFileName}_{$timestamp}_merged.xlsx";
-                Excel::store(new TelsExport($allData), $mergedFileName, 'public');
+                //$mergedFileName = "{$baseFileName}_{$timestamp}_merged.xlsx";
+                //Excel::store(new TelsExport($allData), $mergedFileName, 'public');
 
 
                 foreach ($fileNames as $file) {
