@@ -193,13 +193,14 @@ class ExportTelefonosJob implements ShouldQueue
             if ($this->quantity > 20000) {
                 $chunks = ceil($this->quantity / 10000);
                 $allData = [];
+                $allData = $query->get()->shuffle()->toArray();
 
                 for ($i = 0; $i < $chunks; $i++) {
                     $data = $query->skip($i * 10000)->take(10000)->get()->shuffle();
                     $fileName = "{$baseFileName}_{$timestamp}_part_" . ($i + 1) . '.xlsx';
                     Excel::store(new TelsExport($data), $fileName, 'public');
                     $fileNames[] = $fileName;
-                    $allData = array_merge($allData, $data->toArray());
+                    //$allData = array_merge($allData, $data->toArray());
                 }
 
                 $zipFileName = "{$baseFileName}_{$timestamp}.zip";
