@@ -78,6 +78,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function permisos()
+    {
+        return $this->hasManyThrough(Permission::class, Role::class);
+    }
+
 
     public function equipoAsLeader()
     {
