@@ -191,12 +191,12 @@ class ExportTelefonosJob implements ShouldQueue
             $baseFileName = $this->fileName ?: 'tels_export';
             $timestamp = now()->format('YmdHis');
 
-            if ($this->quantity > 20000) {
-                $chunks = ceil($this->quantity / 10000);
+            if ($this->quantity > 100000) {
+                $chunks = ceil($this->quantity / 50000);
                 $allData = collect();
 
                 for ($i = 0; $i < $chunks; $i++) {
-                    $data = $query->skip($i * 10000)->take(10000)->get()->shuffle();
+                    $data = $query->skip($i * 50000)->take(50000)->get()->shuffle();
                     $allData = $allData->merge($data);
                 }
 
