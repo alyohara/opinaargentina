@@ -162,10 +162,8 @@ class ExportTelefonosJob implements ShouldQueue
 
     public function handle()
     {
-
-        ini_set('max_execution_time', 3600); // 1 hora
-        ini_set('memory_limit', '2048M'); // 512 MB
-
+        ini_set('max_execution_time', 7200); // 2 hours
+        ini_set('memory_limit', '4096M'); // 4 GB
 
         $export = Export::create([
             'user_id' => $this->userId,
@@ -191,12 +189,12 @@ class ExportTelefonosJob implements ShouldQueue
             $baseFileName = $this->fileName ?: 'tels_export';
             $timestamp = now()->format('YmdHis');
 
-            if ($this->quantity > 100000) {
-                $chunks = ceil($this->quantity / 50000);
+            if ($this->quantity > 500000) {
+                $chunks = ceil($this->quantity / 100000);
                 $allData = collect();
 
                 for ($i = 0; $i < $chunks; $i++) {
-                    $data = $query->skip($i * 50000)->take(50000)->get()->shuffle();
+                    $data = $query->skip($i * 100000)->take(100000)->get()->shuffle();
                     $allData = $allData->merge($data);
                 }
 
