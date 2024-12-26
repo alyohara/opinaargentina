@@ -1,26 +1,62 @@
+# Opina Argentina
 
+Opina Argentina is a web application that allows users to share their opinions on various topics related to Argentina. This project is built using PHP and MySQL, and it runs on the XAMPP server.
 
-6. **Run database migrations:**
-    ```sh
-    php artisan migrate
+## Features
+
+- User registration and authentication
+- Post opinions on different topics
+- Comment on other users' opinions
+- Like and dislike opinions
+- User profile management
+
+## Installation
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/yourusername/opinaargentina.git
     ```
-
-7. **Start the development server:**
-    ```sh
-    php artisan serve
+2. Navigate to the project directory:
+    ```bash
+    cd opinaargentina
     ```
+3. Start the XAMPP server and ensure Apache and MySQL are running.
+4. Import the database:
+    - Open phpMyAdmin.
+    - Create a new database named `opinaargentina`.
+    - Import the `opinaargentina.sql` file located in the `database` directory.
+5. Configure the database connection:
+    - Open `config.php` and update the database credentials.
 
-8. **Compile the assets:**
-    ```sh
-    npm run dev
+## Usage
+
+1. Open your web browser and navigate to `http://localhost/opinaargentina`.
+2. Register a new account or log in with an existing account.
+3. Start sharing your opinions and interacting with other users.
+
+## Contributing
+
+We welcome contributions! Please follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch:
+    ```bash
+    git checkout -b feature-name
     ```
+3. Make your changes and commit them:
+    ```bash
+    git commit -m "Description of changes"
+    ```
+4. Push to the branch:
+    ```bash
+    git push origin feature-name
+    ```
+5. Create a pull request.
 
-Your application should now be up and running on [http://localhost:8000](http://localhost:8000).
+## License
 
-### Contributing
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-Thank you for considering contributing to the OpinaArgentina project! Please read the contribution guide for details on how to get started.
+## Contact
 
-### License
-
-The OpinaArgentina project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+For any questions or suggestions, please contact us at [angel.bianco@unab.edu.ar](mailto:angel.bianco@unab.edu.ar).
