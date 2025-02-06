@@ -8,58 +8,80 @@ use Illuminate\Http\Request;
 class TelController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra una lista de los registros de teléfonos.
      */
     public function index()
     {
-        //
+        $tels = Tel::all();
+        return view('tels.index', compact('tels'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Muestra el formulario para crear un nuevo registro.
      */
     public function create()
     {
-        //
+        return view('tels.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un nuevo registro en la base de datos.
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'persona_id'    => 'nullable|integer|exists:personas_t,id',
+            'tipo_telefono' => 'nullable|in:fijo,movil',
+            'nro_telefono'  => 'nullable|string|max:15',
+            'localidad_id'  => 'nullable|integer|exists:localidades,id',
+            'provincia_id'  => 'nullable|integer|exists:provincias,id',
+        ]);
+
+        Tel::create($data);
+
+        return redirect()->route('tels.index')->with('success', 'Registro creado exitosamente.');
     }
 
     /**
-     * Display the specified resource.
+     * Muestra un registro específico.
      */
     public function show(Tel $tel)
     {
-        //
+        return view('tels.show', compact('tel'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Muestra el formulario para editar un registro.
      */
     public function edit(Tel $tel)
     {
-        //
+        return view('tels.edit', compact('tel'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza el registro en la base de datos.
      */
     public function update(Request $request, Tel $tel)
     {
-        //
+        $data = $request->validate([
+            'persona_id'    => 'nullable|integer|exists:personas_t,id',
+            'tipo_telefono' => 'nullable|in:fijo,movil',
+            'nro_telefono'  => 'nullable|string|max:15',
+            'localidad_id'  => 'nullable|integer|exists:localidades,id',
+            'provincia_id'  => 'nullable|integer|exists:provincias,id',
+        ]);
+
+        $tel->update($data);
+
+        return redirect()->route('tels.index')->with('success', 'Registro actualizado exitosamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina el registro de la base de datos.
      */
     public function destroy(Tel $tel)
     {
-        //
+        $tel->delete();
+        return redirect()->route('tels.index')->with('success', 'Registro eliminado exitosamente.');
     }
 }
