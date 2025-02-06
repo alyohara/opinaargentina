@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLocalidadesTableV2 extends Migration
+return new class extends Migration
 {
     /**
      * Ejecuta las migraciones.
@@ -49,4 +49,5 @@ class CreateLocalidadesTableV2 extends Migration
     {
         Schema::dropIfExists('localidades');
     }
-}
+};
+
