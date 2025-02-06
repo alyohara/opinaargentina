@@ -38,6 +38,7 @@ Route::middleware([
     Route::resource('cities', CityController::class);
     Route::resource('people', PersonController::class);
     Route::resource('telefonos', TelefonoController::class);
+    Route::resource('localidades', LocalidadController::class);
     Route::get('/exports', [ExportController::class, 'index'])->name('exports.index');
 
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
