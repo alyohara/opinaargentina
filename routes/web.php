@@ -40,6 +40,7 @@ Route::middleware([
     Route::resource('telefonos', TelefonoController::class);
     Route::resource('localidades', LocalidadController::class);
     Route::resource('provincias', ProvinciaController::class);
+    Route::resource('personas_t', PersonaTController::class);
     Route::get('/exports', [ExportController::class, 'index'])->name('exports.index');
 
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
