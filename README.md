@@ -59,4 +59,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
+<<<<<<< Updated upstream
 For any questions or suggestions, please contact us at [angel.bianco@unab.edu.ar](mailto:angel.bianco@unab.edu.ar).
+=======
+For any questions or suggestions, please contact us at [your-email@example.com](mailto:your-email@example.com).
+>>>>>>> Stashed changes
