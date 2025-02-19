@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\LocalidadController;
+use App\Http\Controllers\PersonaTController;
+use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\UserController;
