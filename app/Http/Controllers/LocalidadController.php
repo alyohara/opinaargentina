@@ -30,7 +30,7 @@ class LocalidadController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nombre'       => 'nullable|string|max:100',
+            'nombre' => 'nullable|string|max:100',
             'provincia_id' => 'required|exists:provincias,id',
         ]);
 
@@ -61,7 +61,7 @@ class LocalidadController extends Controller
     public function update(Request $request, Localidad $localidad)
     {
         $data = $request->validate([
-            'nombre'       => 'nullable|string|max:100',
+            'nombre' => 'nullable|string|max:100',
             'provincia_id' => 'required|exists:provincias,id',
         ]);
 
@@ -77,5 +77,11 @@ class LocalidadController extends Controller
     {
         $localidad->delete();
         return redirect()->route('localidades.index')->with('success', 'Localidad eliminada exitosamente.');
+    }
+
+    public function getLocalidadesByProvincia($provinciaId)
+    {
+        $localidades = Localidad::where('provincia_id', $provinciaId)->get();
+        return response()->json($localidades);
     }
 }

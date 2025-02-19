@@ -10,10 +10,31 @@ class TelController extends Controller
     /**
      * Muestra una lista de los registros de teléfonos.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tels = Tel::all();
-        return view('tels.index', compact('tels'));
+        // Cache provinces and localities to reduce database load
+        $provincias = Cache::remember('provincias', now()->addMinutes(10), function () {
+            return Provincia::all();
+        });
+
+        $localidades = Cache::remember('localidades', now()->addMinutes(10), function () {
+            return Localidad::all();
+        });
+
+        $query = Tel::with(['localidad.provincia']);
+
+        if ($request->has('provincia_id') && $request->provincia_id) {
+            $query->where('provincia_id', $request->provincia_id);
+        }
+
+        if ($request->has('localidad_id') && $request->localidad_id) {
+            $query->where('localidad_id', $request->localidad_id);
+        }
+
+        // Use cursor pagination for better performance with large datasets
+        $tels = $query->cursorPaginate(100);
+
+        return view('tels.index', compact('provincias', 'localidades', 'tels'));
     }
 
     /**
@@ -30,11 +51,11 @@ class TelController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'persona_id'    => 'nullable|integer|exists:personas_t,id',
+            'persona_id' => 'nullable|integer|exists:personas_t,id',
             'tipo_telefono' => 'nullable|in:fijo,movil',
-            'nro_telefono'  => 'nullable|string|max:15',
-            'localidad_id'  => 'nullable|integer|exists:localidades,id',
-            'provincia_id'  => 'nullable|integer|exists:provincias,id',
+            'nro_telefono' => 'nullable|string|max:15',
+            'localidad_id' => 'nullable|integer|exists:localidades,id',
+            'provincia_id' => 'nullable|integer|exists:provincias,id',
         ]);
 
         Tel::create($data);
@@ -64,11 +85,11 @@ class TelController extends Controller
     public function update(Request $request, Tel $tel)
     {
         $data = $request->validate([
-            'persona_id'    => 'nullable|integer|exists:personas_t,id',
+            'persona_id' => 'nullable|integer|exists:personas_t,id',
             'tipo_telefono' => 'nullable|in:fijo,movil',
-            'nro_telefono'  => 'nullable|string|max:15',
-            'localidad_id'  => 'nullable|integer|exists:localidades,id',
-            'provincia_id'  => 'nullable|integer|exists:provincias,id',
+            'nro_telefono' => 'nullable|string|max:15',
+            'localidad_id' => 'nullable|integer|exists:localidades,id',
+            'provincia_id' => 'nullable|integer|exists:provincias,id',
         ]);
 
         $tel->update($data);
