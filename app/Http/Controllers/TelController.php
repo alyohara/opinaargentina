@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Localidad;
+use App\Models\Provincia;
 use App\Models\Tel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class TelController extends Controller
 {
