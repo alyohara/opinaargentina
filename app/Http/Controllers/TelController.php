@@ -15,6 +15,8 @@ class TelController extends Controller
      */
     public function index(Request $request)
     {
+        ini_set('memory_limit', '1024M');
+
         // Cache provinces and localities to reduce database load
         $provincias = Cache::remember('provincias', now()->addMinutes(10), function () {
             return Provincia::all();
