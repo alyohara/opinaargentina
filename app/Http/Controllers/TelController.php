@@ -28,9 +28,11 @@ class TelController extends Controller
 
 //
         $localidades = Localidad::all();
+        $selectedProvincia = $request->input('provincia');
+        $selectedLocalidad = $request->input('localidad');
         $tels = [];
 
-        return view('tels.index', compact('provincias', 'localidades', 'tels'));
+        return view('tels.index', compact('provincias', 'localidades', 'tels', 'selectedProvincia', 'selectedLocalidad'));
     }
 
     /**
