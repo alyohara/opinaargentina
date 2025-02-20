@@ -23,7 +23,7 @@
                                             <option value="">Seleccione una provincia</option>
                                             @foreach($provincias as $provincia)
                                                 <option
-                                                    value="{{ $provincia->id }}" {{ $selectedProvincia == $provincia->id ? 'selected' : '' }}>{{ $provincia->name }}</option>
+                                                    value="{{ $provincia->id }}" {{ $selectedProvincia == $provincia->id ? 'selected' : '' }}>{{ $provincia->nombre }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -32,7 +32,7 @@
                                             <option value="">Seleccione una localidad</option>
                                             @foreach($localidades as $localidad)
                                                 <option
-                                                    value="{{ $localidad->id }}" {{ $selectedLocalidad == $localidad->id ? 'selected' : '' }}>{{ $localidad->name }}</option>
+                                                    value="{{ $localidad->id }}" {{ $selectedLocalidad == $localidad->id ? 'selected' : '' }}>{{ $localidad->nombre }}</option>
                                             @endforeach
                                         </select>
                                     </div>
