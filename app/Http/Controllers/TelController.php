@@ -22,11 +22,12 @@ class TelController extends Controller
             return Provincia::all();
         });
 
-        $localidades = Cache::remember('localidades', now()->addMinutes(10), function () {
-            return Localidad::all();
-        });
+       // $localidades = Cache::remember('localidades', now()->addMinutes(10), function () {
+       //     return Localidad::all();
+        ///});
 
 //
+        $localidades = Localidad::all();
         $tels = [];
 
         return view('tels.index', compact('provincias', 'localidades', 'tels'));
