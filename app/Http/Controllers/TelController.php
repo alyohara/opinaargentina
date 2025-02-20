@@ -26,18 +26,8 @@ class TelController extends Controller
             return Localidad::all();
         });
 
-        $query = Tel::with(['localidad.provincia']);
-
-        if ($request->has('provincia_id') && $request->provincia_id) {
-            $query->where('provincia_id', $request->provincia_id);
-        }
-
-        if ($request->has('localidad_id') && $request->localidad_id) {
-            $query->where('localidad_id', $request->localidad_id);
-        }
-
-        // Use cursor pagination for better performance with large datasets
-        $tels = $query->cursorPaginate(100);
+//
+        $tels = [];
 
         return view('tels.index', compact('provincias', 'localidades', 'tels'));
     }
