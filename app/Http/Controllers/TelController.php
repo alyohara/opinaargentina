@@ -54,7 +54,7 @@ class TelController extends Controller
         $telefonos = Tel::with(['localidad.provincia'])->take(10)->get();
         //$telefonos = $query->cursorPaginate(100);
 
-        return view('telefonos.index', compact('states', 'cities', 'telefonos', 'selectedState', 'selectedCity'));
+        return view('tels.index', compact('states', 'cities', 'telefonos', 'selectedState', 'selectedCity'));
     }
 
     /**
