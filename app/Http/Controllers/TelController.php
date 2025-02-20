@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Localidad;
 use App\Models\Provincia;
+use App\Models\State;
 use App\Models\Tel;
+use App\Models\Telefono;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -17,22 +20,41 @@ class TelController extends Controller
     {
         ini_set('memory_limit', '1024M');
 
-        // Cache provinces and localities to reduce database load
-        $provincias = Cache::remember('provincias', now()->addMinutes(10), function () {
-            return Provincia::all();
-        });
+        $states = Provincia::all();
+        $cities = Localidad::all();
+       // $query = Telefono::with(['city.state']);
 
-       // $localidades = Cache::remember('localidades', now()->addMinutes(10), function () {
-       //     return Localidad::all();
-        ///});
+        $selectedState = $request->provincia;
+        $selectedCity = $request->localidad;
+        $orderBy = $request->order_by;
 
-//
-        $localidades = collect(); // Inicialmente vacío
-        $selectedProvincia = $request->input('provincia');
-        $selectedLocalidad = $request->input('localidad');
-        $tels = [];
+        if ($selectedState) {
+            $cityIds = Localidad::where('provincia_id', $selectedState)->pluck('id');
+           // $query->whereIn('city_id', $cityIds);
+        }
 
-        return view('tels.index', compact('provincias', 'localidades', 'tels', 'selectedProvincia', 'selectedLocalidad'));
+        if ($selectedCity) {
+            //$query->where('city_id', $selectedCity);
+        }
+
+        switch ($orderBy) {
+            case 'city_asc':
+                //$query->orderBy('city_id', 'asc');
+                break;
+            case 'city_desc':
+                //$query->orderBy('city_id', 'desc');
+                break;
+            case 'state_asc':
+                //$query->orderBy('state_id', 'asc');
+                break;
+            case 'state_desc':
+                //$query->orderBy('state_id', 'desc');
+                break;
+        }
+        $telefonos = Tel::with(['localidad.provincia'])->take(10)->get();
+        //$telefonos = $query->cursorPaginate(100);
+
+        return view('telefonos.index', compact('states', 'cities', 'telefonos', 'selectedState', 'selectedCity'));
     }
 
     /**

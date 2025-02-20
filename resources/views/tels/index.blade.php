@@ -30,7 +30,13 @@
                                     <div class="col-md-5">
                                         <select id="localidad" name="localidad" class="form-control select2">
                                             <option value="">Seleccione una localidad</option>
-                                            <!-- Las localidades se cargarán dinámicamente -->
+                                            @if($selectedProvincia)
+                                                @foreach($localidades as $localidad)
+                                                    <option
+                                                        value="{{ $localidad->id }}" {{ $selectedLocalidad == $localidad->id ? 'selected' : '' }}>{{ $localidad->nombre }}</option>
+                                                @endforeach
+                                            @endif
+
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-right">
