@@ -51,14 +51,14 @@ class TelController extends Controller
                 //$query->orderBy('state_id', 'desc');
                 break;
         }
-        $telefonos = Tel::with(['localidad.provincia'])->take(10)->get();
+        $tels = Tel::with(['localidad.provincia'])->take(10)->get();
         //$telefonos = $query->cursorPaginate(100);
         $provincias = $states;
         $localidades = $cities;
         $selectedProvincia = $selectedState;
         $selectedLocalidad = $selectedCity;
 
-        return view('tels.index', compact('provincias', 'localidades', 'telefonos', 'selectedProvincia', 'selectedLocalidad'));
+        return view('tels.index', compact('provincias', 'localidades', 'tels', 'selectedProvincia', 'selectedLocalidad'));
     }
 
     /**
