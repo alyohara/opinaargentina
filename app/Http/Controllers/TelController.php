@@ -28,11 +28,14 @@ class TelController extends Controller
         $selectedCity = $request->localidad;
         $orderBy = $request->order_by;
 
-//        if ($selectedState) {
-//            $cityIds = Localidad::where('provincia_id', $selectedState)->pluck('id');
-//            $query->whereIn('localidad_id', $cityIds);
-//        }
-//
+        if ($selectedState) {
+            $cities = Localidad::where('provincia_id', $selectedState)->get();
+            $cityIds = $cities->pluck('id');
+            $query->whereIn('localidad_id', $cityIds);
+        } else {
+            $selectedState = null;
+            $cities = Localidad::all();
+        }
 //        if ($selectedCity) {
 //            $query->where('localidad_id', $selectedCity);
 //        }
