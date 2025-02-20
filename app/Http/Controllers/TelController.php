@@ -27,7 +27,7 @@ class TelController extends Controller
         ///});
 
 //
-        $localidades = Localidad::all();
+        $localidades = collect(); // Inicialmente vacío
         $selectedProvincia = $request->input('provincia');
         $selectedLocalidad = $request->input('localidad');
         $tels = [];

@@ -30,10 +30,7 @@
                                     <div class="col-md-5">
                                         <select id="localidad" name="localidad" class="form-control select2">
                                             <option value="">Seleccione una localidad</option>
-                                            @foreach($localidades as $localidad)
-                                                <option
-                                                    value="{{ $localidad->id }}" {{ $selectedLocalidad == $localidad->id ? 'selected' : '' }}>{{ $localidad->nombre }}</option>
-                                            @endforeach
+                                            <!-- Las localidades se cargarán dinámicamente -->
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-right">
@@ -112,7 +109,7 @@
                         @endforeach
                         </tbody>
                     </table>
-{{--                    {{ $tels->links() }}--}}
+                    {{--                    {{ $tels->links() }}--}}
                 </div>
             </div>
         </div>
@@ -151,7 +148,7 @@
                         data.forEach(localidad => {
                             const option = document.createElement('option');
                             option.value = localidad.id;
-                            option.textContent = localidad.name;
+                            option.textContent = localidad.nombre;
                             localidadSelect.appendChild(option);
                         });
                     });
