@@ -112,7 +112,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                    {{ $tels->links() }}
+                    {{ //$tels->links() }}
                 </div>
             </div>
         </div>
