@@ -97,8 +97,8 @@
                                 <td>{{ $tel->persona_id }}</td>
                                 <td>{{ $tel->tipo_telefono }}</td>
                                 <td>{{ $tel->nro_telefono }}</td>
-                                <td>{{ $tel->localidad->name }}</td>
-                                <td>{{ $tel->localidad->provincia->name }}</td>
+                                <td>{{ $tel->localidad->nombre }}</td>
+                                <td>{{ $tel->localidad->provincia->nombre }}</td>
                                 <td>
                                     <a href="{{ route('tels.show', $tel) }}"
                                        class="btn btn-info btn-sm">Ver</a>
