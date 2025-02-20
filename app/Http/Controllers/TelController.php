@@ -53,7 +53,7 @@ class TelController extends Controller
 //        }
 
         $tels = $query->cursorPaginate(100);
-        dd($tels);
+        //dd($tels);
         $provincias = $states;
         $localidades = $cities;
         $selectedProvincia = $selectedState;
