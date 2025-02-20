@@ -22,7 +22,7 @@ class TelController extends Controller
 
         $states = Provincia::all();
         $cities = Localidad::all();
-       // $query = Telefono::with(['city.state']);
+        $query =  Tel::with(['localidad.provincia']);
 
         $selectedState = $request->provincia ?? 0;
         $selectedCity = $request->localidad ?? 0;
@@ -30,29 +30,29 @@ class TelController extends Controller
 
         if ($selectedState) {
             $cityIds = Localidad::where('provincia_id', $selectedState)->pluck('id');
-           // $query->whereIn('city_id', $cityIds);
+            $query->whereIn('localidad_id', $cityIds);
         }
 
         if ($selectedCity) {
-            //$query->where('city_id', $selectedCity);
+            $query->where('localidad_id', $selectedCity);
         }
 
         switch ($orderBy) {
             case 'city_asc':
-                //$query->orderBy('city_id', 'asc');
+                $query->orderBy('localidad_id', 'asc');
                 break;
             case 'city_desc':
-                //$query->orderBy('city_id', 'desc');
+                $query->orderBy('localidad_id', 'desc');
                 break;
             case 'state_asc':
-                //$query->orderBy('state_id', 'asc');
+                $query->orderBy('provincia_id', 'asc');
                 break;
             case 'state_desc':
-                //$query->orderBy('state_id', 'desc');
+                $query->orderBy('provincia_id', 'desc');
                 break;
         }
-        $tels = Tel::with(['localidad.provincia'])->take(10)->get();
-        //$telefonos = $query->cursorPaginate(100);
+
+        $tels = $query->cursorPaginate(100);
         $provincias = $states;
         $localidades = $cities;
         $selectedProvincia = $selectedState;
