@@ -28,29 +28,29 @@ class TelController extends Controller
         $selectedCity = $request->localidad ?? 0;
         $orderBy = $request->order_by;
 
-        if ($selectedState) {
-            $cityIds = Localidad::where('provincia_id', $selectedState)->pluck('id');
-            $query->whereIn('localidad_id', $cityIds);
-        }
-
-        if ($selectedCity) {
-            $query->where('localidad_id', $selectedCity);
-        }
-
-        switch ($orderBy) {
-            case 'city_asc':
-                $query->orderBy('localidad_id', 'asc');
-                break;
-            case 'city_desc':
-                $query->orderBy('localidad_id', 'desc');
-                break;
-            case 'state_asc':
-                $query->orderBy('provincia_id', 'asc');
-                break;
-            case 'state_desc':
-                $query->orderBy('provincia_id', 'desc');
-                break;
-        }
+//        if ($selectedState) {
+//            $cityIds = Localidad::where('provincia_id', $selectedState)->pluck('id');
+//            $query->whereIn('localidad_id', $cityIds);
+//        }
+//
+//        if ($selectedCity) {
+//            $query->where('localidad_id', $selectedCity);
+//        }
+//
+//        switch ($orderBy) {
+//            case 'city_asc':
+//                $query->orderBy('localidad_id', 'asc');
+//                break;
+//            case 'city_desc':
+//                $query->orderBy('localidad_id', 'desc');
+//                break;
+//            case 'state_asc':
+//                $query->orderBy('provincia_id', 'asc');
+//                break;
+//            case 'state_desc':
+//                $query->orderBy('provincia_id', 'desc');
+//                break;
+//        }
 
         $tels = $query->cursorPaginate(100);
         dd($tels);
