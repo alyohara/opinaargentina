@@ -42,7 +42,7 @@
                                     </div>
                                 </div>
                             </form>
-                            <form method="POST" action="{{ route('tels.export') }}" id="export-form" class="mt-3">
+                            <form method="POST" action="{{ route('telefonos.export') }}" id="export-form" class="mt-3">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-4">
