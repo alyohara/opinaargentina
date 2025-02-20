@@ -55,8 +55,10 @@ class TelController extends Controller
         //$telefonos = $query->cursorPaginate(100);
         $provincias = $states;
         $localidades = $cities;
+        $selectedProvincia = $selectedState;
+        $selectedLocalidad = $selectedCity;
 
-        return view('tels.index', compact('provincias', 'localidades', 'telefonos', 'selectedState', 'selectedCity'));
+        return view('tels.index', compact('provincias', 'localidades', 'telefonos', 'selectedProvincia', 'selectedLocalidad'));
     }
 
     /**
