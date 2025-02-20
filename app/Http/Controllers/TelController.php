@@ -24,8 +24,8 @@ class TelController extends Controller
         $cities = Localidad::all();
        // $query = Telefono::with(['city.state']);
 
-        $selectedState = $request->provincia;
-        $selectedCity = $request->localidad;
+        $selectedState = $request->provincia ?? 0;
+        $selectedCity = $request->localidad ?? 0;
         $orderBy = $request->order_by;
 
         if ($selectedState) {
