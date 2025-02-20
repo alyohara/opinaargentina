@@ -187,7 +187,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
-            const exportForm = document.querySelector('form[action="{{ route('tels.export') }}"]');
+            const exportForm = document.querySelector('form[action="{{ route('telefonos.export') }}"]');
 
             exportForm.addEventListener('submit', function (event) {
                 event.preventDefault();
