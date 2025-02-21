@@ -18,12 +18,12 @@
                             <form method="GET" action="{{ route('tels.index') }}">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <select id="provincia" name="provincia" class="form-control select2"
-                                                onchange="updateLocalidades()">
+                                        <select id="provincia" name="provincia" class="form-control select2" onchange="updateLocalidades()">
                                             <option value="">Seleccione una provincia</option>
                                             @foreach($provincias as $provincia)
-                                                <option
-                                                    value="{{ $provincia->id }}" {{ $selectedProvincia == $provincia->id ? 'selected' : '' }}>{{ $provincia->nombre }}</option>
+                                                <option value="{{ $provincia->id }}" {{ $selectedProvincia == $provincia->id ? 'selected' : '' }}>
+                                                    {{ $provincia->nombre }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -32,11 +32,11 @@
                                             <option value="">Seleccione una localidad</option>
                                             @if($selectedProvincia)
                                                 @foreach($localidades as $localidad)
-                                                    <option
-                                                        value="{{ $localidad->id }}" {{ $selectedLocalidad == $localidad->id ? 'selected' : '' }}>{{ $localidad->nombre }}</option>
+                                                    <option value="{{ $localidad->id }}" {{ $selectedLocalidad == $localidad->id ? 'selected' : '' }}>
+                                                        {{ $localidad->nombre }}
+                                                    </option>
                                                 @endforeach
                                             @endif
-
                                         </select>
                                     </div>
                                     <div class="col-md-1">
@@ -56,8 +56,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-right">
-                                        <button type="submit" id="filter-button" class="btn btn-primary">Filtrar
-                                        </button>
+                                        <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                                     </div>
                                 </div>
                             </form>
