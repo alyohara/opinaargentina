@@ -17,7 +17,7 @@
                         <div class="card-body">
                             <form method="GET" action="{{ route('tels.index') }}">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <select id="provincia" name="provincia" class="form-control select2" onchange="updateLocalidades()">
                                             <option value="">Seleccione una provincia</option>
                                             @foreach($provincias as $provincia)
@@ -27,7 +27,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <select id="localidad" name="localidad" class="form-control select2">
                                             <option value="">Seleccione una localidad</option>
                                             @if($selectedProvincia)
