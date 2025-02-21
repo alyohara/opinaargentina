@@ -17,7 +17,7 @@
                         <div class="card-body">
                             <form method="GET" action="{{ route('tels.index') }}">
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <select id="provincia" name="provincia" class="form-control select2"
                                                 onchange="updateLocalidades()">
                                             <option value="">Seleccione una provincia</option>
@@ -27,7 +27,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-4">
                                         <select id="localidad" name="localidad" class="form-control select2">
                                             <option value="">Seleccione una localidad</option>
                                             @if($selectedProvincia)
@@ -37,6 +37,22 @@
                                                 @endforeach
                                             @endif
 
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <select id="tipo_telefono" name="tipo_telefono" class="form-control select2">
+                                            <option value="">Seleccione un tipo de teléfono</option>
+                                            <option value="fijo" {{ request('tipo_telefono') == 'fijo' ? 'selected' : '' }}>Fijo</option>
+                                            <option value="movil" {{ request('tipo_telefono') == 'movil' ? 'selected' : '' }}>Móvil</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <select id="order_by" name="order_by" class="form-control select2">
+                                            <option value="">Ordenar por</option>
+                                            <option value="city_asc" {{ request('order_by') == 'city_asc' ? 'selected' : '' }}>Localidad Ascendente</option>
+                                            <option value="city_desc" {{ request('order_by') == 'city_desc' ? 'selected' : '' }}>Localidad Descendente</option>
+                                            <option value="state_asc" {{ request('order_by') == 'state_asc' ? 'selected' : '' }}>Provincia Ascendente</option>
+                                            <option value="state_desc" {{ request('order_by') == 'state_desc' ? 'selected' : '' }}>Provincia Descendente</option>
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-right">

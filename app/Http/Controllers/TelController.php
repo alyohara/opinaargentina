@@ -21,12 +21,15 @@ class TelController extends Controller
         ini_set('memory_limit', '1024M');
 
         $states = Provincia::all();
-        $cities = Localidad::all();
+        //$cities = Localidad::all();
         $query =  Tel::with(['localidad.provincia']);
 
         $selectedState = $request->provincia;
         $selectedCity = $request->localidad;
+        $selectedTipoTelefono = $request->tipo_telefono;
         $orderBy = $request->order_by;
+        $orderBy = $request->order_by;
+
 
         if ($selectedState) {
             $cities = Localidad::where('provincia_id', $selectedState)->get();
@@ -36,25 +39,28 @@ class TelController extends Controller
             $selectedState = null;
             $cities = Localidad::all();
         }
-//        if ($selectedCity) {
-//            $query->where('localidad_id', $selectedCity);
-//        }
-//
-//        switch ($orderBy) {
-//            case 'city_asc':
-//                $query->orderBy('localidad_id', 'asc');
-//                break;
-//            case 'city_desc':
-//                $query->orderBy('localidad_id', 'desc');
-//                break;
-//            case 'state_asc':
-//                $query->orderBy('provincia_id', 'asc');
-//                break;
-//            case 'state_desc':
-//                $query->orderBy('provincia_id', 'desc');
-//                break;
-//        }
 
+        if ($selectedCity) {
+            $query->where('localidad_id', $selectedCity);
+        }
+        if ($selectedTipoTelefono) {
+            $query->where('tipo_telefono', $selectedTipoTelefono);
+        }
+
+        switch ($orderBy) {
+            case 'city_asc':
+                $query->orderBy('localidad_id', 'asc');
+                break;
+            case 'city_desc':
+                $query->orderBy('localidad_id', 'desc');
+                break;
+            case 'state_asc':
+                $query->orderBy('provincia_id', 'asc');
+                break;
+            case 'state_desc':
+                $query->orderBy('provincia_id', 'desc');
+                break;
+        }
         $tels = $query->cursorPaginate(100);
         //dd($tels);
         $provincias = $states;
