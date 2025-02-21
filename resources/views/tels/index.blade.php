@@ -41,14 +41,14 @@
                                     </div>
                                 </div>
                                 <div class="row mt-3">
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <select id="tipo_telefono" name="tipo_telefono" class="form-control select2">
                                             <option value="">Seleccione un tipo de teléfono</option>
                                             <option value="fijo" {{ request('tipo_telefono') == 'fijo' ? 'selected' : '' }}>Fijo</option>
                                             <option value="movil" {{ request('tipo_telefono') == 'movil' ? 'selected' : '' }}>Móvil</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <select id="order_by" name="order_by" class="form-control select2">
                                             <option value="">Ordenar por</option>
                                             <option value="city_asc" {{ request('order_by') == 'city_asc' ? 'selected' : '' }}>Localidad Ascendente</option>
