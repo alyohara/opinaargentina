@@ -39,14 +39,16 @@
                                             @endif
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
                                         <select id="tipo_telefono" name="tipo_telefono" class="form-control select2">
                                             <option value="">Seleccione un tipo de teléfono</option>
                                             <option value="fijo" {{ request('tipo_telefono') == 'fijo' ? 'selected' : '' }}>Fijo</option>
                                             <option value="movil" {{ request('tipo_telefono') == 'movil' ? 'selected' : '' }}>Móvil</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-4">
                                         <select id="order_by" name="order_by" class="form-control select2">
                                             <option value="">Ordenar por</option>
                                             <option value="city_asc" {{ request('order_by') == 'city_asc' ? 'selected' : '' }}>Localidad Ascendente</option>
@@ -55,7 +57,7 @@
                                             <option value="state_desc" {{ request('order_by') == 'state_desc' ? 'selected' : '' }}>Provincia Descendente</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-2 text-right">
+                                    <div class="col-md-4 text-right">
                                         <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                                     </div>
                                 </div>
