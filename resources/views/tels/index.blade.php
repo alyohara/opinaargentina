@@ -57,7 +57,7 @@
                                             <option value="state_desc" {{ request('order_by') == 'state_desc' ? 'selected' : '' }}>Provincia Descendente</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 text-right">
+                                    <div class="col-md-2 text-right">
                                         <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
                                     </div>
                                 </div>
