@@ -71,6 +71,7 @@ class ExportTelefonosJob implements ShouldQueue
             if ($this->tipoTelefono) {
                 $query->where('tipo_telefono', $this->tipoTelefono);
             }
+            log::info('ExportTelefonosJob query', ['query' => $query]);
 
 //            switch ($this->orderBy) {
 //                case 'city_asc':
