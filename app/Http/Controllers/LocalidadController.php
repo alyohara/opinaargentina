@@ -81,7 +81,7 @@ class LocalidadController extends Controller
 
     public function getLocalidadesByProvincia($provinciaId)
     {
-        $localidades = Localidad::where('provincia_id', $provinciaId)->get();
+        $localidades = Localidad::where('provincia_id', $provinciaId)->paginate(500);
         return response()->json($localidades);
     }
 }

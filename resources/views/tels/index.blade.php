@@ -167,31 +167,45 @@
             });
         });
 
+        let currentPage = 1;
+        let totalPages = 1;
+
         function updateLocalidades() {
             const provinciaId = document.getElementById('provincia').value;
             const localidadSelect = document.getElementById('localidad');
             localidadSelect.innerHTML = '<option value="">Seleccione una localidad</option>';
+            currentPage = 1;
+            totalPages = 1;
             if (provinciaId) {
-                fetch(`/api/provincias/${provinciaId}/localidades`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`Network response was not ok: ${response.statusText}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        data.forEach(localidad => {
-                            const option = document.createElement('option');
-                            option.value = localidad.id;
-                            option.textContent = localidad.nombre;
-                            localidadSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching localidades:', error);
-                        alert('Error fetching localidades. Please try again later.');
-                    });
+                fetchLocalidades(provinciaId, currentPage);
             }
+        }
+
+        function fetchLocalidades(provinciaId, page) {
+            fetch(`/api/provincias/${provinciaId}/localidades?page=${page}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    totalPages = data.last_page;
+                    data.data.forEach(localidad => {
+                        const option = document.createElement('option');
+                        option.value = localidad.id;
+                        option.textContent = localidad.nombre;
+                        document.getElementById('localidad').appendChild(option);
+                    });
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        fetchLocalidades(provinciaId, currentPage);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching localidades:', error);
+                    alert('Error fetching localidades. Please try again later.');
+                });
         }
 
         $(document).ready(function () {
