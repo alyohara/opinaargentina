@@ -71,7 +71,6 @@ class ExportTelefonosJob implements ShouldQueue
             if ($this->tipoTelefono) {
                 $query->where('tipo_telefono', $this->tipoTelefono);
             }
-            Log::channel('export_query')->info('ExportTelefonosJob query', ['query' => $query]);
 //            switch ($this->orderBy) {
 //                case 'city_asc':
 //                    $query->orderBy('localidad_id', 'asc');
@@ -113,6 +112,7 @@ function exportData($query)
 {
     $timestamp = now()->format('YmdHis');
     $fileNames = [];
+    Log::channel('export_query')->info('ExportTelefonosJob query', ['query' => $query]);
 
     if ($this->quantity > 1000000) {
         $chunks = ceil($this->quantity / 100000);
