@@ -125,6 +125,8 @@ namespace App\Jobs;
 
 use App\Exports\TelsExport;
 use App\Models\Export;
+use App\Models\Localidad;
+use App\Models\Tel;
 use App\Models\Telefono;
 use App\Models\City;
 use Illuminate\Bus\Queueable;
@@ -151,13 +153,15 @@ class ExportTelefonosJob implements ShouldQueue
 
     public $timeout = 7200; // 2 hours
 
-    public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null)
+    public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null, $orderBy = null)
     {
         $this->stateId = $stateId;
         $this->cityId = $cityId;
         $this->quantity = $quantity;
         $this->userId = $userId;
         $this->fileName = $fileName;
+        $this->tipoTelefono = $tipoTelefono;
+        $this->orderBy = $orderBy;
     }
 
     public function handle()
@@ -176,13 +180,35 @@ class ExportTelefonosJob implements ShouldQueue
         Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
 
         try {
-            $query = Telefono::query()->with(['city.state']);
+            $query = Tel::query()->select(['nro_telefono', 'localidad_id'])->with(['localidad.provincia']); // this query only needs nro_telefono and localidad->nombre
+
             if ($this->stateId) {
-                $cityIds = City::where('state_id', $this->stateId)->pluck('id');
-                $query->whereIn('city_id', $cityIds);
+                $cityIds = Localidad::where('provincia_id', $this->stateId)->pluck('id');
+                $query->whereIn('localidad_id', $cityIds);
             }
             if ($this->cityId) {
-                $query->where('city_id', $this->cityId);
+                $query->where('localidad_id', $this->cityId);
+            }
+            // add tipo_telefono filter here if needed
+            if ($this->tipoTelefono) {
+                $query->where('tipo_telefono', $this->tipoTelefono);
+            }
+            // add orderBy here if needed
+            if ($this->orderBy) {
+                switch ($this->orderBy) {
+                    case 'city_asc':
+                        $query->orderBy('localidad_id', 'asc');
+                        break;
+                    case 'city_desc':
+                        $query->orderBy('localidad_id', 'desc');
+                        break;
+                    case 'state_asc':
+                        $query->orderBy('provincia_id', 'asc');
+                        break;
+                    case 'state_desc':
+                        $query->orderBy('provincia_id', 'desc');
+                        break;
+                }
             }
 
             $fileNames = [];

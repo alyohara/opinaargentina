@@ -204,11 +204,13 @@ class TelefonoController extends Controller
     {
         $stateId = $request->input('state_id');
         $cityId = $request->input('city_id');
+        $tipoTelefono = $request->input('tipo_telefono');
+        $orderBy = $request->input('order_by');
         $quantity = $request->input('quantity');
         $userId = auth()->id();
         $fileName = $request->input('file_name');
 
-        ExportTelefonosJob::dispatch($stateId, $cityId, $quantity, $userId, $fileName);
+        ExportTelefonosJob::dispatch($stateId, $cityId, $quantity, $userId, $fileName, $tipoTelefono, $orderBy);
 
 
         return response()->json(['message' => 'Exportación iniciada, aguarde unos minutos.']);

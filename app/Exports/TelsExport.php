@@ -50,25 +50,28 @@ class TelsExport implements FromView, WithChunkReading
 
     public function view(): ViewContract
     {
-        $formattedData = [];
-
-        foreach ($this->data as $telefono) {
-            if ($telefono->movil) {
-                $formattedData[] = [
-                    'telefono' => $telefono->movil,
-                    'localidad' => $telefono->city->name,
-                ];
-            }
-            if ($telefono->telefono) {
-                $formattedData[] = [
-                    'telefono' => $telefono->telefono,
-                    'localidad' => $telefono->city->name,
-                ];
-            }
-        }
-
+//        $formattedData = [];
+//
+//        foreach ($this->data as $telefono) {
+//            if ($telefono->movil) {
+//                $formattedData[] = [
+//                    'telefono' => $telefono->movil,
+//                    'localidad' => $telefono->city->name,
+//                ];
+//            }
+//            if ($telefono->telefono) {
+//                $formattedData[] = [
+//                    'telefono' => $telefono->telefono,
+//                    'localidad' => $telefono->city->name,
+//                ];
+//            }
+//        }
+//
+//        return view('exports.telefonosSimplificado', [
+//            'telefonos' => $formattedData
+//        ]);
         return view('exports.telefonosSimplificado', [
-            'telefonos' => $formattedData
+            'telefonos' => $this->data
         ]);
     }
 }

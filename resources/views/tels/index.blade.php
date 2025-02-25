@@ -84,6 +84,15 @@
                                            value="{{ $selectedProvincia }}">
                                     <input type="hidden" id="export-localidad-id" name="localidad_id"
                                            value="{{ $selectedLocalidad }}">
+                                    // Agregar el campo de tipo de teléfono
+                                    <input type="hidden" id="export-tipo-telefono" name="tipo_telefono"
+                                           value="{{ request('tipo_telefono') }}">
+                                    // Agregar el campo de orden
+                                    <input type="hidden" id="export-order-by" name="order_by"
+                                           value="{{ request('order_by') }}">
+
+
+
                                 </div>
                             </form>
                         </div>
@@ -180,17 +189,38 @@
 
         $(document).ready(function () {
             $('.select2').select2({
-                placeholder: 'Seleccione una opción',
+                // placeholder: 'Seleccione una opción',
                 allowClear: true,
                 width: '100%'
+            });
+            //every select2 has a clear button
+            $('.select2-selection__clear').on('click', function () {
+                $(this).closest('.select2-container').prev('select').val(null).trigger('change');
+            });
+
+            $('#provincia').on('select2:open', function (e) {
+                $('.select2-search__field').attr('placeholder', 'Seleccione una provincia');
+            });
+            $('#localidad').on('select2:open', function (e) {
+                $('.select2-search__field').attr('placeholder', 'Seleccione una localidad');
+            });
+            $('#tipo_telefono').on('select2:open', function (e) {
+                $('.select2-search__field').attr('placeholder', 'Seleccione un tipo de teléfono');
+            });
+            $('#order_by').on('select2:open', function (e) {
+                $('.select2-search__field').attr('placeholder', 'Seleccione un orden');
             });
 
             function updateExportFields() {
                 const selectedProvinciaId = $('#provincia').val();
                 const selectedLocalidadId = $('#localidad').val();
+                const selectedTipoTelefono = $('#tipo_telefono').val();
+                const selectedOrderBy = $('#order_by').val();
 
                 $('#export-provincia-id').val(selectedProvinciaId);
                 $('#export-localidad-id').val(selectedLocalidadId);
+                $('#export-tipo-telefono').val(selectedTipoTelefono);
+                $('#export-order-by').val(selectedOrderBy);
             }
 
             $('#provincia').on('change', function () {
@@ -199,6 +229,14 @@
             });
 
             $('#localidad').on('change', function () {
+                updateExportFields();
+            });
+
+            $('#tipo_telefono').on('change', function () {
+                updateExportFields();
+            });
+
+            $('#order_by').on('change', function () {
                 updateExportFields();
             });
 
