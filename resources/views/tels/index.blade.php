@@ -173,7 +173,12 @@
             localidadSelect.innerHTML = '<option value="">Seleccione una localidad</option>';
             if (provinciaId) {
                 fetch(`/api/provincias/${provinciaId}/localidades`)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Network response was not ok: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         data.forEach(localidad => {
                             const option = document.createElement('option');
@@ -181,6 +186,10 @@
                             option.textContent = localidad.nombre;
                             localidadSelect.appendChild(option);
                         });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching localidades:', error);
+                        alert('Error fetching localidades. Please try again later.');
                     });
             }
         }

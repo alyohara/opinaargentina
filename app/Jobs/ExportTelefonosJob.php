@@ -59,7 +59,7 @@ class ExportTelefonosJob implements ShouldQueue
         Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            $query = Tel::with(['localidad.provincia']);
+            $query = Tel::all();
             if ($this->stateId) {
                 $cityIds = Localidad::where('provincia_id', $this->stateId)->pluck('id');
                 $query->whereIn('localidad_id', $cityIds);
