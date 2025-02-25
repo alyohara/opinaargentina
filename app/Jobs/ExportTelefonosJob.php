@@ -1,125 +1,4 @@
 <?php
-//namespace App\Jobs;
-//
-//use App\Exports\TelsExport;
-//use App\Models\Export;
-//use App\Models\Telefono;
-//use App\Models\City;
-//use Illuminate\Bus\Queueable;
-//use Illuminate\Contracts\Queue\ShouldQueue;
-//use Illuminate\Foundation\Bus\Dispatchable;
-//use Illuminate\Queue\InteractsWithQueue;
-//use Illuminate\Queue\SerializesModels;
-//use Maatwebsite\Excel\Facades\Excel;
-//use Illuminate\Support\Facades\Storage;
-//use Illuminate\Support\Facades\Log;
-//use ZipArchive;
-//use Carbon\Carbon;
-//use App\Events\ExportCompleted;
-//
-//class ExportTelefonosJob implements ShouldQueue
-//{
-//    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-//
-//    protected $stateId;
-//    protected $cityId;
-//    protected $quantity;
-//    protected $userId;
-//
-//    public $timeout = 1200;
-//
-//    public function __construct($stateId, $cityId, $quantity, $userId)
-//    {
-//        $this->stateId = $stateId;
-//        $this->cityId = $cityId;
-//        $this->quantity = $quantity;
-//        $this->userId = $userId;
-//    }
-//
-//    public function handle()
-//    {
-//        $export = Export::create([
-//            'user_id' => $this->userId,
-//            'job_started_at' => Carbon::now(),
-//            'status' => 'in_progress',
-//            'file_path' => '',
-//            'file_size' => 0
-//        ]);
-//        Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
-//
-//        Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
-//
-//        try {
-//            $query = Telefono::query()->with(['city.state']);
-//
-//            if ($this->stateId) {
-//                $cityIds = City::where('state_id', $this->stateId)->pluck('id');
-//                $query->whereIn('city_id', $cityIds);
-//            }
-//
-//            if ($this->cityId) {
-//                $query->where('city_id', $this->cityId);
-//            }
-//
-//            $fileNames = [];
-//            if ($this->quantity > 20000) {
-//                $chunks = ceil($this->quantity / 10000);
-//
-//                for ($i = 0; $i < $chunks; $i++) {
-//                    $data = $query->skip($i * 10000)->take(10000)->get()->shuffle();
-//                    $fileName = 'tels_export_' . now()->format('YmdHis') . '_part_' . ($i + 1) . '.xlsx';
-//                    Excel::store(new TelsExport($data), $fileName, 'public');
-//                    $fileNames[] = $fileName;
-//                }
-//
-//                $zipFileName = 'tels_export_' . now()->format('YmdHis') . '.zip';
-//                $zip = new ZipArchive;
-//
-//                if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
-//                    foreach ($fileNames as $file) {
-//                        if (Storage::disk('public')->exists($file)) {
-//                            $zip->addFile(storage_path('app/public/' . $file), $file);
-//                        }
-//                    }
-//                    $zip->close();
-//                }
-//
-//                foreach ($fileNames as $file) {
-//                    Storage::disk('public')->delete($file);
-//                }
-//
-//                $filePath = $zipFileName;
-//                $fileSize = Storage::disk('public')->size($zipFileName) / 1024; // size in KB
-//            } else {
-//                $totalRecords = $query->count();
-//                $randomStart = rand(0, max(0, $totalRecords - $this->quantity));
-//                $data = $query->skip($randomStart)->take($this->quantity)->get();
-//                $fileName = 'tels_export_' . now()->format('YmdHis') . '.xlsx';
-//                Excel::store(new TelsExport($data), $fileName, 'public');
-//                $filePath = $fileName;
-//                $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
-//            }
-//
-//            $export->update([
-//                'file_path' => $filePath,
-//                'file_size' => $fileSize,
-//                'job_ended_at' => Carbon::now(),
-//                'status' => 'creado'
-//            ]);
-//            event(new ExportCompleted($this->userId));
-//
-//            Log::info('ExportTelefonosJob completed successfully', ['filePath' => $filePath]);
-//        } catch (\Exception $e) {
-//            $export->update([
-//                'job_ended_at' => Carbon::now(),
-//                'status' => 'fail'
-//            ]);
-//
-//            Log::error('ExportTelefonosJob failed', ['error' => $e->getMessage()]);
-//            throw $e;
-//        }
-//    }
-//}
 
 namespace App\Jobs;
 
@@ -127,8 +6,6 @@ use App\Exports\TelsExport;
 use App\Models\Export;
 use App\Models\Localidad;
 use App\Models\Tel;
-use App\Models\Telefono;
-use App\Models\City;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -150,8 +27,10 @@ class ExportTelefonosJob implements ShouldQueue
     protected $quantity;
     protected $userId;
     protected $fileName;
+    protected $tipoTelefono;
+    protected $orderBy;
 
-    public $timeout = 7200; // 2 hours
+    public $timeout = 7200; // 2 horas
 
     public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null, $orderBy = null)
     {
@@ -159,15 +38,15 @@ class ExportTelefonosJob implements ShouldQueue
         $this->cityId = $cityId;
         $this->quantity = $quantity;
         $this->userId = $userId;
-        $this->fileName = $fileName;
+        $this->fileName = $fileName ?: 'tels_export';
         $this->tipoTelefono = $tipoTelefono;
         $this->orderBy = $orderBy;
     }
 
     public function handle()
     {
-        ini_set('max_execution_time', 14400); // 4 hours
-        ini_set('memory_limit', '8192M'); // 8 GB
+        ini_set('max_execution_time', 14400); // 4 horas
+        ini_set('memory_limit', '8192M'); // 8GB
 
         $export = Export::create([
             'user_id' => $this->userId,
@@ -176,11 +55,11 @@ class ExportTelefonosJob implements ShouldQueue
             'file_path' => '',
             'file_size' => 0
         ]);
-        Log::info('ExportTelefonosJob saved', ['exportId' => $export->id, 'job_started_at' => $export->job_started_at, 'status' => $export->status]);
-        Log::info('ExportTelefonosJob started', ['stateId' => $this->stateId, 'cityId' => $this->cityId, 'quantity' => $this->quantity, 'userId' => $this->userId]);
+
+        Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            $query = Tel::query()->select(['nro_telefono', 'localidad_id'])->with(['localidad.provincia']); // this query only needs nro_telefono and localidad->nombre
+            $query = Tel::select(['nro_telefono', 'localidad_id'])->with(['localidad.provincia']);
 
             if ($this->stateId) {
                 $cityIds = Localidad::where('provincia_id', $this->stateId)->pluck('id');
@@ -189,67 +68,15 @@ class ExportTelefonosJob implements ShouldQueue
             if ($this->cityId) {
                 $query->where('localidad_id', $this->cityId);
             }
-            // add tipo_telefono filter here if needed
             if ($this->tipoTelefono) {
                 $query->where('tipo_telefono', $this->tipoTelefono);
             }
-            // add orderBy here if needed
             if ($this->orderBy) {
-                switch ($this->orderBy) {
-                    case 'city_asc':
-                        $query->orderBy('localidad_id', 'asc');
-                        break;
-                    case 'city_desc':
-                        $query->orderBy('localidad_id', 'desc');
-                        break;
-                    case 'state_asc':
-                        $query->orderBy('provincia_id', 'asc');
-                        break;
-                    case 'state_desc':
-                        $query->orderBy('provincia_id', 'desc');
-                        break;
-                }
+                $query->orderBy($this->getOrderByColumn(), $this->getOrderDirection());
             }
 
-            $fileNames = [];
-            $baseFileName = $this->fileName ?: 'tels_export';
-            $timestamp = now()->format('YmdHis');
-
-            if ($this->quantity > 1000000) {
-                $chunks = ceil($this->quantity / 100000);
-                for ($i = 0; $i < $chunks; $i++) {
-                    $data = $query->skip($i * 100000)->take(100000)->get()->shuffle();
-                    $fileName = "{$baseFileName}_{$timestamp}_part_{$i}.xlsx";
-                    Excel::store(new TelsExport($data), $fileName, 'public');
-                    $fileNames[] = $fileName;
-                }
-
-                $zipFileName = "{$baseFileName}_{$timestamp}.zip";
-                $zip = new ZipArchive;
-                if ($zip->open(storage_path('app/public/' . $zipFileName), ZipArchive::CREATE) === TRUE) {
-                    foreach ($fileNames as $file) {
-                        if (Storage::disk('public')->exists($file)) {
-                            $zip->addFile(storage_path('app/public/' . $file), $file);
-                        }
-                    }
-                    $zip->close();
-                }
-
-                foreach ($fileNames as $file) {
-                    Storage::disk('public')->delete($file);
-                }
-
-                $filePath = $zipFileName;
-                $fileSize = Storage::disk('public')->size($zipFileName) / 1024; // size in KB
-            } else {
-                $totalRecords = $query->count();
-                $randomStart = rand(0, max(0, $totalRecords - $this->quantity));
-                $data = $query->skip($randomStart)->take($this->quantity)->get();
-                $fileName = "{$baseFileName}_{$timestamp}.xlsx";
-                Excel::store(new TelsExport($data), $fileName, 'public');
-                $filePath = $fileName;
-                $fileSize = Storage::disk('public')->size($fileName) / 1024; // size in KB
-            }
+            $filePath = $this->exportData($query);
+            $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
 
             $export->update([
                 'file_path' => $filePath,
@@ -259,14 +86,70 @@ class ExportTelefonosJob implements ShouldQueue
             ]);
 
             event(new ExportCompleted($this->userId));
-            Log::info('ExportTelefonosJob completed successfully', ['filePath' => $filePath]);
+            Log::info('ExportTelefonosJob finalizado', ['filePath' => $filePath]);
         } catch (\Exception $e) {
-            $export->update([
-                'job_ended_at' => Carbon::now(),
-                'status' => 'fail'
-            ]);
-            Log::error('ExportTelefonosJob failed', ['error' => $e->getMessage()]);
+            $export->update(['job_ended_at' => Carbon::now(), 'status' => 'fail']);
+            Log::error('ExportTelefonosJob falló', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             throw $e;
         }
+    }
+
+    private function exportData($query)
+    {
+        $timestamp = now()->format('YmdHis');
+        $fileNames = [];
+
+        if ($this->quantity > 1000000) {
+            $chunks = ceil($this->quantity / 100000);
+            for ($i = 0; $i < $chunks; $i++) {
+                $data = $query->skip($i * 100000)->take(100000)->get();
+                $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
+                Excel::store(new TelsExport($data), $fileName, 'public');
+                $fileNames[] = $fileName;
+            }
+            return $this->createZip($fileNames, $timestamp);
+        } else {
+            $data = $query->take($this->quantity)->get();
+            $fileName = "{$this->fileName}_{$timestamp}.xlsx";
+            Excel::store(new TelsExport($data), $fileName, 'public');
+            return $fileName;
+        }
+    }
+
+    private function createZip($fileNames, $timestamp)
+    {
+        $zipFileName = "{$this->fileName}_{$timestamp}.zip";
+        $zipPath = storage_path("app/public/{$zipFileName}");
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+            foreach ($fileNames as $file) {
+                $filePath = storage_path("app/public/{$file}");
+                if (Storage::disk('public')->exists($file)) {
+                    $zip->addFile($filePath, $file);
+                }
+            }
+            $zip->close();
+        }
+
+        foreach ($fileNames as $file) {
+            Storage::disk('public')->delete($file);
+        }
+
+        return $zipFileName;
+    }
+
+    private function getOrderByColumn()
+    {
+        return match ($this->orderBy) {
+            'city_asc', 'city_desc' => 'localidad_id',
+            'state_asc', 'state_desc' => 'provincia_id',
+            default => 'id',
+        };
+    }
+
+    private function getOrderDirection()
+    {
+        return str_contains($this->orderBy, 'desc') ? 'desc' : 'asc';
     }
 }

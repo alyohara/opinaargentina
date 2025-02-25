@@ -84,10 +84,8 @@
                                            value="{{ $selectedProvincia }}">
                                     <input type="hidden" id="export-localidad-id" name="localidad_id"
                                            value="{{ $selectedLocalidad }}">
-                                    // Agregar el campo de tipo de teléfono
                                     <input type="hidden" id="export-tipo-telefono" name="tipo_telefono"
                                            value="{{ request('tipo_telefono') }}">
-                                    // Agregar el campo de orden
                                     <input type="hidden" id="export-order-by" name="order_by"
                                            value="{{ request('order_by') }}">
 
