@@ -111,7 +111,6 @@ class ExportTelefonosJob implements ShouldQueue
     {
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
-        Log::info('ExportTelefonosJob query', ['query' => $query->toSql()]);
 
         if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 100000);
