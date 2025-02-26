@@ -120,19 +120,19 @@ class ExportTelefonosJob implements ShouldQueue
             return $this->createZip($fileNames, $timestamp);
         } else {
             $data = $query->inRandomOrder()->take($this->quantity)->get();
-            log::info('Exportando ' . $this->quantity . ' registros');}
-            // log the query structure and data to see if it is correct
-             log::info($query->toSql());
-             log::info($data);
-
-            $fileName = "{$this->fileName}_{$timestamp}.xlsx";
-            Excel::store(new TelsExport($data), $fileName, 'public');
-            return $fileName;
+            log::info('Exportando ' . $this->quantity . ' registros');
         }
+        // log the query structure and data to see if it is correct
+        log::info($query->toSql());
+        log::info($data);
+
+        $fileName = "{$this->fileName}_{$timestamp}.xlsx";
+        Excel::store(new TelsExport($data), $fileName, 'public');
+        return $fileName;
     }
 
-    private
-    function createZip($fileNames, $timestamp)
+
+    private function createZip($fileNames, $timestamp)
     {
         $zipFileName = "{$this->fileName}_{$timestamp}.zip";
         $zipPath = storage_path("app/public/{$zipFileName}");
