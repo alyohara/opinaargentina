@@ -84,27 +84,6 @@ class ExportTelefonosJob implements ShouldQueue
 //                    break;
 //            }
 
-            $timestamp = now()->format('YmdHis');
-            $fileNames = [];
-            \Log::info('Exportando datos la querryyyyie', ['query' => $query->toSql(), 'bindings' => $query->getBindings()]);
-
-
-            if ($this->quantity > 1000000) {
-                $chunks = ceil($this->quantity / 100000);
-                for ($i = 0; $i < $chunks; $i++) {
-                    $data = $query->skip($i * 100000)->take(100000)->get();
-                    $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
-                    Excel::store(new TelsExport($data), $fileName, 'public');
-                    $fileNames[] = $fileName;
-                }
-                $filePath = $this->createZip($fileNames, $timestamp);
-            } else {
-                $data = $query->take($this->quantity)->get();
-                $fileName = "{$this->fileName}_{$timestamp}.xlsx";
-                Excel::store(new TelsExport($data), $fileName, 'public');
-                $filePath = $fileName;
-            }
-
 
             $filePath = $this->exportData($query);
             $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
@@ -130,7 +109,6 @@ class ExportTelefonosJob implements ShouldQueue
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
 
-
         if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 100000);
             for ($i = 0; $i < $chunks; $i++) {
@@ -141,7 +119,12 @@ class ExportTelefonosJob implements ShouldQueue
             }
             return $this->createZip($fileNames, $timestamp);
         } else {
-            $data = $query->take($this->quantity)->get();
+            $data = $query->inRandomOrder()->take($this->quantity)->get();
+            log::info('Exportando ' . $this->quantity . ' registros');}
+            // log the query structure and data to see if it is correct
+             log::info($query->toSql());
+             log::info($data);
+
             $fileName = "{$this->fileName}_{$timestamp}.xlsx";
             Excel::store(new TelsExport($data), $fileName, 'public');
             return $fileName;
