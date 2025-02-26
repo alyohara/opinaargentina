@@ -45,7 +45,8 @@ class ExportTelefonosJob implements ShouldQueue
             'stateId' => $this->stateId,
             'cityId' => $this->cityId,
             'tipoTelefono' => $this->tipoTelefono,
-            'orderBy' => $this->orderBy
+            'orderBy' => $this->orderBy,
+            'fileName' => $this->fileName,
         ]);
 
     }
