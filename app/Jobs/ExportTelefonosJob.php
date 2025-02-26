@@ -57,8 +57,8 @@ class ExportTelefonosJob implements ShouldQueue
             'file_size' => 0
         ]);
 
-        \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
-        \Log::info('Exportando uno');
+        Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
+        Log::info('Exportando uno', ['exportId' => $export->id]);
 
         try {
             \Log::info('Exportando dos');
