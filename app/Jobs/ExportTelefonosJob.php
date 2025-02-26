@@ -58,19 +58,27 @@ class ExportTelefonosJob implements ShouldQueue
         ]);
 
         \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
+        \Log::info('Exportando uno');
 
         try {
-            $query = Tel::select('nro_telefono', 'localidad_id', 'provincia_id');
+            \Log::info('Exportando dos');
 
+            $query = Tel::select('nro_telefono', 'localidad_id', 'provincia_id');
             if ($this->stateId && !$this->cityId) {
                 $query->where('provincia_id', $this->stateId);
+                \Log::info('Exportando cuatro');
+
             } elseif ($this->cityId) {
                 $query->where('localidad_id', $this->cityId);
-            }
+                \Log::info('Exportando cinco');
 
+            }
+            \Log::info('Exportando seis');
 
             if ($this->tipoTelefono) {
                 $query->where('tipo_telefono', $this->tipoTelefono);
+                \Log::info('Exportando siete');
+
             }
 //            switch ($this->orderBy) {
 //                case 'city_asc':
@@ -86,9 +94,13 @@ class ExportTelefonosJob implements ShouldQueue
 //                    $query->orderBy('provincia_id', 'desc');
 //                    break;
 //            }
+            \Log::info('Exportando ocho');
 
             $timestamp = now()->format('YmdHis');
             $fileNames = [];
+            $data = $query->take($this->quantity)->get();
+            \Log::info('Exportando datijkijibibibkbkbikbkbknlknlknlnos', ['query' => $data]);
+
             \Log::info('Exportando datos la querryyyyie', ['query' => $query->toSql(), 'bindings' => $query->getBindings()]);
 
 
@@ -131,8 +143,7 @@ class ExportTelefonosJob implements ShouldQueue
         }
     }
 
-    private
-    function exportData($query)
+    private function exportData($query)
     {
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
