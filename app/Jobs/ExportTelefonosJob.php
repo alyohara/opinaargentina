@@ -87,8 +87,32 @@ class ExportTelefonosJob implements ShouldQueue
 //                    break;
 //            }
 
+            $timestamp = now()->format('YmdHis');
+            $fileNames = [];
+            \Log::info('Exportando datos la querryyyyie', ['query' => $query->toSql(), 'bindings' => $query->getBindings()]);
 
-            $filePath = $this->exportData($query);
+
+            if ($this->quantity > 1000000) {
+                $chunks = ceil($this->quantity / 100000);
+                for ($i = 0; $i < $chunks; $i++) {
+                    $data = $query->skip($i * 100000)->take(100000)->get();
+                    $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
+                    Excel::store(new TelsExport($data), $fileName, 'public');
+                    $fileNames[] = $fileName;
+                }
+                $filePath =  $this->createZip($fileNames, $timestamp);
+            } else {
+                $data = $query->take($this->quantity)->get();
+                $fileName = "{$this->fileName}_{$timestamp}.xlsx";
+                Excel::store(new TelsExport($data), $fileName, 'public');
+                $filePath = $fileName;
+            }
+
+
+
+
+
+            // $filePath = $this->exportData($query);
             $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
 
             $export->update([
@@ -113,7 +137,7 @@ class ExportTelefonosJob implements ShouldQueue
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
         \Log::info('Exportando datos', ['query' => $query->toSql(), 'bindings' => $query->getBindings()]);
-        
+
 
         if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 100000);
