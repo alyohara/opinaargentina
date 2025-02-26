@@ -99,75 +99,74 @@ class ExportTelefonosJob implements ShouldQueue
 
             event(new ExportCompleted($this->userId));
             Log::info('ExportTelefonosJob finalizado', ['filePath' => $filePath]);
-        } catch (\Exception $e)
-{
-$export->update(['job_ended_at' => Carbon::now(), 'status' => 'fail']);
-Log::error('ExportTelefonosJob falló', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-throw $e;
-}
-}
-
-private
-function exportData($query)
-{
-    $timestamp = now()->format('YmdHis');
-    $fileNames = [];
-    Log::channel('export_query')->info('ExportTelefonosJob query', ['query' => $query]);
-
-    if ($this->quantity > 1000000) {
-        $chunks = ceil($this->quantity / 100000);
-        for ($i = 0; $i < $chunks; $i++) {
-            $data = $query->skip($i * 100000)->take(100000)->get();
-            $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
-            Excel::store(new TelsExport($data), $fileName, 'public');
-            $fileNames[] = $fileName;
+        } catch (\Exception $e) {
+            $export->update(['job_ended_at' => Carbon::now(), 'status' => 'fail']);
+            Log::error('ExportTelefonosJob falló', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            throw $e;
         }
-        return $this->createZip($fileNames, $timestamp);
-    } else {
-        $data = $query->take($this->quantity)->get();
-        $fileName = "{$this->fileName}_{$timestamp}.xlsx";
-        Excel::store(new TelsExport($data), $fileName, 'public');
-        return $fileName;
     }
-}
 
-private
-function createZip($fileNames, $timestamp)
-{
-    $zipFileName = "{$this->fileName}_{$timestamp}.zip";
-    $zipPath = storage_path("app/public/{$zipFileName}");
+    private
+    function exportData($query)
+    {
+        $timestamp = now()->format('YmdHis');
+        $fileNames = [];
+        Log::info('ExportTelefonosJob query', ['query' => $query]);
 
-    $zip = new ZipArchive;
-    if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
-        foreach ($fileNames as $file) {
-            $filePath = storage_path("app/public/{$file}");
-            if (Storage::disk('public')->exists($file)) {
-                $zip->addFile($filePath, $file);
+        if ($this->quantity > 1000000) {
+            $chunks = ceil($this->quantity / 100000);
+            for ($i = 0; $i < $chunks; $i++) {
+                $data = $query->skip($i * 100000)->take(100000)->get();
+                $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
+                Excel::store(new TelsExport($data), $fileName, 'public');
+                $fileNames[] = $fileName;
             }
+            return $this->createZip($fileNames, $timestamp);
+        } else {
+            $data = $query->take($this->quantity)->get();
+            $fileName = "{$this->fileName}_{$timestamp}.xlsx";
+            Excel::store(new TelsExport($data), $fileName, 'public');
+            return $fileName;
         }
-        $zip->close();
     }
 
-    foreach ($fileNames as $file) {
-        Storage::disk('public')->delete($file);
+    private
+    function createZip($fileNames, $timestamp)
+    {
+        $zipFileName = "{$this->fileName}_{$timestamp}.zip";
+        $zipPath = storage_path("app/public/{$zipFileName}");
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+            foreach ($fileNames as $file) {
+                $filePath = storage_path("app/public/{$file}");
+                if (Storage::disk('public')->exists($file)) {
+                    $zip->addFile($filePath, $file);
+                }
+            }
+            $zip->close();
+        }
+
+        foreach ($fileNames as $file) {
+            Storage::disk('public')->delete($file);
+        }
+
+        return $zipFileName;
     }
 
-    return $zipFileName;
-}
+    private
+    function getOrderByColumn()
+    {
+        return match ($this->orderBy) {
+            'city_asc', 'city_desc' => 'localidad_id',
+            'state_asc', 'state_desc' => 'provincia_id',
+            default => 'id',
+        };
+    }
 
-private
-function getOrderByColumn()
-{
-    return match ($this->orderBy) {
-        'city_asc', 'city_desc' => 'localidad_id',
-        'state_asc', 'state_desc' => 'provincia_id',
-        default => 'id',
-    };
-}
-
-private
-function getOrderDirection()
-{
-    return str_contains($this->orderBy, 'desc') ? 'desc' : 'asc';
-}
+    private
+    function getOrderDirection()
+    {
+        return str_contains($this->orderBy, 'desc') ? 'desc' : 'asc';
+    }
 }
