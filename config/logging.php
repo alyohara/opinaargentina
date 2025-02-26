@@ -126,10 +126,11 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
         'export_query' => [
             'driver' => 'single',
             'path' => storage_path('logs/export_query.log'),
-            'level' => 'info',
+            'level' => 'debug',
         ],
 
     ],
