@@ -209,6 +209,16 @@ class TelefonoController extends Controller
         $quantity = $request->input('quantity');
         $userId = auth()->id();
         $fileName = $request->input('file_name');
+        // log the request
+        \Log::info('Export request', [
+            'state_id' => $stateId,
+            'city_id' => $cityId,
+            'tipo_telefono' => $tipoTelefono,
+            'order_by' => $orderBy,
+            'quantity' => $quantity,
+            'user_id' => $userId,
+            'file_name' => $fileName,
+        ]);
 
         ExportTelefonosJob::dispatch($stateId, $cityId, $quantity, $userId, $fileName, $tipoTelefono, $orderBy);
 
