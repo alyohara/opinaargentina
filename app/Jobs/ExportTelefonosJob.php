@@ -57,28 +57,17 @@ class ExportTelefonosJob implements ShouldQueue
             'file_size' => 0
         ]);
 
-        Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
-        Log::info('Exportando uno', ['exportId' => $export->id]);
+        \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            \Log::info('Exportando dos');
-
             $query = Tel::select('nro_telefono', 'localidad_id', 'provincia_id');
             if ($this->stateId && !$this->cityId) {
                 $query->where('provincia_id', $this->stateId);
-                \Log::info('Exportando cuatro');
-
             } elseif ($this->cityId) {
                 $query->where('localidad_id', $this->cityId);
-                \Log::info('Exportando cinco');
-
             }
-            \Log::info('Exportando seis');
-
             if ($this->tipoTelefono) {
                 $query->where('tipo_telefono', $this->tipoTelefono);
-                \Log::info('Exportando siete');
-
             }
 //            switch ($this->orderBy) {
 //                case 'city_asc':
@@ -94,13 +83,9 @@ class ExportTelefonosJob implements ShouldQueue
 //                    $query->orderBy('provincia_id', 'desc');
 //                    break;
 //            }
-            \Log::info('Exportando ocho');
 
             $timestamp = now()->format('YmdHis');
             $fileNames = [];
-            $data = $query->take($this->quantity)->get();
-            \Log::info('Exportando datijkijibibibkbkbikbkbknlknlknlnos', ['query' => $data]);
-
             \Log::info('Exportando datos la querryyyyie', ['query' => $query->toSql(), 'bindings' => $query->getBindings()]);
 
 
@@ -112,7 +97,7 @@ class ExportTelefonosJob implements ShouldQueue
                     Excel::store(new TelsExport($data), $fileName, 'public');
                     $fileNames[] = $fileName;
                 }
-                $filePath =  $this->createZip($fileNames, $timestamp);
+                $filePath = $this->createZip($fileNames, $timestamp);
             } else {
                 $data = $query->take($this->quantity)->get();
                 $fileName = "{$this->fileName}_{$timestamp}.xlsx";
@@ -121,10 +106,7 @@ class ExportTelefonosJob implements ShouldQueue
             }
 
 
-
-
-
-            // $filePath = $this->exportData($query);
+            $filePath = $this->exportData($query);
             $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
 
             $export->update([
@@ -147,7 +129,6 @@ class ExportTelefonosJob implements ShouldQueue
     {
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
-        \Log::info('Exportando datos', ['query' => $query->toSql(), 'bindings' => $query->getBindings()]);
 
 
         if ($this->quantity > 1000000) {
