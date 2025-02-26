@@ -13,3 +13,8 @@ sudo php artisan config:cache
 sudo php artisan view:cache
 sudo php artisan optimize:clear
 sudo php artisan queue:clear
+sudo php artisan cache:clear
+sudo php artisan config:clear
+sudo php artisan route:clear
+sudo php artisan view:clear
+sudo php artisan queue:restart
