@@ -119,7 +119,7 @@ class ExportTelefonosJob implements ShouldQueue
             }
             return $this->createZip($fileNames, $timestamp);
         } else {
-            $data = $query->inRandomOrder()->take($this->quantity)->get();
+            $data = $query->take($this->quantity)->get();
             log::info('Exportando ' . $this->quantity . ' registros');
         }
         // log the query structure and data to see if it is correct
