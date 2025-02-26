@@ -41,6 +41,13 @@ class ExportTelefonosJob implements ShouldQueue
         $this->fileName = $fileName ?: 'tels_export';
         $this->tipoTelefono = $tipoTelefono;
         $this->orderBy = $orderBy;
+        Log::info('ExportTelefonosJob contruct la concha de la lora', [
+            'stateId' => $this->stateId,
+            'cityId' => $this->cityId,
+            'tipoTelefono' => $this->tipoTelefono,
+            'orderBy' => $this->orderBy
+        ]);
+
     }
 
     public function handle()
@@ -57,12 +64,7 @@ class ExportTelefonosJob implements ShouldQueue
         ]);
 
         Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
-        Log::info('ExportTelefonosJob', [
-            'stateId' => $this->stateId,
-            'cityId' => $this->cityId,
-            'tipoTelefono' => $this->tipoTelefono,
-            'orderBy' => $this->orderBy
-        ]);
+
         try {
             $query = Tel::with(['localidad.provincia']);
 
