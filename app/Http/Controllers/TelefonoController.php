@@ -202,8 +202,8 @@ class TelefonoController extends Controller
 
     public function export(Request $request)
     {
-        $stateId = $request->input('provincia');
-        $cityId = $request->input('localidad');
+        $stateId = $request->input('provincia_id');
+        $cityId = $request->input('localidad_id');
         $tipoTelefono = $request->input('tipo_telefono');
         $orderBy = $request->input('order_by');
         $quantity = $request->input('quantity');
