@@ -60,7 +60,7 @@ class ExportTelefonosJob implements ShouldQueue
         \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            $query = Tel::with(['localidad.provincia'])->select('nro_telefono', 'localidad_id')->whereNotNull('nro_telefono')->where('nro_telefono', '!=', '');
+            $query = Tel::select('nro_telefono', 'localidad_id')->whereNotNull('nro_telefono')->where('nro_telefono', '!=', '');
 
             if ($this->stateId && !$this->cityId) {
                 $query->where('provincia_id', $this->stateId);
@@ -71,7 +71,7 @@ class ExportTelefonosJob implements ShouldQueue
                 $query->where('tipo_telefono', $this->tipoTelefono);
             }
 
-          
+
             $filePath = $this->exportData($query);
             $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
 
