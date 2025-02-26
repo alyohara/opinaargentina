@@ -57,7 +57,12 @@ class ExportTelefonosJob implements ShouldQueue
         ]);
 
         Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
-
+        Log::info('ExportTelefonosJob', [
+            'stateId' => $this->stateId,
+            'cityId' => $this->cityId,
+            'tipoTelefono' => $this->tipoTelefono,
+            'orderBy' => $this->orderBy
+        ]);
         try {
             $query = Tel::with(['localidad.provincia']);
 
@@ -87,12 +92,7 @@ class ExportTelefonosJob implements ShouldQueue
 //            }
 
 // log info about state, city, tipoTelefono, orderBy
-            Log::info('ExportTelefonosJob', [
-                'stateId' => $this->stateId,
-                'cityId' => $this->cityId,
-                'tipoTelefono' => $this->tipoTelefono,
-                'orderBy' => $this->orderBy
-            ]);
+
             $filePath = $this->exportData($query);
             $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
 
