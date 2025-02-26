@@ -210,7 +210,7 @@ class TelefonoController extends Controller
         $userId = auth()->id();
         $fileName = $request->input('file_name');
         // log the request
-        \Log::info('Export request', [
+        Log::info('Export request y datos del mismo antes del dispatch', [
             'state_id' => $stateId,
             'city_id' => $cityId,
             'tipo_telefono' => $tipoTelefono,
