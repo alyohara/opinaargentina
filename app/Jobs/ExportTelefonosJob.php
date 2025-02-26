@@ -86,7 +86,13 @@ class ExportTelefonosJob implements ShouldQueue
 //                    break;
 //            }
 
-
+// log info about state, city, tipoTelefono, orderBy
+            Log::info('ExportTelefonosJob', [
+                'stateId' => $this->stateId,
+                'cityId' => $this->cityId,
+                'tipoTelefono' => $this->tipoTelefono,
+                'orderBy' => $this->orderBy
+            ]);
             $filePath = $this->exportData($query);
             $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
 
