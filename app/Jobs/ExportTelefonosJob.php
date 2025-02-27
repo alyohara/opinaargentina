@@ -103,14 +103,12 @@ class ExportTelefonosJob implements ShouldQueue
     {
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
-
+        $query = clone $baseQuery;
         if ($this->quantity > 1000) {
             $chunks = ceil($this->quantity / 1000);
-            $randomIds = $this->getRandomIds($baseQuery, $this->quantity, $totalRecords);
 
             for ($i = 0; $i < $chunks; $i++) {
-                $chunkIds = array_slice($randomIds, $i * 1000, 1000);
-                $data = Tel::whereIn('id', $chunkIds)->with('localidad')->get();
+                $data = $query->skip($i * 1000)->take(1000)->get();
                 $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $fileNames[] = $fileName;
@@ -118,35 +116,11 @@ class ExportTelefonosJob implements ShouldQueue
 
             return $this->createZip($fileNames, $timestamp);
         } else {
-            $data = $this->getRandomData($baseQuery, $this->quantity, $totalRecords);
+            $data = $query->take($this->quantity)->get();
             $fileName = "{$this->fileName}_{$timestamp}.xlsx";
             Excel::store(new TelsExport($data), $fileName, 'public');
             return $fileName;
         }
-    }
-    private function getRandomData($baseQuery, $quantity, $totalRecords)
-    {
-        if ($totalRecords <= $quantity) {
-            return $baseQuery->get();
-        }
-        $randomIds = $this->getRandomIds($baseQuery, $quantity, $totalRecords);
-        return Tel::whereIn('id', $randomIds)->with('localidad')->get();
-
-    }
-
-    private function getRandomIds($baseQuery, $quantity, $totalRecords)
-    {
-        // When there are less than 1000 record, dont randomize
-        if ($totalRecords <= 1000){
-            return $baseQuery->pluck('id')->toArray();
-        }
-
-        // If the query retuns less or equals than the quantity, get all records
-        if($totalRecords <= $quantity){
-            return $baseQuery->pluck('id')->toArray();
-        }
-        $randomIds = $baseQuery->inRandomOrder()->take($quantity)->pluck('id')->toArray();
-        return $randomIds;
     }
 
     private function createZip($fileNames, $timestamp)
