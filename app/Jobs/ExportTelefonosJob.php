@@ -107,11 +107,11 @@ class ExportTelefonosJob implements ShouldQueue
         $fileNames = [];
 
         $query = clone $baseQuery;
-        if ($this->quantity > 10000) {
+        if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 1000);
 
             for ($i = 0; $i < $chunks; $i++) {
-                $data = $query->skip($i * 1000)->take(1000)->get();
+                $data = $query->skip($i * 1000)->take(1000)->lazy();
                 $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $fileNames[] = $fileName;
