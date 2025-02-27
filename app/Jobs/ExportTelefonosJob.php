@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use ZipArchive;
 use Carbon\Carbon;
 use App\Events\ExportCompleted;
+use Illuminate\Support\Facades\DB;
 
 class ExportTelefonosJob implements ShouldQueue
 {
@@ -41,7 +42,6 @@ class ExportTelefonosJob implements ShouldQueue
         $this->fileName = $fileName ?: 'tels_export';
         $this->tipoTelefono = $tipoTelefono;
         $this->orderBy = $orderBy;
-
     }
 
     public function handle()
@@ -60,19 +60,26 @@ class ExportTelefonosJob implements ShouldQueue
         \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            $query = Tel::select('nro_telefono', 'localidad_id')->with('localidad')->whereNotNull('nro_telefono')->where('nro_telefono', '!=', '');
+            $baseQuery = Tel::select('nro_telefono', 'localidad_id')
+                ->with('localidad')
+                ->whereNotNull('nro_telefono')
+                ->where('nro_telefono', '!=', '');
 
             if ($this->stateId && !$this->cityId) {
-                $query->where('provincia_id', $this->stateId);
+                $baseQuery->where('provincia_id', $this->stateId);
             } elseif ($this->cityId) {
-                $query->where('localidad_id', $this->cityId);
+                $baseQuery->where('localidad_id', $this->cityId);
             }
             if ($this->tipoTelefono) {
-                $query->where('tipo_telefono', $this->tipoTelefono);
+                $baseQuery->where('tipo_telefono', $this->tipoTelefono);
+            }
+            $totalRecords = $baseQuery->count();
+            if ($this->quantity > $totalRecords) {
+                $this->quantity = $totalRecords;
+                \Log::info('Export quantity adjusted to actual records count', ['quantity' => $this->quantity]);
             }
 
-
-            $filePath = $this->exportData($query);
+            $filePath = $this->exportData($baseQuery, $totalRecords);
             $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
 
             $export->update([
@@ -91,7 +98,7 @@ class ExportTelefonosJob implements ShouldQueue
         }
     }
 
-    private function exportData($query)
+    private function exportData($baseQuery, $totalRecords)
     {
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
@@ -99,25 +106,46 @@ class ExportTelefonosJob implements ShouldQueue
         if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 100000);
             for ($i = 0; $i < $chunks; $i++) {
-                $data = $query->skip($i * 100000)->take(100000)->get();
+                $data = $this->getRandomData($baseQuery, 100000, $totalRecords);
                 $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $fileNames[] = $fileName;
             }
             return $this->createZip($fileNames, $timestamp);
         } else {
-            $data = $query->take($this->quantity)->get();
-            log::info('Exportando ' . $this->quantity . ' registros');
+            $data = $this->getRandomData($baseQuery, $this->quantity, $totalRecords);
         }
-        // log the query structure and data to see if it is correct
-        //log::info($query->toSql());
-        //log::info($data);
-
         $fileName = "{$this->fileName}_{$timestamp}.xlsx";
         Excel::store(new TelsExport($data), $fileName, 'public');
         return $fileName;
     }
 
+    private function getRandomData($baseQuery, $quantity, $totalRecords){
+        if ($totalRecords <= $quantity) {
+            return $baseQuery->get();
+        }
+
+        $randomIds = $this->getRandomIds($baseQuery, $quantity, $totalRecords);
+        return Tel::whereIn('id', $randomIds)->with('localidad')->get();
+    }
+    private function getRandomIds($baseQuery, $quantity, $totalRecords)
+    {
+        // Randomly select a starting point
+        $start = rand(0, $totalRecords - $quantity);
+
+        $subQuery = clone $baseQuery;
+        $subQuery->select('id');
+
+        // Get the IDs within the selected range
+        $ids = DB::table(DB::raw("({$subQuery->toSql()}) as sub"))
+            ->mergeBindings($subQuery->getQuery())
+            ->orderBy('id')
+            ->skip($start)
+            ->take($quantity)
+            ->pluck('id');
+        return $ids;
+
+    }
 
     private function createZip($fileNames, $timestamp)
     {
