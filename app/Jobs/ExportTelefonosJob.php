@@ -28,11 +28,10 @@ class ExportTelefonosJob implements ShouldQueue
     protected $userId;
     protected $fileName;
     protected $tipoTelefono;
-    protected $orderBy;
 
     public $timeout = 7200; // 2 horas
 
-    public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null, $orderBy = null)
+    public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null)
     {
         $this->stateId = $stateId;
         $this->cityId = $cityId;
@@ -40,7 +39,6 @@ class ExportTelefonosJob implements ShouldQueue
         $this->userId = $userId;
         $this->fileName = $fileName ?: 'tels_export';
         $this->tipoTelefono = $tipoTelefono;
-        $this->orderBy = $orderBy;
     }
 
     public function handle()
@@ -102,12 +100,12 @@ class ExportTelefonosJob implements ShouldQueue
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
 
-        if ($this->quantity > 1000000) {
-            $chunks = ceil($this->quantity / 100000);
+        if ($this->quantity > 1000) {
+            $chunks = ceil($this->quantity / 1000);
             $randomIds = $this->getRandomIds($baseQuery, $this->quantity, $totalRecords);
 
             for ($i = 0; $i < $chunks; $i++) {
-                $chunkIds = array_slice($randomIds, $i * 100000, 100000);
+                $chunkIds = array_slice($randomIds, $i * 1000, 1000);
                 $data = Tel::whereIn('id', $chunkIds)->with('localidad')->get();
                 $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
                 Excel::store(new TelsExport($data), $fileName, 'public');
@@ -121,7 +119,6 @@ class ExportTelefonosJob implements ShouldQueue
             Excel::store(new TelsExport($data), $fileName, 'public');
             return $fileName;
         }
-
     }
     private function getRandomData($baseQuery, $quantity, $totalRecords)
     {
@@ -169,21 +166,5 @@ class ExportTelefonosJob implements ShouldQueue
         }
 
         return $zipFileName;
-    }
-
-    private
-    function getOrderByColumn()
-    {
-        return match ($this->orderBy) {
-            'city_asc', 'city_desc' => 'localidad_id',
-            'state_asc', 'state_desc' => 'provincia_id',
-            default => 'id',
-        };
-    }
-
-    private
-    function getOrderDirection()
-    {
-        return str_contains($this->orderBy, 'desc') ? 'desc' : 'asc';
     }
 }
