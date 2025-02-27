@@ -117,9 +117,21 @@ class ExportTelefonosJob implements ShouldQueue
             return $this->createZip($fileNames, $timestamp);
         } else {
             // here i want to put a random number between 0 and 100
-            $randomNumber = rand(0, 100);
+            // if quantity is between 0 and 1000, the random must be between 0 and 100000;
+            // if quantity is between 1000 and 10000, the random must be between 0 and 10000;
+            // if quantity is between 10000 and 100000, the random must be between 0 and 1000;
+            // if quantity is between 100000 and 1000000, the random must be between 0 and 100;
+            if ($this->quantity <= 1000) {
+                $randomNumber = rand(0, 100000);
+            } elseif ($this->quantity <= 10000) {
+                $randomNumber = rand(0, 10000);
+            } elseif ($this->quantity <= 100000) {
+                $randomNumber = rand(0, 1000);
+            } else {
+                $randomNumber = rand(0, 100);
+            }
             // use this random number to move the start of the query
-            $query = $query->skip($randomNumber);
+            $query = $query->skip($randomNumber % $totalRecords);
 
             $data = $query->take($this->quantity)->get();
             $fileName = "{$this->fileName}_{$timestamp}.xlsx";
