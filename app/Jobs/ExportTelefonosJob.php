@@ -17,6 +17,8 @@ use ZipArchive;
 use Carbon\Carbon;
 use App\Events\ExportCompleted;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PDO;
 
 class ExportTelefonosJob implements ShouldQueue
@@ -103,6 +105,7 @@ class ExportTelefonosJob implements ShouldQueue
     {
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
+
         $query = clone $baseQuery;
         if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 1000);
@@ -116,11 +119,6 @@ class ExportTelefonosJob implements ShouldQueue
 
             return $this->createZip($fileNames, $timestamp);
         } else {
-            // here i want to put a random number between 0 and 100
-            // if quantity is between 0 and 1000, the random must be between 0 and 100000;
-            // if quantity is between 1000 and 10000, the random must be between 0 and 10000;
-            // if quantity is between 10000 and 100000, the random must be between 0 and 1000;
-            // if quantity is between 100000 and 1000000, the random must be between 0 and 100;
             if ($this->quantity <= 1000) {
                 $randomNumber = rand(0, 100000);
             } elseif ($this->quantity <= 10000) {
@@ -130,14 +128,79 @@ class ExportTelefonosJob implements ShouldQueue
             } else {
                 $randomNumber = rand(0, 100);
             }
-            // use this random number to move the start of the query
             $query = $query->skip($randomNumber % $totalRecords);
 
-            $data = $query->take($this->quantity)->get();
-            $fileName = "{$this->fileName}_{$timestamp}.xlsx";
-            Excel::store(new TelsExport($data), $fileName, 'public');
-            return $fileName;
+
+            $query->chunk(1000, function ($data) use (&$fileNames, $timestamp) {
+                $fileName = "{$this->fileName}_{$timestamp}_part_" . count($fileNames) . ".xlsx";
+                Excel::store(new TelsExport($data), $fileName, 'public');
+                $fileNames[] = $fileName;
+            });
+
+            return $this->mergeExcelFiles($fileNames, $timestamp);
+            // here i want to put a random number between 0 and 100
+            // if quantity is between 0 and 1000, the random must be between 0 and 100000;
+            // if quantity is between 1000 and 10000, the random must be between 0 and 10000;
+            // if quantity is between 10000 and 100000, the random must be between 0 and 1000;
+            // if quantity is between 100000 and 1000000, the random must be between 0 and 100;
+//            if ($this->quantity <= 1000) {
+//                $randomNumber = rand(0, 100000);
+//            } elseif ($this->quantity <= 10000) {
+//                $randomNumber = rand(0, 10000);
+//            } elseif ($this->quantity <= 100000) {
+//                $randomNumber = rand(0, 1000);
+//            } else {
+//                $randomNumber = rand(0, 100);
+//            }
+//            // use this random number to move the start of the query
+//            $query = $query->skip($randomNumber % $totalRecords);
+//
+//            $data = $query->take($this->quantity)->get();
+//            $fileName = "{$this->fileName}_{$timestamp}.xlsx";
+//            Excel::store(new TelsExport($data), $fileName, 'public');
+//            return $fileName;
         }
+    }
+
+    private function mergeExcelFiles($fileNames, $timestamp)
+    {
+        $spreadsheet = new Spreadsheet();
+        $masterSheet = $spreadsheet->getActiveSheet();
+        $currentRow = 1;
+
+        foreach ($fileNames as $file) {
+            $filePath = storage_path("app/public/{$file}");
+
+            if (!Storage::disk('public')->exists($file)) {
+                continue;
+            }
+
+            $spreadsheetPart = IOFactory::load($filePath);
+            $sheet = $spreadsheetPart->getActiveSheet();
+            $data = $sheet->toArray();
+
+            // Omitir encabezados después del primer archivo
+            if ($currentRow > 1) {
+                array_shift($data);
+            }
+
+            // Escribir en la hoja maestra
+            foreach ($data as $row) {
+                $masterSheet->fromArray($row, null, "A{$currentRow}");
+                $currentRow++;
+            }
+
+            // Borrar el archivo parcial
+            Storage::disk('public')->delete($file);
+        }
+
+        // Guardar el archivo final
+        $finalFileName = "{$this->fileName}_{$timestamp}.xlsx";
+        $finalFilePath = storage_path("app/public/{$finalFileName}");
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save($finalFilePath);
+
+        return $finalFileName;
     }
 
     private function createZip($fileNames, $timestamp)
