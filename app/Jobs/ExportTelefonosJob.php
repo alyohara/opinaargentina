@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Exports\TelsExport;
 use App\Models\Export;
-use App\Models\Localidad;
 use App\Models\Tel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -60,8 +59,8 @@ class ExportTelefonosJob implements ShouldQueue
         \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            $baseQuery = Tel::select('nro_telefono', 'localidad_id')
-                ->with('localidad')
+            $baseQuery = Tel::select('nro_telefono', 'localidad_id', 'id') // Add 'id' to the selection
+            ->with('localidad')
                 ->whereNotNull('nro_telefono')
                 ->where('nro_telefono', '!=', '');
 
@@ -105,46 +104,48 @@ class ExportTelefonosJob implements ShouldQueue
 
         if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 100000);
+            $randomIds = $this->getRandomIds($baseQuery, $this->quantity, $totalRecords);
+
             for ($i = 0; $i < $chunks; $i++) {
-                $data = $this->getRandomData($baseQuery, 100000, $totalRecords);
+                $chunkIds = array_slice($randomIds, $i * 100000, 100000);
+                $data = Tel::whereIn('id', $chunkIds)->with('localidad')->get();
                 $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $fileNames[] = $fileName;
             }
+
             return $this->createZip($fileNames, $timestamp);
         } else {
             $data = $this->getRandomData($baseQuery, $this->quantity, $totalRecords);
+            $fileName = "{$this->fileName}_{$timestamp}.xlsx";
+            Excel::store(new TelsExport($data), $fileName, 'public');
+            return $fileName;
         }
-        $fileName = "{$this->fileName}_{$timestamp}.xlsx";
-        Excel::store(new TelsExport($data), $fileName, 'public');
-        return $fileName;
-    }
 
-    private function getRandomData($baseQuery, $quantity, $totalRecords){
+    }
+    private function getRandomData($baseQuery, $quantity, $totalRecords)
+    {
         if ($totalRecords <= $quantity) {
             return $baseQuery->get();
         }
-
         $randomIds = $this->getRandomIds($baseQuery, $quantity, $totalRecords);
         return Tel::whereIn('id', $randomIds)->with('localidad')->get();
+
     }
+
     private function getRandomIds($baseQuery, $quantity, $totalRecords)
     {
-        // Randomly select a starting point
-        $start = rand(0, $totalRecords - $quantity);
+        // When there are less than 1000 record, dont randomize
+        if ($totalRecords <= 1000){
+            return $baseQuery->pluck('id')->toArray();
+        }
 
-        $subQuery = clone $baseQuery;
-        $subQuery->select('id');
-
-        // Get the IDs within the selected range
-        $ids = DB::table(DB::raw("({$subQuery->toSql()}) as sub"))
-            ->mergeBindings($subQuery->getQuery())
-            ->orderBy('id')
-            ->skip($start)
-            ->take($quantity)
-            ->pluck('id');
-        return $ids;
-
+        // If the query retuns less or equals than the quantity, get all records
+        if($totalRecords <= $quantity){
+            return $baseQuery->pluck('id')->toArray();
+        }
+        $randomIds = $baseQuery->inRandomOrder()->take($quantity)->pluck('id')->toArray();
+        return $randomIds;
     }
 
     private function createZip($fileNames, $timestamp)
