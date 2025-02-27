@@ -128,7 +128,6 @@ class ExportTelefonosJob implements ShouldQueue
             } else {
                 $randomNumber = rand(0, 100);
             }
-            $query = $query->skip($randomNumber % $totalRecords);
 
 
             $query->chunk(1000, function ($data) use (&$fileNames, $timestamp) {
