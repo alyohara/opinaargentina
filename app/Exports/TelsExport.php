@@ -13,8 +13,10 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\View\View as ViewContract;
 use Illuminate\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class TelsExport implements FromView, WithChunkReading
+class TelsExport implements FromCollection, WithChunkReading, WithHeadings, WithMapping
 {
     protected $data;
 
@@ -32,46 +34,26 @@ class TelsExport implements FromView, WithChunkReading
         return 1000; // Process 1000 rows at a time
     }
 
-//    public function headings(): array
-//    {
-//        return [
-//            'Telefono',
-//            'Localidad',
-//        ];
-//    }
-//
-//    public function map($telefono): array
-//    {
-//        return [
-//            $telefono->telefono,
-//            $telefono->city->name,
-//        ];
-//    }
-
-    public function view(): ViewContract
+    public function headings(): array
     {
-//        $formattedData = [];
-//
-//        foreach ($this->data as $telefono) {
-//            if ($telefono->movil) {
-//                $formattedData[] = [
-//                    'telefono' => $telefono->movil,
-//                    'localidad' => $telefono->city->name,
-//                ];
-//            }
-//            if ($telefono->telefono) {
-//                $formattedData[] = [
-//                    'telefono' => $telefono->telefono,
-//                    'localidad' => $telefono->city->name,
-//                ];
-//            }
-//        }
-//
-//        return view('exports.telefonosSimplificado', [
-//            'telefonos' => $formattedData
-//        ]);
-        return view('exports.telefonosSimplificado', [
-            'telefonos' => $this->data
-        ]);
+        return [
+            'nro_telefono',
+            'localidad',
+        ];
     }
+
+    public function map($tel): array
+    {
+        return [
+            $tel->nro_telefono,
+            $tel->localidad->nombre,
+        ];
+    }
+
+//    public function view(): ViewContract
+//    {
+//        return view('exports.telefonosSimplificado', [
+//            'telefonos' => $this->data
+//        ]);
+//    }
 }

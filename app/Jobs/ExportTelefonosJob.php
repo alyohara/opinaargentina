@@ -60,7 +60,7 @@ class ExportTelefonosJob implements ShouldQueue
         \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            $query = Tel::select('nro_telefono', 'localidad_id')->whereNotNull('nro_telefono')->where('nro_telefono', '!=', '');
+            $query = Tel::select('nro_telefono', 'localidad_id')->with('localidad')->whereNotNull('nro_telefono')->where('nro_telefono', '!=', '');
 
             if ($this->stateId && !$this->cityId) {
                 $query->where('provincia_id', $this->stateId);
@@ -110,8 +110,8 @@ class ExportTelefonosJob implements ShouldQueue
             log::info('Exportando ' . $this->quantity . ' registros');
         }
         // log the query structure and data to see if it is correct
-        log::info($query->toSql());
-        log::info($data);
+        //log::info($query->toSql());
+        //log::info($data);
 
         $fileName = "{$this->fileName}_{$timestamp}.xlsx";
         Excel::store(new TelsExport($data), $fileName, 'public');
