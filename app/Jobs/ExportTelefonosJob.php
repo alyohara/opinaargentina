@@ -104,7 +104,7 @@ class ExportTelefonosJob implements ShouldQueue
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
         $query = clone $baseQuery;
-        if ($this->quantity > 1000) {
+        if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 1000);
 
             for ($i = 0; $i < $chunks; $i++) {
@@ -116,6 +116,11 @@ class ExportTelefonosJob implements ShouldQueue
 
             return $this->createZip($fileNames, $timestamp);
         } else {
+            // here i want to put a random number between 0 and 100
+            $randomNumber = rand(0, 100);
+            // use this random number to move the start of the query
+            $query = $query->skip($randomNumber);
+
             $data = $query->take($this->quantity)->get();
             $fileName = "{$this->fileName}_{$timestamp}.xlsx";
             Excel::store(new TelsExport($data), $fileName, 'public');
