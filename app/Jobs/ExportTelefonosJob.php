@@ -17,6 +17,7 @@ use ZipArchive;
 use Carbon\Carbon;
 use App\Events\ExportCompleted;
 use Illuminate\Support\Facades\DB;
+use PDO;
 
 class ExportTelefonosJob implements ShouldQueue
 {
@@ -43,8 +44,11 @@ class ExportTelefonosJob implements ShouldQueue
 
     public function handle()
     {
-        ini_set('max_execution_time', 14400); // 4 horas
+        ini_set('max_execution_time', 28800); // 8 hours
         ini_set('memory_limit', '8192M'); // 8GB
+
+        // Set database timeout
+        DB::connection()->getPdo()->setAttribute(PDO::ATTR_TIMEOUT, 28800);
 
         $export = Export::create([
             'user_id' => $this->userId,
