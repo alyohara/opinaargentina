@@ -129,9 +129,9 @@ class ExportTelefonosJob implements ShouldQueue
 
     private function exportData($baseQuery, $fileName)
     {
-        // Use chunkById to avoid loading all records into memory at once
-        Excel::store(new TelsExport($baseQuery), $fileName, 'public',ExcelExcel::XLSX);
+        $filePath = "exports/{$fileName}"; // Guardar en storage/app/public/exports
+        Excel::store(new TelsExport($baseQuery), $filePath, 'public', ExcelExcel::XLSX);
 
-        return $fileName;
+        return Storage::disk('public')->path($filePath); // Devolver la ruta absoluta
     }
 }
