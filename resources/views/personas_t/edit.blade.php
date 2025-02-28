@@ -85,29 +85,45 @@
             const selectedLocalidad = {{ isset($personaT) ? $personaT->localidad_id : 'null' }};
 
             // Función para actualizar las localidades cuando se selecciona una provincia
+            let currentPage = 1;
+            let totalPages = 1;
+
             function updateLocalidades() {
-                const provinciaId = provinciaSelect.value;
+                const provinciaId = document.getElementById('provincia').value;
+                const localidadSelect = document.getElementById('localidad');
                 localidadSelect.innerHTML = '<option value="">Seleccione una localidad</option>';
+                currentPage = 1;
+                totalPages = 1;
                 if (provinciaId) {
-                    fetch(`/api/provincias/${provinciaId}/localidades`)
-                        .then(response => response.json())
-                        .then(localidades => {
-                            if (Array.isArray(localidades)) {
-                                localidades.forEach(localidad => {
-                                    const option = document.createElement('option');
-                                    option.value = localidad.id;
-                                    option.text = localidad.nombre;
-                                    localidadSelect.appendChild(option);
-                                });
-                            } else {
-                                console.error('Error: La respuesta de la API no es un array:', localidades);
-                            }
+                    fetchLocalidades(provinciaId, currentPage);
+                }
+            }
+
+            function fetchLocalidades(provinciaId, page) {
+                fetch(`/api/provincias/${provinciaId}/localidades?page=${page}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Network response was not ok: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        totalPages = data.last_page;
+                        data.data.forEach(localidad => {
+                            const option = document.createElement('option');
+                            option.value = localidad.id;
+                            option.textContent = localidad.nombre;
+                            document.getElementById('localidad').appendChild(option);
                         });
-                }
-                // Establecer la localidad seleccionada después de cargar las opciones
-                if (selectedLocalidad !== null) {
-                    localidadSelect.value = selectedLocalidad;
-                }
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            fetchLocalidades(provinciaId, currentPage);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching localidades:', error);
+                        alert('Error fetching localidades. Please try again later.');
+                    });
             }
             // Actualizar las localidades al cargar la página si ya hay una provincia seleccionada
             if (selectedProvincia !== null) {
