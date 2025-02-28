@@ -107,8 +107,7 @@ class ExportTelefonosJob implements ShouldQueue
         }
     }
 
-    private
-    function exportData($query)
+    private function exportData($query)
     {
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
@@ -116,21 +115,18 @@ class ExportTelefonosJob implements ShouldQueue
 
         if ($this->quantity > 1000000) {
             $chunks = ceil($this->quantity / 100000);
-            for ($i = 0; $i < $chunks; $i++) {
-                $data = $query->skip($i * 100000)->take(100000)->get();
+            for ($i = 0; i < $chunks; $i++) {
                 $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
-                Excel::store(new TelsExport($data), $fileName, 'public');
+                Excel::store(new TelsExport($query->skip($i * 100000)->take(100000)), $fileName, 'public');
                 $fileNames[] = $fileName;
             }
             return $this->createZip($fileNames, $timestamp);
         } else {
-            $data = $query->take($this->quantity)->get();
             $fileName = "{$this->fileName}_{$timestamp}.xlsx";
-            Excel::store(new TelsExport($data), $fileName, 'public');
+            Excel::store(new TelsExport($query->take($this->quantity)), $fileName, 'public');
             return $fileName;
         }
     }
-
     private
     function createZip($fileNames, $timestamp)
     {
