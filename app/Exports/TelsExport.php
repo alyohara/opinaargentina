@@ -10,12 +10,10 @@ use Illuminate\Database\Eloquent\Builder;
 class TelsExport implements FromQuery, WithHeadings, WithMapping
 {
     protected $query;
-    protected $quantity;
 
-    public function __construct(Builder $query, int $quantity)
+    public function __construct(Builder $query)
     {
         $this->query = $query;
-        $this->quantity = $quantity;
     }
 
     public function query()

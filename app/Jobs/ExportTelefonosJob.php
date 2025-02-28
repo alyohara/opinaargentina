@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Exports\TelsExport;
 use App\Models\Export;
-use App\Models\Tel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,7 +16,6 @@ use Carbon\Carbon;
 use App\Events\ExportCompleted;
 use Illuminate\Support\Facades\DB;
 use PDO;
-use Maatwebsite\Excel\Excel as ExcelExcel;
 
 class ExportTelefonosJob implements ShouldQueue
 {
@@ -30,7 +28,7 @@ class ExportTelefonosJob implements ShouldQueue
     protected $fileName;
     protected $tipoTelefono;
 
-    public $timeout = 7200; // 2 horas
+    public $timeout = 7200; // 2 hours
 
     public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null)
     {
@@ -58,7 +56,7 @@ class ExportTelefonosJob implements ShouldQueue
             'file_size' => 0
         ]);
 
-        \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
+        Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
             $baseQuery = Tel::query();
@@ -80,12 +78,12 @@ class ExportTelefonosJob implements ShouldQueue
             $totalRecords = $baseQuery->count();
             if ($this->quantity > $totalRecords) {
                 $this->quantity = $totalRecords;
-                \Log::info('Export quantity adjusted to actual records count', ['quantity' => $this->quantity]);
+                Log::info('Export quantity adjusted to actual records count', ['quantity' => $this->quantity]);
             }
 
             $fileName = "{$this->fileName}_" . now()->format('YmdHis') . ".xlsx";
             $filePath = $this->exportData($baseQuery, $fileName, $this->quantity);
-            $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
+            $fileSize = Storage::disk('public')->size($filePath) / 1024; // Size in KB
 
             $export->update([
                 'file_path' => $filePath,
@@ -106,8 +104,8 @@ class ExportTelefonosJob implements ShouldQueue
     private function exportData($baseQuery, $fileName, $quantity)
     {
         $filePath = "exports/{$fileName}";
-        $export = new TelsExport($baseQuery, $quantity);
-        Excel::store($export, $filePath, 'public', ExcelExcel::XLSX);
+        $export = new TelsExport($baseQuery->limit($quantity));
+        Excel::store($export, $filePath, 'public');
 
         return $filePath;
     }
