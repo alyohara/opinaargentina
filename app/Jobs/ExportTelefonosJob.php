@@ -29,11 +29,10 @@ class ExportTelefonosJob implements ShouldQueue
     protected $userId;
     protected $fileName;
     protected $tipoTelefono;
-    protected $orderBy;
 
     public $timeout = 7200; // 2 horas
 
-    public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null, $orderBy = null)
+    public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null)
     {
         $this->stateId = $stateId;
         $this->cityId = $cityId;
@@ -41,7 +40,6 @@ class ExportTelefonosJob implements ShouldQueue
         $this->userId = $userId;
         $this->fileName = $fileName ?: 'tels_export';
         $this->tipoTelefono = $tipoTelefono;
-        $this->orderBy = $orderBy;
     }
 
     public function handle()
@@ -63,8 +61,8 @@ class ExportTelefonosJob implements ShouldQueue
         \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            $baseQuery = Tel::select('nro_telefono', 'localidad_id', 'id')
-                ->with('localidad.provincia')
+            $baseQuery = Tel::query();
+            $baseQuery->with('localidad.provincia')
                 ->whereNotNull('nro_telefono')
                 ->where('nro_telefono', '!=', '');
 
@@ -78,37 +76,15 @@ class ExportTelefonosJob implements ShouldQueue
             if ($this->tipoTelefono) {
                 $baseQuery->where('tipo_telefono', $this->tipoTelefono);
             }
-//            if ($this->orderBy) {
-//                switch ($this->orderBy) {
-//                    case 'city_asc':
-//                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-//                            ->orderBy('localidades.nombre', 'asc');
-//                        break;
-//                    case 'city_desc':
-//                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-//                            ->orderBy('localidades.nombre', 'desc');
-//                        break;
-//                    case 'state_asc':
-//                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-//                            ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
-//                            ->orderBy('provincias.nombre', 'asc');
-//                        break;
-//                    case 'state_desc':
-//                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-//                            ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
-//                            ->orderBy('provincias.nombre', 'desc');
-//                        break;
-//                }
-//            }
+
             $totalRecords = $baseQuery->count();
             if ($this->quantity > $totalRecords) {
                 $this->quantity = $totalRecords;
                 \Log::info('Export quantity adjusted to actual records count', ['quantity' => $this->quantity]);
             }
-            //only get the quantity of records needed
-            $baseQuery->take($this->quantity);
+
             $fileName = "{$this->fileName}_" . now()->format('YmdHis') . ".xlsx";
-            $filePath = $this->exportData($baseQuery, $fileName);
+            $filePath = $this->exportData($baseQuery, $fileName, $this->quantity);
             $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
 
             $export->update([
@@ -127,11 +103,12 @@ class ExportTelefonosJob implements ShouldQueue
         }
     }
 
-    private function exportData($baseQuery, $fileName)
+    private function exportData($baseQuery, $fileName, $quantity)
     {
-        $filePath = "exports/{$fileName}"; // Guardar en storage/app/public/exports
-        Excel::store(new TelsExport($baseQuery), $filePath, 'public', ExcelExcel::XLSX);
+        $filePath = "exports/{$fileName}";
+        $export = new TelsExport($baseQuery, $quantity);
+        Excel::store($export, $filePath, 'public', ExcelExcel::XLSX);
 
-        return Storage::disk('public')->path($filePath); // Devolver la ruta absoluta
+        return $filePath;
     }
 }

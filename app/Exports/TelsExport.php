@@ -1,18 +1,14 @@
 <?php
+
 namespace App\Exports;
 
-use App\Models\Tel;
 use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Database\Eloquent\Builder;
 
-class TelsExport implements FromQuery, WithChunkReading, WithHeadings, WithMapping
+class TelsExport implements FromQuery, WithHeadings, WithMapping
 {
-    use Exportable;
-
     protected $query;
     protected $quantity;
 
@@ -24,19 +20,14 @@ class TelsExport implements FromQuery, WithChunkReading, WithHeadings, WithMappi
 
     public function query()
     {
-        return $this->query->take($this->quantity);
-    }
-
-    public function chunkSize(): int
-    {
-        return 1000; // Process 1000 rows at a time
+        return $this->query;
     }
 
     public function headings(): array
     {
         return [
             'nro_telefono',
-            'localidad',
+            'localidad'
         ];
     }
 
