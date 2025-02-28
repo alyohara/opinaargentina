@@ -57,7 +57,7 @@
                         <x-dropdown-link href="{{ route('cities.index') }}" :active="request()->routeIs('cities.index')">
                             {{ __('Administrar Ciudades') }}
                         </x-dropdown-link>
-                        <x-dropdown-link href="{{ route('people.index') }}" :active="request()->routeIs('people.index')">
+                        <x-dropdown-link href="{{ route('personas_t.index') }}" :active="request()->routeIs('personas_t.index')">
                             {{ __('Administrar Personas') }}
                         </x-dropdown-link>
                     </x-slot>

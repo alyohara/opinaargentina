@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PersonaT;
+use App\Models\Tel;
 use Illuminate\Http\Request;
 
 class PersonaTController extends Controller
@@ -12,7 +13,9 @@ class PersonaTController extends Controller
      */
     public function index()
     {
-        $personas = PersonaT::all();
+        // Use pagination instead of fetching all records
+        $personas = PersonaT::paginate(100); // Fetch 100 records per page
+
         return view('personas_t.index', compact('personas'));
     }
 
@@ -58,7 +61,11 @@ class PersonaTController extends Controller
             'localidad_id'              => 'nullable|integer|exists:localidades,id',
         ]);
 
-        PersonaT::create($data);
+        // Create the PersonaT record
+        $personaT = PersonaT::create($data);
+
+        // Handle phone numbers
+        $this->syncPhoneNumbers($personaT, $data);
 
         return redirect()->route('personas_t.index')->with('success', 'Registro creado exitosamente.');
     }
@@ -113,7 +120,11 @@ class PersonaTController extends Controller
             'localidad_id'              => 'nullable|integer|exists:localidades,id',
         ]);
 
+        // Update the PersonaT record
         $personaT->update($data);
+
+        // Handle phone numbers
+        $this->syncPhoneNumbers($personaT, $data);
 
         return redirect()->route('personas_t.index')->with('success', 'Registro actualizado exitosamente.');
     }
@@ -125,5 +136,46 @@ class PersonaTController extends Controller
     {
         $personaT->delete();
         return redirect()->route('personas_t.index')->with('success', 'Registro eliminado exitosamente.');
+    }
+
+    /**
+     * Sincroniza los números de teléfono con la tabla 'tels'.
+     *
+     * @param PersonaT $personaT The PersonaT model instance.
+     * @param array $data The data array from the request.
+     */
+    private function syncPhoneNumbers(PersonaT $personaT, array $data)
+    {
+        // check the locality_id, if it is empty we must put a 1, since the column in the DB does not accept null.
+        $localidad_id = $data['localidad_id'] ?? 1;
+        // Array of phone types and numbers
+        $phoneTypes = [
+            'telefono' => 'fijo',
+            'movil' => 'movil',
+        ];
+
+        foreach ($phoneTypes as $field => $type) {
+            if (isset($data[$field]) && $data[$field] !== null && $data[$field] !== '') {
+                // Check if a phone number already exists
+                $tel = Tel::where('nro_telefono', $data[$field])->first();
+
+                if ($tel) {
+                    // Update the existing phone number
+                    $tel->update([
+                        'tipo_telefono' => $type,
+                        'localidad_id' => $localidad_id,
+                        'persona_id' => $personaT->id,
+                    ]);
+                } else {
+                    // Create a new phone number
+                    Tel::create([
+                        'nro_telefono' => $data[$field],
+                        'tipo_telefono' => $type,
+                        'localidad_id' => $localidad_id,
+                        'persona_id' => $personaT->id,
+                    ]);
+                }
+            }
+        }
     }
 }

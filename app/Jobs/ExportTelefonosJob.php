@@ -17,9 +17,8 @@ use ZipArchive;
 use Carbon\Carbon;
 use App\Events\ExportCompleted;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PDO;
+use Illuminate\Support\Collection;
 
 class ExportTelefonosJob implements ShouldQueue
 {
@@ -63,8 +62,8 @@ class ExportTelefonosJob implements ShouldQueue
         \Log::info('ExportTelefonosJob iniciado', ['exportId' => $export->id]);
 
         try {
-            $baseQuery = Tel::select('nro_telefono', 'localidad_id', 'id') // Add 'id' to the selection
-            ->with('localidad')
+            $baseQuery = Tel::select('nro_telefono', 'localidad_id', 'id')
+                ->with('localidad')
                 ->whereNotNull('nro_telefono')
                 ->where('nro_telefono', '!=', '');
 
@@ -106,54 +105,37 @@ class ExportTelefonosJob implements ShouldQueue
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
 
-        $query = clone $baseQuery;
         if ($this->quantity > 100000) {
             $chunks = ceil($this->quantity / 100000);
 
             for ($i = 0; $i < $chunks; $i++) {
-                $data = $query->skip($i * 100000)->take(100000)->get();
                 $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
-                Excel::store(new TelsExport($data), $fileName, 'public');
+                $this->exportChunk($baseQuery, $fileName, $i);
                 $fileNames[] = $fileName;
             }
-            //merge the excel files
-            $spreadsheet = new Spreadsheet();
-            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-            $spreadsheet->setActiveSheetIndex(0);
-            $spreadsheet->getActiveSheet()->setTitle('Sheet1');
-            $spreadsheet->getActiveSheet()->setCellValue('A1', 'nro_telefono');
-            $spreadsheet->getActiveSheet()->setCellValue('B1', 'localidad_id');
 
-            $row = 2;
-            foreach ($fileNames as $file) {
-                $spreadsheet->getActiveSheet()->fromArray($this->getExcelData($file), null, 'A' . $row);
-                $row += 100000;
-            }
-            $fileName = "{$this->fileName}_{$timestamp}.xlsx";
-            $writer->save(storage_path("app/public/{$fileName}"));
-            foreach ($fileNames as $file) {
-                Storage::disk('public')->delete($file);
-            }
-            return  $fileName; // $this->createZip($fileNames, $timestamp);
+            return $this->createZip($fileNames, $timestamp);
         } else {
-            if ($this->quantity <= 1000) {
-                $randomNumber = rand(0, 100000);
-            } elseif ($this->quantity <= 10000) {
-                $randomNumber = rand(0, 10000);
-            } elseif ($this->quantity <= 100000) {
-                $randomNumber = rand(0, 1000);
-            } else {
-                $randomNumber = rand(0, 100);
-            }
-            $query = $query->skip($randomNumber % $totalRecords);
-
-            $data = $query->take($this->quantity)->get();
             $fileName = "{$this->fileName}_{$timestamp}.xlsx";
-            Excel::store(new TelsExport($data), $fileName, 'public');
+            $this->exportChunk($baseQuery, $fileName, 0, false);
             return $fileName;
         }
     }
+    private function exportChunk($baseQuery, $fileName, $chunkIndex = 0, $isChunk = true)
+    {
+        $chunkSize = 100000;
+        $query = clone $baseQuery;
 
+        if($isChunk) {
+            $query->skip($chunkIndex * $chunkSize)->take($chunkSize);
+        } else {
+            $query->take($this->quantity);
+        }
+        // Use chunk() to process records in smaller batches
+        $query->chunk(1000, function (Collection $chunk) use ($fileName) {
+            Excel::store(new TelsExport($chunk), $fileName, 'public');
+        });
+    }
     private function createZip($fileNames, $timestamp)
     {
         $zipFileName = "{$this->fileName}_{$timestamp}.zip";
