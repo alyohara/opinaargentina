@@ -96,6 +96,7 @@ class PersonaTController extends Controller
      */
     public function show(PersonaT $personaT)
     {
+        dd($personaT);
         return view('personas_t.show', compact('personaT'));
     }
 
