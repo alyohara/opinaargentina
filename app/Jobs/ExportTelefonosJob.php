@@ -78,28 +78,28 @@ class ExportTelefonosJob implements ShouldQueue
             if ($this->tipoTelefono) {
                 $baseQuery->where('tipo_telefono', $this->tipoTelefono);
             }
-            if ($this->orderBy) {
-                switch ($this->orderBy) {
-                    case 'city_asc':
-                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-                            ->orderBy('localidades.nombre', 'asc');
-                        break;
-                    case 'city_desc':
-                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-                            ->orderBy('localidades.nombre', 'desc');
-                        break;
-                    case 'state_asc':
-                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-                            ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
-                            ->orderBy('provincias.nombre', 'asc');
-                        break;
-                    case 'state_desc':
-                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-                            ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
-                            ->orderBy('provincias.nombre', 'desc');
-                        break;
-                }
-            }
+//            if ($this->orderBy) {
+//                switch ($this->orderBy) {
+//                    case 'city_asc':
+//                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
+//                            ->orderBy('localidades.nombre', 'asc');
+//                        break;
+//                    case 'city_desc':
+//                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
+//                            ->orderBy('localidades.nombre', 'desc');
+//                        break;
+//                    case 'state_asc':
+//                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
+//                            ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
+//                            ->orderBy('provincias.nombre', 'asc');
+//                        break;
+//                    case 'state_desc':
+//                        $baseQuery->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
+//                            ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
+//                            ->orderBy('provincias.nombre', 'desc');
+//                        break;
+//                }
+//            }
             $totalRecords = $baseQuery->count();
             if ($this->quantity > $totalRecords) {
                 $this->quantity = $totalRecords;

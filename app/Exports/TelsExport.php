@@ -1,34 +1,32 @@
 <?php
-
 namespace App\Exports;
 
-use App\Models\Telefono;
-use Couchbase\View;
+use App\Models\Tel;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-//use Maatwebsite\Excel\Concerns\WithHeadings;
-//use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Concerns\Exportable;
-use Illuminate\Contracts\View\View as ViewContract;
-use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Illuminate\Database\Eloquent\Builder;
 
-class TelsExport implements FromCollection, WithChunkReading, WithHeadings, WithMapping
+class TelsExport implements FromQuery, WithChunkReading, WithHeadings, WithMapping
 {
-    protected $data;
+    use Exportable;
 
-    public function __construct($data)
+    protected $query;
+    protected $quantity;
+
+    public function __construct(Builder $query, int $quantity)
     {
-        $this->data = $data;
+        $this->query = $query;
+        $this->quantity = $quantity;
     }
 
-    public function collection()
+    public function query()
     {
-        return $this->data;
+        return $this->query->take($this->quantity);
     }
+
     public function chunkSize(): int
     {
         return 1000; // Process 1000 rows at a time
@@ -46,14 +44,7 @@ class TelsExport implements FromCollection, WithChunkReading, WithHeadings, With
     {
         return [
             $tel->nro_telefono,
-            $tel->localidad->nombre,
+            $tel->localidad->nombre ?? '',
         ];
     }
-
-//    public function view(): ViewContract
-//    {
-//        return view('exports.telefonosSimplificado', [
-//            'telefonos' => $this->data
-//        ]);
-//    }
 }
