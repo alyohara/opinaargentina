@@ -92,12 +92,16 @@
                     fetch(`/api/provincias/${provinciaId}/localidades`)
                         .then(response => response.json())
                         .then(localidades => {
-                            localidades.forEach(localidad => {
-                                const option = document.createElement('option');
-                                option.value = localidad.id;
-                                option.text = localidad.nombre;
-                                localidadSelect.appendChild(option);
-                            });
+                            if (Array.isArray(localidades)) {
+                                localidades.forEach(localidad => {
+                                    const option = document.createElement('option');
+                                    option.value = localidad.id;
+                                    option.text = localidad.nombre;
+                                    localidadSelect.appendChild(option);
+                                });
+                            } else {
+                                console.error('Error: La respuesta de la API no es un array:', localidades);
+                            }
                         });
                 }
                 // Establecer la localidad seleccionada después de cargar las opciones
