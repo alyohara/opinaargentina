@@ -9,6 +9,7 @@
         <div class="container">
             <div class="card shadow-sm">
                 <div class="card-body">
+                    <h3 class="mb-4">Datos Generales</h3>
                     <table class="table table-bordered">
                         <tbody>
                         <tr>
@@ -64,6 +65,23 @@
                             <td>{{ $personaT->cp }}</td>
                         </tr>
                         <tr>
+                            <th>State</th>
+                            <td>{{ $personaT->state }}</td>
+                        </tr>
+                        <tr>
+                            <th>Localidad</th>
+                            <td>{{ $personaT->localidad ? $personaT->localidad->nombre : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Provincia</th>
+                            <td>{{ $personaT->localidad && $personaT->localidad->provincia ? $personaT->localidad->provincia->nombre : '' }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <h3 class="mb-4">Datos Electorales</h3>
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
                             <th>Seccion</th>
                             <td>{{ $personaT->seccion }}</td>
                         </tr>
@@ -86,10 +104,6 @@
                         <tr>
                             <th>Direccion Establecimiento</th>
                             <td>{{ $personaT->direccion_establecimiento }}</td>
-                        </tr>
-                        <tr>
-                            <th>State</th>
-                            <td>{{ $personaT->state }}</td>
                         </tr>
                         </tbody>
                     </table>

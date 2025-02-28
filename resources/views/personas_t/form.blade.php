@@ -142,4 +142,34 @@
 
 <div class="mb-3">
     <label for="state" class="form-label">State</label>
-    <input type="
+    <input type="text" class="form-control" id="state" name="state" value="{{ isset($personaT) ? $personaT->state : old('state') }}">
+    @error('state')
+    <div class="text-danger">{{ $message }}</div>
+    @enderror
+</div>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="provincia" class="form-label">Provincia</label>
+        <select id="provincia" name="provincia" class="form-control select2">
+            <option value="">Seleccione una provincia</option>
+            @foreach(\App\Models\Provincia::all() as $provincia)
+                <option value="{{ $provincia->id }}"
+                >
+                    {{ $provincia->nombre }}
+                </option>
+            @endforeach
+        </select>
+        @error('provincia')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label for="localidad" class="form-label">Localidad</label>
+        <select id="localidad" name="localidad_id" class="form-control select2">
+            <option value="">Seleccione una localidad</option>
+        </select>
+        @error('localidad_id')
+        <div class="text-danger">{{ $message }}</div>
+        @enderror
+    </div>
+</div>

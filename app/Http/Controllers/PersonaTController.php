@@ -96,7 +96,7 @@ class PersonaTController extends Controller
      */
     public function show(int $id)
     {
-        $personaT = PersonaT::findOrFail($id);
+        $personaT = PersonaT::with(['localidad.provincia'])->findOrFail($id);
         return view('personas_t.show', compact('personaT'));
     }
 
