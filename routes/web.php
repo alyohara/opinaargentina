@@ -47,7 +47,7 @@ Route::middleware([
     Route::resource('tels', TelController::class);
     Route::get('/exports', [ExportController::class, 'index'])->name('exports.index');
 
-    Route::resource('personas_t', PersonaTController::class)->except(['update', 'destroy', 'edit']);
+    Route::resource('personas_t', PersonaTController::class)->except(['update', 'destroy', 'edit','show']);
     Route::get('personas_t/{id}', [PersonaTController::class, 'show'])->name('personas_t.show');
     Route::get('personas_t/{id}/edit', [PersonaTController::class, 'edit'])->name('personas_t.edit');
     Route::put('personas_t/{id}', [PersonaTController::class, 'update'])->name('personas_t.update');
