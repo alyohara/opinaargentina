@@ -25,6 +25,10 @@
                             <th>ID</th>
                             <th>Apellido y Nombre</th>
                             <th>DNI</th>
+                            <th>Teléfono</th>
+                            <th>Móvil</th>
+                            <th>Email</th>
+                            <th>Localidad ID</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -34,6 +38,10 @@
                                 <td>{{ $persona->id }}</td>
                                 <td>{{ $persona->apellido_y_nombre }}</td>
                                 <td>{{ $persona->dni }}</td>
+                                <td>{{ $persona->telefono }}</td>
+                                <td>{{ $persona->movil }}</td>
+                                <td>{{ $persona->email }}</td>
+                                <td>{{ $persona->localidad_id }}</td>
                                 <td>
                                     <a href="{{ route('personas_t.show', $persona) }}" class="btn btn-info btn-sm">Ver</a>
                                     <a href="{{ route('personas_t.edit', $persona) }}" class="btn btn-warning btn-sm">Editar</a>
