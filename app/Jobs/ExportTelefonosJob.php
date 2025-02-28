@@ -105,7 +105,7 @@ class ExportTelefonosJob implements ShouldQueue
         $timestamp = now()->format('YmdHis');
         $fileNames = [];
 
-        if ($this->quantity > 100000) {
+        if ($this->quantity > 100000000) {
             $chunks = ceil($this->quantity / 100000);
 
             for ($i = 0; $i < $chunks; $i++) {
