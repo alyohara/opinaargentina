@@ -94,25 +94,27 @@ class PersonaTController extends Controller
     /**
      * Muestra un registro específico.
      */
-    public function show(PersonaT $personaT)
+    public function show(int $id)
     {
-        dd($personaT);
+        $personaT = PersonaT::findOrFail($id);
         return view('personas_t.show', compact('personaT'));
     }
 
     /**
      * Muestra el formulario para editar un registro.
      */
-    public function edit(PersonaT $personaT)
+    public function edit(int $id)
     {
+        $personaT = PersonaT::findOrFail($id);
         return view('personas_t.edit', compact('personaT'));
     }
 
     /**
      * Actualiza el registro en la base de datos.
      */
-    public function update(Request $request, PersonaT $personaT)
+    public function update(Request $request, int $id)
     {
+        $personaT = PersonaT::findOrFail($id);
         $data = $request->validate([
             'apellido_y_nombre'         => 'nullable|string|max:255',
             'dni'                       => 'nullable|integer',
@@ -154,8 +156,9 @@ class PersonaTController extends Controller
     /**
      * Elimina el registro de la base de datos.
      */
-    public function destroy(PersonaT $personaT)
+    public function destroy(int $id)
     {
+        $personaT = PersonaT::findOrFail($id);
         $personaT->delete();
         return redirect()->route('personas_t.index')->with('success', 'Registro eliminado exitosamente.');
     }

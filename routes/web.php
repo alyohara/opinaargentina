@@ -44,10 +44,13 @@ Route::middleware([
     Route::resource('telefonos', TelefonoController::class);
     Route::resource('localidades', LocalidadController::class);
     Route::resource('provincias', ProvinciaController::class);
-    Route::resource('personas_t', PersonaTController::class);
     Route::resource('tels', TelController::class);
     Route::get('/exports', [ExportController::class, 'index'])->name('exports.index');
-
+    Route::get('personas_t/{id}', [PersonaTController::class, 'show'])->name('personas_t.show');
+    Route::get('personas_t/{id}/edit', [PersonaTController::class, 'edit'])->name('personas_t.edit');
+    Route::put('personas_t/{id}', [PersonaTController::class, 'update'])->name('personas_t.update');
+    Route::delete('personas_t/{id}', [PersonaTController::class, 'destroy'])->name('personas_t.destroy');
+    Route::resource('personas_t', PersonaTController::class)->except(['show', 'edit', 'update', 'destroy']);
     //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
   //  Route::post('/roles', [RolePermissionController::class, 'store'])->name('roles.store');
   //  Route::delete('/roles/{role}', [RolePermissionController::class, 'destroy'])->name('roles.destroy');
