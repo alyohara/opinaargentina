@@ -11,10 +11,31 @@ class PersonaTController extends Controller
     /**
      * Muestra una lista de los registros de personas.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Use pagination instead of fetching all records
-        $personas = PersonaT::paginate(100); // Fetch 100 records per page
+        // Start with the base query
+        $query = PersonaT::query()->with(['localidad.provincia']);
+
+        // Add filtering if present in the request
+        if ($request->filled('apellido_y_nombre')) {
+            $query->where('apellido_y_nombre', 'like', '%' . $request->apellido_y_nombre . '%');
+        }
+        if ($request->filled('dni')) {
+            $query->where('dni', $request->dni);
+        }
+        if ($request->filled('localidad')) {
+            $query->whereHas('localidad', function ($query) use ($request) {
+                $query->where('nombre', 'like', '%' . $request->localidad . '%');
+            });
+        }
+        if ($request->filled('provincia')) {
+            $query->whereHas('localidad.provincia', function ($query) use ($request) {
+                $query->where('nombre', 'like', '%' . $request->provincia . '%');
+            });
+        }
+
+        // Paginate the results
+        $personas = $query->paginate(100);
 
         return view('personas_t.index', compact('personas'));
     }

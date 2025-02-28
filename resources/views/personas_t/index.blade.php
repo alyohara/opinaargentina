@@ -18,6 +18,25 @@
                             {{ session('success') }}
                         </div>
                     @endif
+                    <form method="GET" action="{{ route('personas_t.index') }}">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <input type="text" name="apellido_y_nombre" class="form-control" placeholder="Apellido y Nombre" value="{{ request('apellido_y_nombre') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" name="dni" class="form-control" placeholder="DNI" value="{{ request('dni') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="localidad" class="form-control" placeholder="Localidad" value="{{ request('localidad') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="provincia" class="form-control" placeholder="Provincia" value="{{ request('provincia') }}">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-primary">Filtrar</button>
+                            </div>
+                        </div>
+                    </form>
 
                     <table class="table table-striped">
                         <thead>
@@ -28,7 +47,8 @@
                             <th>Teléfono</th>
                             <th>Móvil</th>
                             <th>Email</th>
-                            <th>Localidad ID</th>
+                            <th>Localidad</th>
+                            <th>Provincia</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -41,7 +61,8 @@
                                 <td>{{ $persona->telefono }}</td>
                                 <td>{{ $persona->movil }}</td>
                                 <td>{{ $persona->email }}</td>
-                                <td>{{ $persona->localidad_id }}</td>
+                                <td>{{ $persona->localidad ? $persona->localidad->nombre : '' }}</td>
+                                <td>{{ $persona->localidad && $persona->localidad->provincia ? $persona->localidad->provincia->nombre : '' }}</td>
                                 <td>
                                     <a href="{{ route('personas_t.show', $persona) }}" class="btn btn-info btn-sm">Ver</a>
                                     <a href="{{ route('personas_t.edit', $persona) }}" class="btn btn-warning btn-sm">Editar</a>
@@ -55,7 +76,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                    {{ $personas->links() }}
+                    {{ $personas->appends(request()->query())->links() }}
                 </div>
             </div>
         </div>

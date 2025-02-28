@@ -40,7 +40,7 @@ Route::middleware([
     Route::get('/exports', [ExportController::class, 'index'])->name('exports.index');
 
     // Telefono routes
-    Route::resource('tels', TelefonoController::class);
+    Route::resource('tels', Tel::class);
     Route::post('/telefonos/export', [TelefonoController::class, 'export'])->name('telefonos.export');
 
     // User routes
