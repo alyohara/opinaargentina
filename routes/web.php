@@ -46,16 +46,13 @@ Route::middleware([
     Route::resource('provincias', ProvinciaController::class);
     Route::resource('tels', TelController::class);
     Route::get('/exports', [ExportController::class, 'index'])->name('exports.index');
+
+    Route::resource('personas_t', PersonaTController::class)->except(['update', 'destroy', 'edit']);
     Route::get('personas_t/{id}', [PersonaTController::class, 'show'])->name('personas_t.show');
     Route::get('personas_t/{id}/edit', [PersonaTController::class, 'edit'])->name('personas_t.edit');
     Route::put('personas_t/{id}', [PersonaTController::class, 'update'])->name('personas_t.update');
     Route::delete('personas_t/{id}', [PersonaTController::class, 'destroy'])->name('personas_t.destroy');
-    Route::resource('personas_t', PersonaTController::class)->except(['show', 'edit', 'update', 'destroy']);
-    //  Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.index');
-  //  Route::post('/roles', [RolePermissionController::class, 'store'])->name('roles.store');
-  //  Route::delete('/roles/{role}', [RolePermissionController::class, 'destroy'])->name('roles.destroy');
 
-    //Route::resource('roles', RoleController::class);
-    //Route::post('users/{user}/assign-role', [RoleController::class, 'assignRole'])->name('users.assignRole');
+
 
 });
