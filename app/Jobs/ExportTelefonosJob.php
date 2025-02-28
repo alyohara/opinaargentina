@@ -30,7 +30,7 @@ class ExportTelefonosJob implements ShouldQueue
     protected $tipoTelefono;
 
     public $timeout = 7200; // 2 hours
-    public $tries = 5; // Maximum number of attempts
+    //public $tries = 5; // Maximum number of attempts
 
     public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null)
     {
@@ -101,7 +101,7 @@ class ExportTelefonosJob implements ShouldQueue
             Log::error('ExportTelefonosJob falló', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             throw $e;
         }
-    }
+    }   
 
     private function exportData($baseQuery, $fileName, $quantity)
     {

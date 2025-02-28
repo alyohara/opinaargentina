@@ -18,7 +18,7 @@ class TelController extends Controller
      */
     public function index(Request $request)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2G');
 
         $states = Provincia::all();
         //$cities = Localidad::all();
