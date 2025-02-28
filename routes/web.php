@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Tel;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\TelefonoController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\ProvinciaController;
 use App\Http\Controllers\LocalidadController;
 use App\Http\Controllers\PersonaTController;
+use App\Http\Controllers\TelController;
 
 
 /*
@@ -40,7 +42,7 @@ Route::middleware([
     Route::get('/exports', [ExportController::class, 'index'])->name('exports.index');
 
     // Telefono routes
-    Route::resource('tels', Tel::class);
+    Route::resource('tels', TelController::class);
     Route::post('/telefonos/export', [TelefonoController::class, 'export'])->name('telefonos.export');
 
     // User routes
