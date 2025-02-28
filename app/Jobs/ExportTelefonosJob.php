@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Exports\TelsExport;
 use App\Models\Export;
 use App\Models\Tel;
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,6 +30,7 @@ class ExportTelefonosJob implements ShouldQueue
     protected $tipoTelefono;
 
     public $timeout = 7200; // 2 hours
+    public $tries = 5; // Maximum number of attempts
 
     public function __construct($stateId, $cityId, $quantity, $userId, $fileName = null, $tipoTelefono = null)
     {
