@@ -109,7 +109,6 @@ class ExportTelefonosJob implements ShouldQueue
         $query = clone $baseQuery;
         if ($this->quantity > 100000) {
             $chunks = ceil($this->quantity / 100000);
-            $fileName = "uno_de_prueba.xlsx";
 
             for ($i = 0; $i < $chunks; $i++) {
                 $data = $query->skip($i * 100000)->take(100000)->get();
@@ -117,7 +116,24 @@ class ExportTelefonosJob implements ShouldQueue
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $fileNames[] = $fileName;
             }
+            //merge the excel files
+            $spreadsheet = new Spreadsheet();
+            $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $spreadsheet->setActiveSheetIndex(0);
+            $spreadsheet->getActiveSheet()->setTitle('Sheet1');
+            $spreadsheet->getActiveSheet()->setCellValue('A1', 'nro_telefono');
+            $spreadsheet->getActiveSheet()->setCellValue('B1', 'localidad_id');
 
+            $row = 2;
+            foreach ($fileNames as $file) {
+                $spreadsheet->getActiveSheet()->fromArray($this->getExcelData($file), null, 'A' . $row);
+                $row += 100000;
+            }
+            $fileName = "{$this->fileName}_{$timestamp}.xlsx";
+            $writer->save(storage_path("app/public/{$fileName}"));
+            foreach ($fileNames as $file) {
+                Storage::disk('public')->delete($file);
+            }
             return  $fileName; // $this->createZip($fileNames, $timestamp);
         } else {
             if ($this->quantity <= 1000) {
