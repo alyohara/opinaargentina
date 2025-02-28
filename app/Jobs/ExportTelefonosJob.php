@@ -45,7 +45,7 @@ class ExportTelefonosJob implements ShouldQueue
 
     public function handle()
     {
-        ini_set('max_execution_time', 14400); // 4 horas
+        ini_set('max_execution_time', 14400); // 4 hours
         ini_set('memory_limit', '8192M'); // 8GB
 
         $export = Export::create([
@@ -67,28 +67,12 @@ class ExportTelefonosJob implements ShouldQueue
                 $query->where('localidad_id', $this->cityId);
             }
 
-
             if ($this->tipoTelefono) {
                 $query->where('tipo_telefono', $this->tipoTelefono);
             }
-//            switch ($this->orderBy) {
-//                case 'city_asc':
-//                    $query->orderBy('localidad_id', 'asc');
-//                    break;
-//                case 'city_desc':
-//                    $query->orderBy('localidad_id', 'desc');
-//                    break;
-//                case 'state_asc':
-//                    $query->orderBy('provincia_id', 'asc');
-//                    break;
-//                case 'state_desc':
-//                    $query->orderBy('provincia_id', 'desc');
-//                    break;
-//            }
-
 
             $filePath = $this->exportData($query);
-            $fileSize = Storage::disk('public')->size($filePath) / 1024; // Tamaño en KB
+            $fileSize = Storage::disk('public')->size($filePath) / 1024; // Size in KB
 
             $export->update([
                 'file_path' => $filePath,
@@ -99,14 +83,12 @@ class ExportTelefonosJob implements ShouldQueue
 
             event(new ExportCompleted($this->userId));
             Log::info('ExportTelefonosJob finalizado', ['filePath' => $filePath]);
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $export->update(['job_ended_at' => Carbon::now(), 'status' => 'fail']);
             Log::error('ExportTelefonosJob falló', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             throw $e;
         }
     }
-
     private function exportData($query)
     {
         $timestamp = now()->format('YmdHis');
