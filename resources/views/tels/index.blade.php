@@ -18,10 +18,12 @@
                             <form method="GET" action="{{ route('tels.index') }}">
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <select id="provincia" name="provincia" class="form-control select2" onchange="updateLocalidades()">
+                                        <select id="provincia" name="provincia" class="form-control select2"
+                                                onchange="updateLocalidades()">
                                             <option value="">Seleccione una provincia</option>
                                             @foreach($provincias as $provincia)
-                                                <option value="{{ $provincia->id }}" {{ $selectedProvincia == $provincia->id ? 'selected' : '' }}>
+                                                <option
+                                                    value="{{ $provincia->id }}" {{ $selectedProvincia == $provincia->id ? 'selected' : '' }}>
                                                     {{ $provincia->nombre }}
                                                 </option>
                                             @endforeach
@@ -32,7 +34,8 @@
                                             <option value="">Seleccione una localidad</option>
                                             @if($selectedProvincia)
                                                 @foreach($localidades as $localidad)
-                                                    <option value="{{ $localidad->id }}" {{ $selectedLocalidad == $localidad->id ? 'selected' : '' }}>
+                                                    <option
+                                                        value="{{ $localidad->id }}" {{ $selectedLocalidad == $localidad->id ? 'selected' : '' }}>
                                                         {{ $localidad->nombre }}
                                                     </option>
                                                 @endforeach
@@ -44,25 +47,45 @@
                                     <div class="col-md-5">
                                         <select id="tipo_telefono" name="tipo_telefono" class="form-control select2">
                                             <option value="">Seleccione un tipo de teléfono</option>
-                                            <option value="fijo" {{ request('tipo_telefono') == 'fijo' ? 'selected' : '' }}>Fijo</option>
-                                            <option value="movil" {{ request('tipo_telefono') == 'movil' ? 'selected' : '' }}>Móvil</option>
+                                            <option
+                                                value="fijo" {{ request('tipo_telefono') == 'fijo' ? 'selected' : '' }}>
+                                                Fijo
+                                            </option>
+                                            <option
+                                                value="movil" {{ request('tipo_telefono') == 'movil' ? 'selected' : '' }}>
+                                                Móvil
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="col-md-5">
                                         <select id="order_by" name="order_by" class="form-control select2">
                                             <option value="">Ordenar por</option>
-                                            <option value="city_asc" {{ request('order_by') == 'city_asc' ? 'selected' : '' }}>Localidad Ascendente</option>
-                                            <option value="city_desc" {{ request('order_by') == 'city_desc' ? 'selected' : '' }}>Localidad Descendente</option>
-                                            <option value="state_asc" {{ request('order_by') == 'state_asc' ? 'selected' : '' }}>Provincia Ascendente</option>
-                                            <option value="state_desc" {{ request('order_by') == 'state_desc' ? 'selected' : '' }}>Provincia Descendente</option>
+                                            <option
+                                                value="city_asc" {{ request('order_by') == 'city_asc' ? 'selected' : '' }}>
+                                                Localidad Ascendente
+                                            </option>
+                                            <option
+                                                value="city_desc" {{ request('order_by') == 'city_desc' ? 'selected' : '' }}>
+                                                Localidad Descendente
+                                            </option>
+                                            <option
+                                                value="state_asc" {{ request('order_by') == 'state_asc' ? 'selected' : '' }}>
+                                                Provincia Ascendente
+                                            </option>
+                                            <option
+                                                value="state_desc" {{ request('order_by') == 'state_desc' ? 'selected' : '' }}>
+                                                Provincia Descendente
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="col-md-2 text-right">
-                                        <button type="submit" id="filter-button" class="btn btn-primary">Filtrar</button>
+                                        <button type="submit" id="filter-button" class="btn btn-primary">Filtrar
+                                        </button>
                                     </div>
                                 </div>
                             </form>
-                            <form method="POST" action="{{ route('telefonos.export') }}" id="export-form" class="mt-3">
+                            <form method="POST" action="{{ route('telefonos.export') }}" id="export-form"
+                                  class="mt-3">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-4">
@@ -88,7 +111,6 @@
                                            value="{{ request('tipo_telefono') }}">
                                     <input type="hidden" id="export-order-by" name="order_by"
                                            value="{{ request('order_by') }}">
-
 
 
                                 </div>
@@ -118,7 +140,9 @@
                         <tbody>
                         @foreach($tels as $tel)
                             <tr>
-                                <td>{{ $tel->persona_id }}</td>
+                                <td>
+                                    <a href="{{ route('personas_t.show', $tel->persona_id) }}">{{ $tel->persona_id }}</a>
+                                </td>
                                 <td>{{ $tel->tipo_telefono }}</td>
                                 <td>{{ $tel->nro_telefono }}</td>
                                 <td>{{ $tel->localidad->nombre }}</td>
@@ -139,7 +163,7 @@
                         @endforeach
                         </tbody>
                     </table>
-                                        {{ $tels->links() }}
+                    {{ $tels->links() }}
                 </div>
             </div>
         </div>
