@@ -107,23 +107,19 @@ class ExportTelefonosJob implements ShouldQueue
         $fileNames = [];
 
         $query = clone $baseQuery;
-        if ($this->quantity > 1000000) {
-            $chunks = ceil($this->quantity / 1000);
+        if ($this->quantity > 100000) {
+            $chunks = ceil($this->quantity / 100000);
+            $fileName = "uno_de_prueba.xlsx";
 
             for ($i = 0; $i < $chunks; $i++) {
-                $data = $query->skip($i * 1000)->take(1000)->lazy();
+                $data = $query->skip($i * 100000)->take(100000)->get();
                 $fileName = "{$this->fileName}_{$timestamp}_part_{$i}.xlsx";
                 Excel::store(new TelsExport($data), $fileName, 'public');
                 $fileNames[] = $fileName;
             }
 
-            return $this->createZip($fileNames, $timestamp);
+            return  $fileName; // $this->createZip($fileNames, $timestamp);
         } else {
-            // here i want to put a random number between 0 and 100
-            // if quantity is between 0 and 1000, the random must be between 0 and 100000;
-            // if quantity is between 1000 and 10000, the random must be between 0 and 10000;
-            // if quantity is between 10000 and 100000, the random must be between 0 and 1000;
-            // if quantity is between 100000 and 1000000, the random must be between 0 and 100;
             if ($this->quantity <= 1000) {
                 $randomNumber = rand(0, 100000);
             } elseif ($this->quantity <= 10000) {
@@ -133,7 +129,6 @@ class ExportTelefonosJob implements ShouldQueue
             } else {
                 $randomNumber = rand(0, 100);
             }
-            // use this random number to move the start of the query
             $query = $query->skip($randomNumber % $totalRecords);
 
             $data = $query->take($this->quantity)->get();
