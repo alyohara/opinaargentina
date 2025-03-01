@@ -10,6 +10,7 @@ use App\Models\Tel;
 use App\Models\Telefono;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Jobs\ExportTelsJob; // Import the correct job class
 
 class TelController extends Controller
 {
@@ -132,18 +133,18 @@ class TelController extends Controller
             'provincia_id' => 'nullable|integer|exists:provincias,id',
             'localidad_id' => 'nullable|integer|exists:localidades,id',
             'file_name' => 'nullable|string|max:255',
-            'tipo_telefono' => 'nullable|string',
+            'tipo_telefono' => 'nullable|string|in:fijo,movil',
         ]);
 
         $quantity = $validated['quantity'];
         $stateId = $validated['provincia_id'] ?? null;
         $cityId = $validated['localidad_id'] ?? null;
-        $fileName = $validated['file_name'] ?? null;
+        $fileName = $validated['file_name'] ?? 'tels_export_' . now()->format('YmdHis') . '.xlsx'; // Default filename
         $tipoTelefono = $validated['tipo_telefono'] ?? null;
 
         $userId = auth()->id();
 
-        ExportTelefonosJob::dispatch($stateId, $cityId, $quantity, $userId, $fileName, $tipoTelefono);
+        ExportTelsJob::dispatch($stateId, $cityId, $quantity, $userId, $fileName, $tipoTelefono);
 
         return response()->json(['message' => 'Exportación iniciada.']);
     }

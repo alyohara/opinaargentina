@@ -2,23 +2,36 @@
 
 namespace App\Exports;
 
-use Illuminate\Database\Eloquent\Builder;
-use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Support\Collection;
 
-class TelsExport implements FromQuery
+
+class TelsExport implements FromCollection, WithHeadings
 {
-    use Exportable;
+    protected $data;
 
-    protected $query;
-
-    public function __construct(Builder $query)
+    public function __construct(Collection $data)
     {
-        $this->query = $query;
+        $this->data = $data;
     }
-
-    public function query()
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection()
     {
-        return $this->query;
+        return $this->data->map(function ($item) {
+            return [
+                'nro_telefono' => $item->nro_telefono,
+                'localidad_id' => $item->localidad_id,
+            ];
+        });
+    }
+    public function headings(): array
+    {
+        return [
+            'nro_telefono',
+            'localidad_id',
+        ];
     }
 }
