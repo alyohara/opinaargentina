@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Tel;
 use App\Models\Localidad;
+use App\Models\Export;
 use App\Exports\TelsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Bus\Queueable;
