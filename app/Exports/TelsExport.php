@@ -32,8 +32,8 @@ class TelsExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'nro_telefono',
-            'localidad_id',
+            'Teléfono',
+            'Localidad',
         ];
     }
 }
