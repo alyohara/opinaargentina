@@ -35,8 +35,9 @@
                                 <td>{{ $export->status }}</td>
                                 <td>{{ $export->user->name }}</td>
                                 <td>
-                                    <a href="{{ Storage::url($export->file_path) }}" class="btn btn-primary"
-                                       target="_blank">Download</a>
+                                    <a href="{{ str_replace('storage/storage/', 'storage/', Storage::url($export->file_path)) }}" target="_blank">
+                                        {{ basename($export->file_path) }}
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
