@@ -21,9 +21,10 @@ class TelsExport implements FromCollection, WithHeadings
     public function collection()
     {
         return $this->data->map(function ($item) {
+            $localidad = Localidad::find($item->localidad_id);
             return [
                 'nro_telefono' => $item->nro_telefono,
-                'localidad_id' => $item->localidad_id,
+                'localidad_nombre' => $localidad ? $localidad->nombre : 'N/A',
             ];
         });
     }
