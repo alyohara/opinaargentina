@@ -24,6 +24,8 @@ class ExportTelsJob implements ShouldQueue
     protected $userId;
     protected $fileName;
     protected $tipoTelefono;
+    protected $chunkSize = 10000; // Adjust as needed
+
 
     /**
      * Create a new job instance.
@@ -71,6 +73,14 @@ class ExportTelsJob implements ShouldQueue
         $export->job_started_at = now();
         $export->status = 'procesando';
         $export->save();
+
+        $tempFiles = [];
+        $finalPath = 'public/' . $this->fileName;
+        $data->chunk($this->chunkSize)->each(function ($chunk, $index) use ($tempFiles) {
+            $tempFileName = 'temp/' . $this->fileName . '_' . $index . '.xlsx';
+            Excel::store(new TelsExport($chunk), $tempFileName, 'public');
+            $tempFiles[] = $tempFileName;
+        });
 
         try {
             Excel::store(new TelsExport($data), $this->fileName, 'public');
