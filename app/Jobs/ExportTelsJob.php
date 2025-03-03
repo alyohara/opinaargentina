@@ -63,7 +63,23 @@ class ExportTelsJob implements ShouldQueue
         }
         $query->limit($this->quantity);
         $data = $query->get();
+// Save export details as "procesando"
+        $export = new Export();
+        $export->file_path = $this->fileName;
+        $export->user_id = $this->userId;
+        $export->job_started_at = now();
+        $export->status = 'procesando';
+        $export->save();
 
-        Excel::store(new TelsExport($data), $this->fileName, 'public');
+        try {
+            Excel::store(new TelsExport($data), $this->fileName, 'public');
+            $export->file_size = Storage::disk('public')->size($this->fileName);
+            $export->status = 'terminado';
+        } catch (\Exception $e) {
+            $export->status = 'error';
+        }
+
+        $export->job_ended_at = now();
+        $export->save();
     }
 }
