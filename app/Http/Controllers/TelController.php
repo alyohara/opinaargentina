@@ -139,8 +139,7 @@ class TelController extends Controller
         $quantity = $validated['quantity'];
         $stateId = $validated['provincia_id'] ?? null;
         $cityId = $validated['localidad_id'] ?? null;
-        $fileName = $validated['file_name'] ?? 'tels_export_' . now()->format('YmdHis') . '.xlsx'; // Default filename
-        $tipoTelefono = $validated['tipo_telefono'] ?? null;
+        $fileName = $validated['file_name'] ? $validated['file_name'] . '_' . now()->format('YmdHis') . '.xlsx' : 'tels_export_' . now()->format('YmdHis') . '.xlsx'; // Default filename        $tipoTelefono = $validated['tipo_telefono'] ?? null;
 
         $userId = auth()->id();
 
