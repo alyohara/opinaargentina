@@ -7,7 +7,6 @@ use App\Models\Localidad;
 use App\Exports\TelsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -24,8 +23,6 @@ class ExportTelsJob implements ShouldQueue
     protected $userId;
     protected $fileName;
     protected $tipoTelefono;
-
-    public $timeout = 7200;
 
     /**
      * Create a new job instance.
@@ -49,6 +46,7 @@ class ExportTelsJob implements ShouldQueue
      */
     public function handle()
     {
+        ini_set('max_execution_time', 7200);
         $query = Tel::query()->select('nro_telefono', 'localidad_id');
 
         if ($this->stateId) {
