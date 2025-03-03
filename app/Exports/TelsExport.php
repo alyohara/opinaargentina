@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Localidad;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Support\Collection;
