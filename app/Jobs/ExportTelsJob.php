@@ -3,15 +3,16 @@
 namespace App\Jobs;
 
 use App\Models\Tel;
+use App\Models\Localidad;
+use App\Exports\TelsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\TelsExport;
-use App\Models\Localidad;
+use Illuminate\Support\Facades\Storage;
 
 class ExportTelsJob implements ShouldQueue
 {
@@ -23,6 +24,8 @@ class ExportTelsJob implements ShouldQueue
     protected $userId;
     protected $fileName;
     protected $tipoTelefono;
+
+    public $timeout = 7200;
 
     /**
      * Create a new job instance.

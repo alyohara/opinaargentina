@@ -2,36 +2,27 @@
 
 namespace App\Exports;
 
+use App\Models\Tel;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\ShouldQueue;
 use Illuminate\Support\Collection;
 
 
-class TelsExport implements FromCollection, WithHeadings
+class TelsExport implements FromQuery, WithChunkReading, ShouldQueue
 {
-    protected $data;
+    use Exportable;
 
-    public function __construct(Collection $data)
+    public function query()
     {
-        $this->data = $data;
+        return Tel::query();
     }
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
+
+    public function chunkSize(): int
     {
-        return $this->data->map(function ($item) {
-            return [
-                'nro_telefono' => $item->nro_telefono,
-                'localidad_id' => $item->localidad_id,
-            ];
-        });
-    }
-    public function headings(): array
-    {
-        return [
-            'nro_telefono',
-            'localidad_id',
-        ];
+        return 10000; // Adjust chunk size as needed
     }
 }
