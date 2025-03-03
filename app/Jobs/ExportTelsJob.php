@@ -13,6 +13,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ExportTelsJob implements ShouldQueue
 {
@@ -25,7 +28,6 @@ class ExportTelsJob implements ShouldQueue
     protected $fileName;
     protected $tipoTelefono;
     protected $chunkSize = 10000; // Adjust as needed
-
 
     /**
      * Create a new job instance.
@@ -64,9 +66,8 @@ class ExportTelsJob implements ShouldQueue
         if ($this->tipoTelefono) {
             $query->where('tipo_telefono', $this->tipoTelefono);
         }
-        $query->limit($this->quantity);
-        $data = $query->get();
-// Save export details as "procesando"
+
+        // Save export details as "procesando"
         $export = new Export();
         $export->file_path = $this->fileName;
         $export->user_id = $this->userId;
@@ -74,23 +75,64 @@ class ExportTelsJob implements ShouldQueue
         $export->status = 'procesando';
         $export->save();
 
-        $tempFiles = [];
-        $finalPath = 'public/' . $this->fileName;
-        $data->chunk($this->chunkSize)->each(function ($chunk, $index) use ($tempFiles) {
-            $tempFileName = 'temp/' . $this->fileName . '_' . $index . '.xlsx';
-            Excel::store(new TelsExport($chunk), $tempFileName, 'public');
-            $tempFiles[] = $tempFileName;
-        });
-
         try {
-            Excel::store(new TelsExport($data), $this->fileName, 'public');
+            if ($this->quantity <= $this->chunkSize) {
+                $data = $query->limit($this->quantity)->get();
+                Excel::store(new TelsExport($data), $this->fileName, 'public');
+            } else {
+                $numChunks = ceil($this->quantity / $this->chunkSize);
+                $tempFiles = [];
+                $baseFileName = pathinfo($this->fileName, PATHINFO_FILENAME);
+                $extension = pathinfo($this->fileName, PATHINFO_EXTENSION);
+
+                for ($i = 0; $i < $numChunks; $i++) {
+                    $offset = $i * $this->chunkSize;
+                    $chunkData = $query->skip($offset)->take($this->chunkSize)->get();
+                    $tempFileName = "{$baseFileName}_part_{$i}.{$extension}";
+                    $tempFiles[] = $tempFileName;
+                    Excel::store(new TelsExport($chunkData), $tempFileName, 'public');
+                }
+                $this->mergeExcelFiles($tempFiles, $this->fileName);
+                // Delete temp files
+                foreach ($tempFiles as $tempFile) {
+                    Storage::disk('public')->delete($tempFile);
+                }
+            }
             $export->file_size = Storage::disk('public')->size($this->fileName);
             $export->status = 'terminado';
         } catch (\Exception $e) {
             $export->status = 'error';
+            // Delete temp files if there was an error
+            if(isset($tempFiles)){
+                foreach ($tempFiles as $tempFile) {
+                    Storage::disk('public')->delete($tempFile);
+                }
+            }
+
         }
 
         $export->job_ended_at = now();
         $export->save();
+    }
+
+    protected function mergeExcelFiles(array $filePaths, string $outputFileName)
+    {
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->removeSheetByIndex(0); // Remove the default sheet
+
+        foreach ($filePaths as $filePath) {
+            $fullFilePath = Storage::disk('public')->path($filePath);
+            $reader = IOFactory::createReaderForFile($fullFilePath);
+            $reader->setReadDataOnly(true);
+            $tempSpreadsheet = $reader->load($fullFilePath);
+            foreach ($tempSpreadsheet->getAllSheets() as $sheet) {
+                $newSheet = clone $sheet;
+                $spreadsheet->addSheet($newSheet);
+            }
+        }
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $outputFullPath = Storage::disk('public')->path($outputFileName);
+        $writer->save($outputFullPath);
     }
 }
