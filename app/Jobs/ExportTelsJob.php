@@ -26,11 +26,8 @@ class ExportTelsJob implements ShouldQueue
     protected $userId;
     protected $fileName;
     protected $tipoTelefono;
-<<<<<<< HEAD
-    protected $chunkSize = 1000000; // Adjust as needed
-=======
+
     protected $chunkSize = 150000; // Adjust as needed
->>>>>>> dac26ec (export job 0.6.4.1)
 
     /**
      * Create a new job instance.
