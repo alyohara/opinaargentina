@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
+use Illuminate\Support\Facades\Log;
 class ExportTelsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -49,6 +49,8 @@ class ExportTelsJob implements ShouldQueue
      *
      * @return void
      */
+    use Illuminate\Support\Facades\Log;
+
     public function handle()
     {
         ini_set('max_execution_time', 7200);
@@ -99,13 +101,13 @@ class ExportTelsJob implements ShouldQueue
             $export->file_size = Storage::disk('public')->size($this->fileName);
             $export->status = 'terminado';
         } catch (\Exception $e) {
+            Log::error('ExportTelsJob failed: ' . $e->getMessage());
             $export->status = 'error';
         }
 
         $export->job_ended_at = now();
         $export->save();
     }
-
     protected function mergeExcelFiles(array $filePaths, string $outputFileName)
     {
         $spreadsheet = new Spreadsheet();
