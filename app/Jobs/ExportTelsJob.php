@@ -13,9 +13,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use Illuminate\Support\Facades\Log;
 
 class ExportTelsJob implements ShouldQueue
 {
@@ -26,6 +26,7 @@ class ExportTelsJob implements ShouldQueue
     protected $quantity;
     protected $userId;
     protected $fileName;
+    protected $tipoTelefono;
     protected $chunkSize = 150000; // Adjust as needed
 
     /**
@@ -51,8 +52,6 @@ class ExportTelsJob implements ShouldQueue
     public function handle()
     {
         ini_set('max_execution_time', 7200);
-        ini_set('memory_limit', '512M'); // Set memory limit to 512MB
-
         $query = Tel::query()->select('nro_telefono', 'localidad_id');
 
         if ($this->stateId) {
@@ -68,9 +67,6 @@ class ExportTelsJob implements ShouldQueue
             $query->where('tipo_telefono', $this->tipoTelefono);
         }
 
-        // Add randomization
-        $query->inRandomOrder();
-
         // Save export details as "procesando"
         $export = new Export();
         $export->file_path = $this->fileName;
@@ -80,26 +76,39 @@ class ExportTelsJob implements ShouldQueue
         $export->save();
 
         try {
-            $writer = IOFactory::createWriter(new Spreadsheet(), 'Xlsx');
-            $writer->setPreCalculateFormulas(false);
-            $spreadsheet = $writer->getSpreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
+            if ($this->quantity <= $this->chunkSize) {
+                $data = $query->limit($this->quantity)->get();
+                Excel::store(new TelsExport($data), $this->fileName, 'public');
+            } else {
+                $numChunks = ceil($this->quantity / $this->chunkSize);
+                $tempFiles = [];
+                $baseFileName = pathinfo($this->fileName, PATHINFO_FILENAME);
+                $extension = pathinfo($this->fileName, PATHINFO_EXTENSION);
 
-            $rowIndex = 1;
-            $query->chunkById(1000, function ($rows) use ($sheet, &$rowIndex) {
-                foreach ($rows as $row) {
-                    $sheet->fromArray($row->toArray(), null, 'A' . $rowIndex);
-                    $rowIndex++;
+                for ($i = 0; $i < $numChunks; $i++) {
+                    $offset = $i * $this->chunkSize;
+                    $chunkData = $query->skip($offset)->take($this->chunkSize)->get();
+                    $tempFileName = "{$baseFileName}_part_{$i}.{$extension}";
+                    $tempFiles[] = $tempFileName;
+                    Excel::store(new TelsExport($chunkData), $tempFileName, 'public');
                 }
-            });
-
-            $writer->save(Storage::disk('public')->path($this->fileName));
-
+                $this->mergeExcelFiles($tempFiles, $this->fileName);
+                // Delete temp files
+                foreach ($tempFiles as $tempFile) {
+                    Storage::disk('public')->delete($tempFile);
+                }
+            }
             $export->file_size = Storage::disk('public')->size($this->fileName);
             $export->status = 'terminado';
         } catch (\Exception $e) {
-            Log::error('ExportTelsJob failed: ' . $e->getMessage());
             $export->status = 'error';
+            // Delete temp files if there was an error
+            if(isset($tempFiles)){
+                foreach ($tempFiles as $tempFile) {
+                    Storage::disk('public')->delete($tempFile);
+                }
+            }
+
         }
 
         $export->job_ended_at = now();
