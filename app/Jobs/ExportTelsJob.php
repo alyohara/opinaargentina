@@ -33,7 +33,7 @@ class ExportTelsJob implements ShouldQueue
     // random order
 //- Registro de usuario. Cualquiera que se registre puede acceder! tiene
 //que desaparecer o que dicho registro quede pendiente de aprobación de
-//usuario administrador. Tuve que volver a registrarme y entré de una...
+//usuario administrador. Tuve que volver a registrarme y entré de una...  HECHO
 //- En el formulario de registro, que pida nombre y apellido (campos
 //separados), teléfono también.
 //- eliminar todo el texto genérico en la pantalla de inicio

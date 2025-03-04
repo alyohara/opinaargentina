@@ -10,6 +10,8 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h3>{{ $user->name }}</h3>
+                    <p>Nombre: {{ $user->nombre }}</p>
+                    <p>Apellido: {{ $user->apellido }}</p>
                     <p>Email: {{ $user->email }}</p>
                     <a href="{{ route('users.index') }}" class="btn btn-primary">Volver al listado</a>
                 </div>

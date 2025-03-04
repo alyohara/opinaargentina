@@ -27,12 +27,16 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'nombre' => 'nullable|string|max:255',
+            'apellido' => 'nullable|string|max:255',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
         ]);
         $user->roles()->attach($request->role_id);
 
@@ -52,12 +56,16 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
+            'nombre' => 'nullable|string|max:255',
+            'apellido' => 'nullable|string|max:255',
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password ? Hash::make($request->password) : $user->password,
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
         ]);
         $user->roles()->sync($request->role_id);
 

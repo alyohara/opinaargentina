@@ -13,7 +13,9 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
+                            <th>Nombre de Usuario</th>
                             <th>Nombre</th>
+                            <th>Apellido</th>
                             <th>Email</th>
                             <th>Acciones</th>
                         </tr>
@@ -22,6 +24,8 @@
                         @foreach($users as $user)
                             <tr>
                                 <td>{{ $user->name }}</td>
+                                <td>{{ $user->nombre }}</td>
+                                <td>{{ $user->apellido }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     <a href="{{ route('users.show', $user) }}" class="btn btn-info btn-sm">Ver Usuario</a>

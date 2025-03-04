@@ -13,7 +13,7 @@
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name:</label>
+                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre de Usuario:</label>
                         <input type="text" name="name" id="name" value="{{ $user->name }}" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
                     </div>
                     <div class="mb-4">
@@ -27,7 +27,17 @@
                     <div class="mb-4">
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password:</label>
                         <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
-                    </div><div class="form-group">
+                    </div>
+                    <div class="mb-4">
+                        <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" value="{{$user->nombre}}  class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                    </div>
+                    <div class="mb-4">
+                        <label for="apellido" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Apellido:</label>
+                        <input type="text" name="apellido" id="apellido" value="{{$user->apellido}}" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                    </div>
+
+                    <div class="form-group">
                         <label for="role_id">Rol</label>
                         <select name="role_id" id="role_id" class="form-control" required>
                             @foreach($roles as $role)
