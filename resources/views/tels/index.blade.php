@@ -91,7 +91,7 @@
                                     <div class="col-md-4">
                                         <label for="quantity">Cantidad</label>
                                         <select id="quantity" name="quantity" class="form-control">
-                                            @foreach([100, 200, 300, 500, 700, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000] as $quantity)
+                                            @foreach([100, 200, 300, 500, 700, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000] as $quantity)
                                                 <option value="{{ $quantity }}">{{ $quantity }}</option>
                                             @endforeach
                                         </select>

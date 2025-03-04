@@ -67,6 +67,9 @@ class ExportTelsJob implements ShouldQueue
             $query->where('tipo_telefono', $this->tipoTelefono);
         }
 
+        // Add randomization
+        $query->inRandomOrder();
+
         // Save export details as "procesando"
         $export = new Export();
         $export->file_path = $this->fileName;
@@ -108,13 +111,11 @@ class ExportTelsJob implements ShouldQueue
                     Storage::disk('public')->delete($tempFile);
                 }
             }
-
         }
 
         $export->job_ended_at = now();
         $export->save();
     }
-
     protected function mergeExcelFiles(array $filePaths, string $outputFileName)
     {
         $spreadsheet = new Spreadsheet();
