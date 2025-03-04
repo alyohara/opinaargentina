@@ -52,6 +52,8 @@ class ExportTelsJob implements ShouldQueue
     public function handle()
     {
         ini_set('max_execution_time', 7200);
+        ini_set('memory_limit', '512M'); // Set memory limit to 512MB
+
         $query = Tel::query()->select('nro_telefono', 'localidad_id');
 
         if ($this->stateId) {
@@ -79,43 +81,31 @@ class ExportTelsJob implements ShouldQueue
         $export->save();
 
         try {
-            if ($this->quantity <= $this->chunkSize) {
-                $data = $query->limit($this->quantity)->get();
-                Excel::store(new TelsExport($data), $this->fileName, 'public');
-            } else {
-                $numChunks = ceil($this->quantity / $this->chunkSize);
-                $tempFiles = [];
-                $baseFileName = pathinfo($this->fileName, PATHINFO_FILENAME);
-                $extension = pathinfo($this->fileName, PATHINFO_EXTENSION);
+            $writer = IOFactory::createWriter(new Spreadsheet(), 'Xlsx');
+            $writer->setPreCalculateFormulas(false);
+            $spreadsheet = $writer->getSpreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
-                for ($i = 0; $i < $numChunks; $i++) {
-                    $offset = $i * $this->chunkSize;
-                    $chunkData = $query->skip($offset)->take($this->chunkSize)->get();
-                    $tempFileName = "{$baseFileName}_part_{$i}.{$extension}";
-                    $tempFiles[] = $tempFileName;
-                    Excel::store(new TelsExport($chunkData), $tempFileName, 'public');
+            $rowIndex = 1;
+            $query->chunkById(1000, function ($rows) use ($sheet, &$rowIndex) {
+                foreach ($rows as $row) {
+                    $sheet->fromArray($row->toArray(), null, 'A' . $rowIndex);
+                    $rowIndex++;
                 }
-                $this->mergeExcelFiles($tempFiles, $this->fileName);
-                // Delete temp files
-                foreach ($tempFiles as $tempFile) {
-                    Storage::disk('public')->delete($tempFile);
-                }
-            }
+            });
+
+            $writer->save(Storage::disk('public')->path($this->fileName));
+
             $export->file_size = Storage::disk('public')->size($this->fileName);
             $export->status = 'terminado';
         } catch (\Exception $e) {
             $export->status = 'error';
-            // Delete temp files if there was an error
-            if(isset($tempFiles)){
-                foreach ($tempFiles as $tempFile) {
-                    Storage::disk('public')->delete($tempFile);
-                }
-            }
         }
 
         $export->job_ended_at = now();
         $export->save();
     }
+
     protected function mergeExcelFiles(array $filePaths, string $outputFileName)
     {
         $spreadsheet = new Spreadsheet();
