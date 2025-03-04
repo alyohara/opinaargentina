@@ -8,7 +8,7 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet"/>
 
     <!-- Styles -->
     <style>
@@ -23,11 +23,13 @@
             justify-content: center;
             min-height: 100vh;
         }
+
         .top-nav {
             position: absolute;
             top: 20px;
             right: 20px;
         }
+
         .top-nav a {
             margin-left: 10px;
             padding: 10px 20px;
@@ -37,9 +39,11 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
+
         .top-nav a:hover {
             background-color: #60a5fa;
         }
+
         .center-content {
             text-align: center;
             background-color: #FFFFFF;
@@ -56,8 +60,10 @@
             <a href="{{ url('/dashboard') }}">Dashboard</a>
         @else
             <a href="{{ route('login') }}">Ingresar</a>
-            @if (Route::has('register'))
-                <a href="{{ route('register') }}">Registro</a>
+            @if (1=2)
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}">Registro</a>
+                @endif
             @endif
         @endauth
     </div>
@@ -65,7 +71,8 @@
 
 <div class="center-content">
     <h1>Bienvenidos al Sistema de Gestión de Proyectos</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante
+        dapibus diam.</p>
 </div>
 </body>
 </html>
