@@ -13,10 +13,10 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Illuminate\Support\Facades\Log;
+
 class ExportTelsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -26,7 +26,6 @@ class ExportTelsJob implements ShouldQueue
     protected $quantity;
     protected $userId;
     protected $fileName;
-    protected $tipoTelefono;
     protected $chunkSize = 150000; // Adjust as needed
 
     /**
@@ -49,8 +48,6 @@ class ExportTelsJob implements ShouldQueue
      *
      * @return void
      */
-    use Illuminate\Support\Facades\Log;
-
     public function handle()
     {
         ini_set('max_execution_time', 7200);
@@ -108,6 +105,7 @@ class ExportTelsJob implements ShouldQueue
         $export->job_ended_at = now();
         $export->save();
     }
+
     protected function mergeExcelFiles(array $filePaths, string $outputFileName)
     {
         $spreadsheet = new Spreadsheet();
