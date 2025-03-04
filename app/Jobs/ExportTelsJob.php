@@ -29,6 +29,26 @@ class ExportTelsJob implements ShouldQueue
     protected $tipoTelefono;
     protected $chunkSize = 300000; // Adjust as needed
 
+    // TODO
+    // random order
+//- Registro de usuario. Cualquiera que se registre puede acceder! tiene
+//que desaparecer o que dicho registro quede pendiente de aprobación de
+//usuario administrador. Tuve que volver a registrarme y entré de una...
+//- En el formulario de registro, que pida nombre y apellido (campos
+//separados), teléfono también.
+//- eliminar todo el texto genérico en la pantalla de inicio
+//- navegador advierte que es un sitio no seguro. que lo sea, es
+//fundamental. El dominio tiene SSL contratado.
+//- Dashboard. Sacar la distribución por usuario, no es relevante. Sería
+//ideal poder abrir fácilmente el registro. Ej. doble click en buenos
+//aires y que abra por localidad. Es posible agregarle un cuadro de
+//búsqueda rápida? ej. quiero saber cuántas mujeres jóvenes hay en Alte
+//Brown.
+//- anda lento. El movimiento entre secciones es muy pausado. Es
+//necesario que sea más rápido y dinámico. Suele saltar el error 504
+//Gateway Time-out (por ej cuando quiero acceder a
+//http://prospectiva.site/telefonos)
+
     /**
      * Create a new job instance.
      *
