@@ -14,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Illuminate\Support\Facades\DB;
 
 class ExportTelsJob implements ShouldQueue
 {
@@ -75,7 +76,10 @@ class ExportTelsJob implements ShouldQueue
                 if ($this->tipoTelefono) {
                     $query->where('tipo_telefono', $this->tipoTelefono);
                 }
-                $data = $query->limit($this->quantity)->get();
+
+                // Randomize the query
+                $data = $query->inRandomOrder()->limit($this->quantity)->get();
+
                 Excel::store(new \App\Exports\TelsExport($data), $this->fileName, 'public');
                 $export->file_size = Storage::disk('public')->size($this->fileName);
                 $export->status = 'terminado';
@@ -91,7 +95,7 @@ class ExportTelsJob implements ShouldQueue
                 for ($i = 0; $i < $numChunks; $i++) {
                     $offset = $i * $this->chunkSize;
                     //dispatch a job for every chunk
-                    ExportTelChunkJob::dispatch($this->stateId, $this->cityId, $offset, $this->chunkSize, $this->userId, $baseFileName, $extension, $i, $this->tipoTelefono);
+                    ExportTelChunkJob::dispatch($this->stateId, $this->cityId, $offset, $this->chunkSize, $this->userId, $baseFileName, $extension, $i, $this->tipoTelefono, true);
                     $tempFiles[] = "{$baseFileName}_part_{$i}.{$extension}";
 
                 }

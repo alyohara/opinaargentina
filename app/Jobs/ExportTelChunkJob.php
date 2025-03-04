@@ -13,6 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ExportTelChunkJob implements ShouldQueue
 {
@@ -27,8 +28,9 @@ class ExportTelChunkJob implements ShouldQueue
     protected $extension;
     protected $chunkIndex;
     protected $tipoTelefono;
+    protected $randomOrder;
 
-    public function __construct($stateId, $cityId, $offset, $chunkSize, $userId, $baseFileName, $extension, $chunkIndex, $tipoTelefono)
+    public function __construct($stateId, $cityId, $offset, $chunkSize, $userId, $baseFileName, $extension, $chunkIndex, $tipoTelefono, $randomOrder = false)
     {
         $this->stateId = $stateId;
         $this->cityId = $cityId;
@@ -39,6 +41,7 @@ class ExportTelChunkJob implements ShouldQueue
         $this->extension = $extension;
         $this->chunkIndex = $chunkIndex;
         $this->tipoTelefono = $tipoTelefono;
+        $this->randomOrder = $randomOrder;
     }
 
     public function handle()
@@ -56,6 +59,11 @@ class ExportTelChunkJob implements ShouldQueue
 
         if ($this->tipoTelefono) {
             $query->where('tipo_telefono', $this->tipoTelefono);
+        }
+
+        // Apply random order if needed
+        if ($this->randomOrder) {
+            $query->inRandomOrder();
         }
 
         $chunkData = $query->skip($this->offset)->take($this->chunkSize)->get();
