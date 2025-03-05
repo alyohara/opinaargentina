@@ -19,10 +19,10 @@ class CalculateAnalytics extends Command
         $totalTelefonos = Tel::count();
         $totalUsuarios = User::count();
 
-        $telefonosPorProvincia = Tel::selectRaw('states.name as provincia, count(*) as total')
+        $telefonosPorProvincia = Tel::selectRaw('provincias.nombre as provincia, count(*) as total')
             ->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
             ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
-            ->groupBy('provincias.name')
+            ->groupBy('provincias.nombre')
             ->pluck('total', 'provincia');
 
         $usuariosPorRol = User::selectRaw('roles.name as rol, count(*) as total')
@@ -31,17 +31,17 @@ class CalculateAnalytics extends Command
             ->groupBy('roles.name')
             ->pluck('total', 'rol');
 
-        $localidadConMasTelefonos = Tel::selectRaw('localidades.name as localidad, count(*) as total')
+        $localidadConMasTelefonos = Tel::selectRaw('localidades.nombre as localidad, count(*) as total')
             ->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
-            ->groupBy('localidades.name')
+            ->groupBy('localidades.nombre')
             ->orderByDesc('total')
             ->first()
             ->localidad;
 
-        $rankingProvincias = Tel::selectRaw('provincias.name as provincia, count(*) as total')
+        $rankingProvincias = Tel::selectRaw('provincias.nombre as provincia, count(*) as total')
             ->join('localidades', 'tels.localidad_id', '=', 'localidades.id')
             ->join('provincias', 'localidades.provincia_id', '=', 'provincias.id')
-            ->groupBy('provincias.name')
+            ->groupBy('provincias.nombre')
             ->orderByDesc('total')
             ->pluck('total', 'provincia');
 
