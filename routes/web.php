@@ -52,7 +52,10 @@ Route::middleware([
     Route::get('personas_t/{id}/edit', [PersonaTController::class, 'edit'])->name('personas_t.edit');
     Route::put('personas_t/{id}', [PersonaTController::class, 'update'])->name('personas_t.update');
     Route::delete('personas_t/{id}', [PersonaTController::class, 'destroy'])->name('personas_t.destroy');
+// routes/web.php
 
+    Route::get('/telefonos/provincia/{provincia}', [DashboardController::class, 'telefonosPorProvincia'])->name('telefonos.provincia');
+    Route::get('/buscar-telefonos', [DashboardController::class, 'buscarTelefonos'])->name('buscar.telefonos');
 
 
 });

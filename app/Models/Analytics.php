@@ -28,4 +28,13 @@ class Analytics extends Model
         'usuarios_por_rol' => 'array',
         'ranking_provincias' => 'array',
     ];
+    public static function updateAnalytics()
+    {
+        // Update logic for analytics
+        $analytics = self::latest()->first();
+        $analytics->update([
+            'telefonos_por_provincia' => Provincia::withCount('telefonos')->get()->pluck('telefonos_count', 'nombre')->toArray(),
+            'ranking_provincias' => Provincia::withCount('telefonos')->orderBy('telefonos_count', 'desc')->get()->pluck('telefonos_count', 'nombre')->toArray(),
+        ]);
+    }
 }

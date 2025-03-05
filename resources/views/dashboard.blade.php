@@ -45,14 +45,9 @@
                             <canvas id="telefonosPorProvinciaChart"></canvas>
                         </div>
 
-                        <!-- Card for Usuarios por Rol -->
-                        <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-                            <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Usuarios por Rol</h4>
-                            <canvas id="usuariosPorRolChart"></canvas>
-                        </div>
 
                         <!-- Card for Ranking de Provincias -->
-                        <div class="mt-6 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+                        <div class="mt-12 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
                             <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Ranking de Provincias</h4>
                             <canvas id="rankingProvinciasChart"></canvas>
                         </div>
@@ -77,17 +72,7 @@
             }]
         };
 
-        // Data for Usuarios por Rol
-        const usuariosPorRolData = {
-            labels: {!! json_encode(array_keys($analytics->usuarios_por_rol)) !!},
-            datasets: [{
-                label: 'Usuarios por Rol',
-                data: {!! json_encode(array_values($analytics->usuarios_por_rol)) !!},
-                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1
-            }]
-        };
+
 
         // Data for Ranking de Provincias
         const rankingProvinciasData = {
@@ -106,6 +91,18 @@
             type: 'bar',
             data: telefonosPorProvinciaData,
             options: {
+                onClick: (e, item) => {
+                    if (item.length > 0) {
+                        const provincia = item[0].index;
+                        const provinciaId = telefonosPorProvinciaData.labels[provincia];
+                        fetch(`/telefonos/provincia/${provinciaId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                // Handle data for localidades
+                                console.log(data);
+                            });
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true
@@ -114,12 +111,7 @@
             }
         };
 
-        // Config for Usuarios por Rol Chart
-        const usuariosPorRolConfig = {
-            type: 'pie',
-            data: usuariosPorRolData,
-            options: {}
-        };
+
 
         // Config for Ranking de Provincias Chart
         const rankingProvinciasConfig = {
@@ -136,7 +128,22 @@
 
         // Render Charts
         new Chart(document.getElementById('telefonosPorProvinciaChart'), telefonosPorProvinciaConfig);
-        new Chart(document.getElementById('usuariosPorRolChart'), usuariosPorRolConfig);
         new Chart(document.getElementById('rankingProvinciasChart'), rankingProvinciasConfig);
+        // Search functionality
+        function buscarTelefonos() {
+            const provinciaId = document.getElementById('provincia_id').value;
+            const localidadId = document.getElementById('localidad_id').value;
+            const genero = document.getElementById('genero').value;
+            const edadMin = document.getElementById('edad_min').value;
+            const edadMax = document.getElementById('edad_max').value;
+
+            fetch(`/buscar-telefonos?provincia_id=${provinciaId}&localidad_id=${localidadId}&genero=${genero}&edad_min=${edadMin}&edad_max=${edadMax}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Handle search results
+                    console.log(data);
+                });
+        }
+
     </script>
 </x-app-layout>

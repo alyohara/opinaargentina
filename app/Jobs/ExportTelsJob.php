@@ -36,7 +36,7 @@ class ExportTelsJob implements ShouldQueue
 //usuario administrador. Tuve que volver a registrarme y entré de una...  HECHO
 //- En el formulario de registro, que pida nombre y apellido (campos
 //separados), teléfono también. HECHO
-//- eliminar todo el texto genérico en la pantalla de inicio
+//- eliminar todo el texto genérico en la pantalla de inicio HECHO
 //- navegador advierte que es un sitio no seguro. que lo sea, es
 //fundamental. El dominio tiene SSL contratado.
 //- Dashboard. Sacar la distribución por usuario, no es relevante. Sería
@@ -47,7 +47,7 @@ class ExportTelsJob implements ShouldQueue
 //- anda lento. El movimiento entre secciones es muy pausado. Es
 //necesario que sea más rápido y dinámico. Suele saltar el error 504
 //Gateway Time-out (por ej cuando quiero acceder a
-//http://prospectiva.site/telefonos)
+//http://prospectiva.site/telefonos) HECHO (mejorado en gran parte)
 
     /**
      * Create a new job instance.

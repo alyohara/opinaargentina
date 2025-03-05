@@ -71,16 +71,16 @@
 
 <div class="center-content">
     <h1>Bienvenidos</h1>
-    @auth
-        <form action="{{ url('/dashboard') }}">
-            <button type="submit" class="btn btn-primary">Dashboard</button>
-        </form>
+{{--    @auth--}}
+{{--        <form action="{{ url('/dashboard') }}">--}}
+{{--            <button type="submit" class="btn btn-primary">Dashboard</button>--}}
+{{--        </form>--}}
 
-    @else
-        <form action="{{ route('login') }}">
-            <button type="submit" class="btn btn-primary">Ingresar</button>
-        </form>
-    @endauth
+{{--    @else--}}
+{{--        <form action="{{ route('login') }}">--}}
+{{--            <button type="submit" class="btn btn-primary">Ingresar</button>--}}
+{{--        </form>--}}
+{{--    @endauth--}}
 
 
 </div>
