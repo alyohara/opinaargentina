@@ -29,7 +29,8 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'nombre' => 'nullable|string|max:255',
             'apellido' => 'nullable|string|max:255',
-        ]);
+            'telefono' => 'nullable|string|max:20|regex:/^\+?[0-9]{1,20}$/',
+            ]);
 
         $user = User::create([
             'name' => $request->name,
@@ -37,6 +38,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
+            'telefono' => $request->telefono,
         ]);
         $user->roles()->attach($request->role_id);
 
@@ -58,6 +60,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'nombre' => 'nullable|string|max:255',
             'apellido' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:20|regex:/^\+?[0-9]{1,20}$/',
         ]);
 
         $user->update([
@@ -66,6 +69,7 @@ class UserController extends Controller
             'password' => $request->password ? Hash::make($request->password) : $user->password,
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
+            'telefono' => $request->telefono,
         ]);
         $user->roles()->sync($request->role_id);
 

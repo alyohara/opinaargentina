@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
                 <h1 class="text-2xl font-semibold mb-4">Edit User</h1>
-                <form action="{{ route('users.update', $user) }}" method="POST">
+                <form id="userForm" action="{{ route('users.update', $user) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
@@ -36,6 +36,10 @@
                         <label for="apellido" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Apellido:</label>
                         <input type="text" name="apellido" id="apellido" value="{{$user->apellido}}" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
                     </div>
+                    <div class="mb-4">
+                        <label for="telefono" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Teléfono:</label>
+                        <input type="text" name="telefono" id="telefono" value="{{$user->telefono}}" class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                    </div>
 
                     <div class="form-group">
                         <label for="role_id">Rol</label>
@@ -51,4 +55,15 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('userForm').addEventListener('submit', function(event) {
+            var telefono = document.getElementById('telefono').value;
+            var telefonoPattern = /^[0-9]{10}$/;
+            if (!telefonoPattern.test(telefono)) {
+                alert('Por favor, ingrese un número de teléfono válido.');
+                event.preventDefault();
+            }
+        });
+    </script>
+
 </x-app-layout>
