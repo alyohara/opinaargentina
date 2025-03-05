@@ -72,14 +72,14 @@
 <div class="center-content">
     <h1>Bienvenidos</h1>
     @auth
-        <a href="{{ url('/dashboard') }}" class="btn btn-primary">Dashboard</a>
+        <form action="{{ url('/dashboard') }}">
+            <button type="submit" class="btn btn-primary">Dashboard</button>
+        </form>
+
     @else
-        <a href="{{ route('login') }}" class="btn btn-primary">Ingresar</a>
-        @if (1 == 2)
-            @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="btn btn-primary">Registro</a>
-            @endif
-        @endif
+        <form action="{{ route('login') }}">
+            <button type="submit" class="btn btn-primary">Ingresar</button>
+        </form>
     @endauth
 
 
