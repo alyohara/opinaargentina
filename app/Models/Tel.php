@@ -44,5 +44,5 @@ class Tel extends Model
     {
         return $this->belongsTo(Provincia::class, 'provincia_id');
     }
-    
+
 }
