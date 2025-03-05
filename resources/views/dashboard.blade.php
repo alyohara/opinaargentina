@@ -62,8 +62,7 @@
                             <img src="{{ asset('loading.gif') }}" alt="Loading..." />
                         </div>
                         <canvas id="rankingProvinciasChart"></canvas>
-                        <button id="backToProvincias" class="btn btn-secondary mt-4">Volver a Provincias</button>
-                    </div>
+                        <button id="backToProvincias" class="btn btn-secondary mt-4 hidden">Volver a Provincias</button>                    </div>
                 @endif
             </div>
         </div>
@@ -102,8 +101,6 @@
             }
         };
 
-
-
         // Data for Ranking de Provincias
         const rankingProvinciasData = {
             labels: {!! json_encode(array_keys($analytics->ranking_provincias)) !!},
@@ -130,6 +127,7 @@
                             .then(response => response.json())
                             .then(data => {
                                 updateRankingChart(data);
+                                showBackButton();
                                 hideLoading();
                             })
                             .catch(error => {
@@ -152,6 +150,7 @@
             rankingProvinciasChart.data.datasets[0].data = Object.values(data);
             rankingProvinciasChart.update();
         }
+
         // Function to show the loading overlay
         function showLoading() {
             document.getElementById('loading-overlay').classList.remove('hidden');
@@ -161,16 +160,28 @@
         function hideLoading() {
             document.getElementById('loading-overlay').classList.add('hidden');
         }
+
+        // Function to show the back button
+        function showBackButton() {
+            document.getElementById('backToProvincias').classList.remove('hidden');
+        }
+
+        // Function to hide the back button
+        function hideBackButton() {
+            document.getElementById('backToProvincias').classList.add('hidden');
+        }
+
         // Render Charts
         new Chart(document.getElementById('telefonosPorProvinciaChart'), telefonosPorProvinciaConfig);
         const rankingProvinciasChart = new Chart(document.getElementById('rankingProvinciasChart'), rankingProvinciasConfig);
+
         document.getElementById('backToProvincias').addEventListener('click', () => {
             showLoading();
             rankingProvinciasChart.data.labels = {!! json_encode(array_keys($analytics->ranking_provincias)) !!};
             rankingProvinciasChart.data.datasets[0].data = {!! json_encode(array_values($analytics->ranking_provincias)) !!};
             rankingProvinciasChart.update();
+            hideBackButton();
             hideLoading();
         });
-
     </script>
 </x-app-layout>
