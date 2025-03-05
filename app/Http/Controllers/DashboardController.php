@@ -47,9 +47,10 @@ class DashboardController extends Controller
         $telefonos = $query->get();
         return response()->json($telefonos);
     }
-    public function ciudadesPorProvincia($provinciaId)
+    public function ciudadesPorProvincia($provinciaNombre)
     {
-        $ciudades = Localidad::where('nombre', $provinciaId)->withCount('telefonos')->get()->pluck('telefonos_count', 'nombre');
+        $provinciaId = Provincia::where('nombre', $provinciaNombre)->first()->id;
+        $ciudades = Localidad::where('provincia_id', $provinciaId)->withCount('telefonos')->get()->pluck('telefonos_count', 'nombre');
         return response()->json($ciudades);
     }
 
