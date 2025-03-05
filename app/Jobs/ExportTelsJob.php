@@ -35,7 +35,7 @@ class ExportTelsJob implements ShouldQueue
 //que desaparecer o que dicho registro quede pendiente de aprobación de
 //usuario administrador. Tuve que volver a registrarme y entré de una...  HECHO
 //- En el formulario de registro, que pida nombre y apellido (campos
-//separados), teléfono también.
+//separados), teléfono también. HECHO
 //- eliminar todo el texto genérico en la pantalla de inicio
 //- navegador advierte que es un sitio no seguro. que lo sea, es
 //fundamental. El dominio tiene SSL contratado.

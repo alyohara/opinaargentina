@@ -70,9 +70,19 @@
 @endif
 
 <div class="center-content">
-    <h1>Bienvenidos al Sistema de Gestión de Proyectos</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante
-        dapibus diam.</p>
+    <h1>Bienvenidos</h1>
+    @auth
+        <a href="{{ url('/dashboard') }}">Dashboard</a>
+    @else
+        <a href="{{ route('login') }}">Ingresar</a>
+        @if (1 == 2)
+            @if (Route::has('register'))
+                <a href="{{ route('register') }}">Registro</a>
+            @endif
+        @endif
+    @endauth
+
+
 </div>
 </body>
 </html>
