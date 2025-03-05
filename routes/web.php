@@ -15,6 +15,8 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\PersonController;
 use App\Http\Controllers\TelefonoController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\DashboardController;
+
 
 
 
