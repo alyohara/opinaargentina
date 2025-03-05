@@ -15,6 +15,7 @@ class Provincia extends Model
     // Define los atributos asignables
     protected $fillable = [
         'nombre',
+        'telefonos_count',
     ];
 
     // Ejemplo de relación: si una provincia tiene muchas localidades
@@ -22,4 +23,7 @@ class Provincia extends Model
     {
         return $this->hasMany(Localidad::class);
     }
+
+
+
 }

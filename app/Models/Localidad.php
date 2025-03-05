@@ -17,6 +17,7 @@ class Localidad extends Model
     protected $fillable = [
         'nombre',
         'provincia_id',
+        'telefonos_count',
     ];
 
     // Relaciones: Por ejemplo, si cada localidad pertenece a una provincia:
