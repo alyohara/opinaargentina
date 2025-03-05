@@ -8,6 +8,12 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+                <div class="mb-4">
+                    <form action="{{ route('dashboard') }}" method="GET">
+                        <input type="text" name="q" placeholder="Buscar..." class="border rounded px-3 py-2">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Analytics Data -->
                     @if($analytics)
@@ -44,17 +50,17 @@
                             <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Teléfonos por Provincia</h4>
                             <canvas id="telefonosPorProvinciaChart"></canvas>
                         </div>
-
-
-                        <!-- Card for Ranking de Provincias -->
-                        <div class="mt-12 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-                            <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Ranking de Provincias</h4>
-                            <canvas id="rankingProvinciasChart"></canvas>
-                        </div>
                     @else
                         <p class="mt-6 text-gray-800 dark:text-gray-200">No analytics data available.</p>
                     @endif
                 </div>
+                <!-- Card for Ranking de Provincias -->
+                @if($analytics)
+                    <div class="mt-12 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+                        <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Ranking de Provincias</h4>
+                        <canvas id="rankingProvinciasChart"></canvas>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -72,6 +78,26 @@
             }]
         };
 
+        // Config for Teléfonos por Provincia Chart
+        const telefonosPorProvinciaConfig = {
+            type: 'bar',
+            data: telefonosPorProvinciaData,
+            options: {
+                onClick: (e, item) => {
+                    if (item.length > 0) {
+                        const provincia = item[0].index;
+                        const provinciaId = telefonosPorProvinciaData.labels[provincia];
+                        window.location.href = `/telefonos/provincia/${provinciaId}`;
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
 
 
         // Data for Ranking de Provincias
@@ -85,33 +111,6 @@
                 borderWidth: 1
             }]
         };
-
-        // Config for Teléfonos por Provincia Chart
-        const telefonosPorProvinciaConfig = {
-            type: 'bar',
-            data: telefonosPorProvinciaData,
-            options: {
-                onClick: (e, item) => {
-                    if (item.length > 0) {
-                        const provincia = item[0].index;
-                        const provinciaId = telefonosPorProvinciaData.labels[provincia];
-                        fetch(`/telefonos/provincia/${provinciaId}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                // Handle data for localidades
-                                console.log(data);
-                            });
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        };
-
-
 
         // Config for Ranking de Provincias Chart
         const rankingProvinciasConfig = {
@@ -129,21 +128,6 @@
         // Render Charts
         new Chart(document.getElementById('telefonosPorProvinciaChart'), telefonosPorProvinciaConfig);
         new Chart(document.getElementById('rankingProvinciasChart'), rankingProvinciasConfig);
-        // Search functionality
-        function buscarTelefonos() {
-            const provinciaId = document.getElementById('provincia_id').value;
-            const localidadId = document.getElementById('localidad_id').value;
-            const genero = document.getElementById('genero').value;
-            const edadMin = document.getElementById('edad_min').value;
-            const edadMax = document.getElementById('edad_max').value;
-
-            fetch(`/buscar-telefonos?provincia_id=${provinciaId}&localidad_id=${localidadId}&genero=${genero}&edad_min=${edadMin}&edad_max=${edadMax}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Handle search results
-                    console.log(data);
-                });
-        }
 
     </script>
 </x-app-layout>
