@@ -25,4 +25,8 @@ class Localidad extends Model
     {
         return $this->belongsTo(Provincia::class);
     }
+    public function telefonos()
+    {
+        return $this->hasMany(Tel::class);
+    }
 }
