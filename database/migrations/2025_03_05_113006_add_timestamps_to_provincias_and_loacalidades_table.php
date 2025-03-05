@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('localidads', function (Blueprint $table) {
-            //
+            $table->timestamps();
+        });
+        Schema::table('provincias', function (Blueprint $table) {
+            $table->timestamps();
         });
     }
 
@@ -22,7 +25,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('localidads', function (Blueprint $table) {
-            //
+            $table->dropColumn('created_at');
+            $table->dropColumn('updated_at');
+        });
+        Schema::table('provincias', function (Blueprint $table) {
+            $table->dropColumn('created_at');
+            $table->dropColumn('updated_at');
         });
     }
 };
