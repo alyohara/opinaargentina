@@ -8,6 +8,9 @@ use App\Models\City;
 use App\Models\State;
 use App\Models\Role;
 use App\Models\Analytics;
+use App\Models\Provincia;
+use App\Models\Localidad;
+
 
 class CalculateAnalytics extends Command
 {
