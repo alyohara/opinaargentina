@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('localidads', function (Blueprint $table) {
+        Schema::table('localidades', function (Blueprint $table) {
             $table->timestamps();
         });
         Schema::table('provincias', function (Blueprint $table) {
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('localidads', function (Blueprint $table) {
+        Schema::table('localidades', function (Blueprint $table) {
             $table->dropColumn('created_at');
             $table->dropColumn('updated_at');
         });
