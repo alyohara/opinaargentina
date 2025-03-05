@@ -30,7 +30,7 @@
                     </div>
                     <div class="mb-4">
                         <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre:</label>
-                        <input type="text" name="nombre" id="nombre" value="{{$user->nombre}}  class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                        <input type="text" name="nombre" id="nombre" value="{{$user->nombre}}"  class="mt-1 block w-full rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
                     </div>
                     <div class="mb-4">
                         <label for="apellido" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Apellido:</label>

@@ -14,7 +14,7 @@
                     <p>Apellido: {{ $user->apellido }}</p>
                     <p>Email: {{ $user->email }}</p>
                     <p>Teléfono: {{ $user->telefono }}</p>
-                    
+
                     <a href="{{ route('users.index') }}" class="btn btn-primary">Volver al listado</a>
                 </div>
             </div>
