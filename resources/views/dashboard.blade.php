@@ -56,9 +56,13 @@
                 </div>
                 <!-- Card for Ranking de Provincias -->
                 @if($analytics)
-                    <div class="mt-12 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+                    <div class="mt-12 bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 relative">
                         <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200">Ranking de Provincias</h4>
+                        <div id="loading-overlay" class="absolute inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden">
+                            <img src="{{ asset('loading.gif') }}" alt="Loading..." />
+                        </div>
                         <canvas id="rankingProvinciasChart"></canvas>
+                        <button id="backToProvincias" class="btn btn-secondary mt-4">Volver a Provincias</button>
                     </div>
                 @endif
             </div>
@@ -121,10 +125,16 @@
                     if (item.length > 0) {
                         const provincia = item[0].index;
                         const provinciaId = rankingProvinciasData.labels[provincia];
+                        showLoading();
                         fetch(`/telefonos/provincia/${provinciaId}/ciudades`)
                             .then(response => response.json())
                             .then(data => {
                                 updateRankingChart(data);
+                                hideLoading();
+                            })
+                            .catch(error => {
+                                console.error("Error fetching data:", error);
+                                hideLoading();
                             });
                     }
                 },
@@ -142,10 +152,25 @@
             rankingProvinciasChart.data.datasets[0].data = Object.values(data);
             rankingProvinciasChart.update();
         }
+        // Function to show the loading overlay
+        function showLoading() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
 
+        // Function to hide the loading overlay
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
         // Render Charts
         new Chart(document.getElementById('telefonosPorProvinciaChart'), telefonosPorProvinciaConfig);
         const rankingProvinciasChart = new Chart(document.getElementById('rankingProvinciasChart'), rankingProvinciasConfig);
+        document.getElementById('backToProvincias').addEventListener('click', () => {
+            showLoading();
+            rankingProvinciasChart.data.labels = {!! json_encode(array_keys($analytics->ranking_provincias)) !!};
+            rankingProvinciasChart.data.datasets[0].data = {!! json_encode(array_values($analytics->ranking_provincias)) !!};
+            rankingProvinciasChart.update();
+            hideLoading();
+        });
 
     </script>
 </x-app-layout>
