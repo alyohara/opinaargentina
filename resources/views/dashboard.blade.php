@@ -117,6 +117,17 @@
             type: 'line',
             data: rankingProvinciasData,
             options: {
+                onClick: (e, item) => {
+                    if (item.length > 0) {
+                        const provincia = item[0].index;
+                        const provinciaId = rankingProvinciasData.labels[provincia];
+                        fetch(`/telefonos/provincia/${provinciaId}/ciudades`)
+                            .then(response => response.json())
+                            .then(data => {
+                                updateRankingChart(data);
+                            });
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true
@@ -125,9 +136,16 @@
             }
         };
 
+        // Function to update the ranking chart with new data
+        function updateRankingChart(data) {
+            rankingProvinciasChart.data.labels = Object.keys(data);
+            rankingProvinciasChart.data.datasets[0].data = Object.values(data);
+            rankingProvinciasChart.update();
+        }
+
         // Render Charts
         new Chart(document.getElementById('telefonosPorProvinciaChart'), telefonosPorProvinciaConfig);
-        new Chart(document.getElementById('rankingProvinciasChart'), rankingProvinciasConfig);
+        const rankingProvinciasChart = new Chart(document.getElementById('rankingProvinciasChart'), rankingProvinciasConfig);
 
     </script>
 </x-app-layout>

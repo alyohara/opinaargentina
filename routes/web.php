@@ -56,6 +56,6 @@ Route::middleware([
 
     Route::get('/telefonos/provincia/{provincia}', [DashboardController::class, 'telefonosPorProvincia'])->name('telefonos.provincia');
     Route::get('/buscar-telefonos', [DashboardController::class, 'buscarTelefonos'])->name('buscar.telefonos');
-
+    Route::get('/telefonos/provincia/{provincia}/ciudades', [DashboardController::class, 'ciudadesPorProvincia'])->name('telefonos.ciudades');
 
 });
